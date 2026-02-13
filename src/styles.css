@@ -1,0 +1,23 @@
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, rgba(76, 107, 79, 0.15), transparent 55%),
+    radial-gradient(circle at 20% 20%, rgba(75, 126, 168, 0.18), transparent 50%),
+    #f4efe6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: rgba(196, 107, 69, 0.35);
+}
