@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AppShell from "./components/AppShell";
 import ErrorBoundary from "./components/ErrorBoundary";
 import PrivateRoute from "./components/PrivateRoute";
+import SsoLogoutHandler from "./utils/loginUtils/SsoLogoutHandler";
 import AccessDenied from "./pages/AccessDenied";
 import Admin from "./pages/Admin";
 import ApiCatalog from "./pages/ApiCatalog";
@@ -21,6 +22,7 @@ const App = () => {
     <ErrorBoundary>
       <BrowserRouter>
         <Routes>
+          <Route path="sso-logout" element={<SsoLogoutHandler />} />
           <Route element={<PrivateRoute />}>
             <Route element={<AppShell />}>
               <Route index element={<Home />} />

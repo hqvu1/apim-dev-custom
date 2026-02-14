@@ -15,6 +15,7 @@ import TranslateIcon from "@mui/icons-material/Translate";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth/useAuth";
+import useLogout from "../utils/loginUtils/useLogout";
 
 const Header = ({
   drawerWidth,
@@ -27,7 +28,9 @@ const Header = ({
 }) => {
   const { t, i18n } = useTranslation();
   const { account } = useAuth();
+  const { logout } = useLogout();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [userAnchor, setUserAnchor] = useState<null | HTMLElement>(null);
 
   const displayName = account?.name || "Komatsu User";
 
@@ -85,11 +88,27 @@ const Header = ({
             </MenuItem>
           </Menu>
           <Box display="flex" alignItems="center" gap={1}>
-            <Avatar sx={{ bgcolor: "primary.main" }}>{displayName.charAt(0)}</Avatar>
+            <IconButton
+              onClick={(event) => setUserAnchor(event.currentTarget)}
+              aria-label="Open user menu"
+              size="small"
+            >
+              <Avatar sx={{ bgcolor: "primary.main" }}>{displayName.charAt(0)}</Avatar>
+            </IconButton>
             <Typography variant="body2" fontWeight={600}>
               {displayName}
             </Typography>
           </Box>
+          <Menu anchorEl={userAnchor} open={Boolean(userAnchor)} onClose={() => setUserAnchor(null)}>
+            <MenuItem
+              onClick={() => {
+                setUserAnchor(null);
+                logout();
+              }}
+            >
+              Sign out
+            </MenuItem>
+          </Menu>
         </Stack>
       </Toolbar>
     </AppBar>

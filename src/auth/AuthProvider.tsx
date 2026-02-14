@@ -26,7 +26,7 @@ const getRolesFromClaims = (account: AccountInfo | null): string[] => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { instance, accounts } = useMsal();
-  const account = accounts[0] ?? null;
+  const account = instance.getActiveAccount() ?? accounts[0] ?? null;
 
   const getAccessToken = useCallback(async () => {
     if (!account) {
