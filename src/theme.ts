@@ -1,30 +1,39 @@
 import { createTheme } from "@mui/material/styles";
 
+// Komatsu Global Brand Standards
 const brand = {
-  ink: "#0f1a22",
-  steel: "#2f3a45",
-  sand: "#f4efe6",
-  copper: "#c46b45",
-  moss: "#4c6b4f",
-  sky: "#4b7ea8"
+  gloriaBlue: "#140A9A",
+  gloriaBlueHover: "#1C0FBF",
+  gloriaBlueDark: "#0F0872",
+  iceBlue: "#E8F4F8",
+  coolGrey50: "#F8F9FA",
+  coolGrey100: "#F2F4F7",
+  coolGrey200: "#E5E7EB",
+  coolGrey300: "#D1D5DB",
+  coolGrey500: "#6B7280",
+  coolGrey700: "#374151",
+  coolGrey900: "#1F2937"
 };
 
 export const theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: brand.ink
+      main: brand.gloriaBlue,
+      dark: brand.gloriaBlueDark,
+      light: brand.gloriaBlueHover
     },
     secondary: {
-      main: brand.copper
+      main: brand.iceBlue,
+      contrastText: brand.gloriaBlue
     },
     background: {
-      default: brand.sand,
+      default: brand.coolGrey50,
       paper: "#ffffff"
     },
     text: {
-      primary: brand.ink,
-      secondary: brand.steel
+      primary: brand.coolGrey900,
+      secondary: brand.coolGrey700
     }
   },
   typography: {
