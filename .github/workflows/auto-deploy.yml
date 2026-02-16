@@ -1,0 +1,341 @@
+name: Auto Deploy (CI/CD)
+
+# When this action will be executed
+on:
+  # Automatically trigger for different branches
+  push:
+    branches: 
+      - develop      # Auto-deploy to dev
+      - main         # Deploy to prod
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+      - '.github/workflows/README.md'
+      - '.github/**/*.md'
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+# Required permissions for Azure OIDC authentication
+permissions:
+  id-token: write
+  contents: read
+  actions: read
+  checks: write
+  pull-requests: write
+
+# Global environment variables 
+env:
+  IMAGE_NAME: komatsu-apim-portal
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  # Job 1: Run tests before deployment
+  test:
+    name: Run Test Suite
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
+
+  # Job 2: Generate build matrix for environments
+  generate-build-matrix:
+    name: Generate Build Matrix
+    runs-on: ubuntu-latest
+    needs: test
+    outputs:
+      environments: ${{ steps.set-matrix.outputs.environments }}
+    steps:
+      - name: Set build matrix
+        id: set-matrix
+        run: |
+          if [[ "${{ github.ref_name }}" == "develop" ]]; then
+            echo 'environments=["dev"]' >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_name }}" == "main" ]] || [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo 'environments=["prod"]' >> $GITHUB_OUTPUT
+          else
+            echo 'environments=[]' >> $GITHUB_OUTPUT
+          fi
+
+  # Job 3: Build and push container image to target environment ACRs only
+  build:
+    name: Build and Push to ${{ matrix.environment }}
+    runs-on: ubuntu-latest
+    needs: [test, generate-build-matrix]
+    if: needs.generate-build-matrix.outputs.environments != '[]'
+    strategy:
+      matrix:
+        environment: ${{ fromJson(needs.generate-build-matrix.outputs.environments) }}
+      fail-fast: false
+    environment: 
+      name: ${{ matrix.environment }}
+    outputs:
+      image-tag: ${{ env.IMAGE_TAG }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --frozen-lockfile --prefer-offline --no-audit
+
+      - name: Build frontend
+        env:
+          VITE_AZURE_CLIENT_ID: ${{ vars.VITE_AZURE_CLIENT_ID }}
+          VITE_AZURE_AUTHORITY: ${{ vars.VITE_AZURE_AUTHORITY }}
+          VITE_AZURE_REDIRECT_URI: ${{ vars.VITE_AZURE_REDIRECT_URI }}
+          VITE_AZURE_POST_LOGOUT_REDIRECT_URI: ${{ vars.VITE_AZURE_POST_LOGOUT_REDIRECT_URI }}
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+        run: |
+          npm run build
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set semantic image tags
+        id: semantic-tags
+        run: |
+          if [[ "${{ matrix.environment }}" == "dev" ]]; then
+            echo "SEMANTIC_TAG=dev-${{ env.IMAGE_TAG }}" >> $GITHUB_ENV
+            echo "LATEST_TAG=dev-latest" >> $GITHUB_ENV
+          elif [[ "${{ matrix.environment }}" == "prod" ]]; then
+            echo "SEMANTIC_TAG=prod-${{ env.IMAGE_TAG }}" >> $GITHUB_ENV
+            echo "LATEST_TAG=prod-latest" >> $GITHUB_ENV
+          fi
+
+      - name: Build and push to ACR
+        id: acr-build
+        run: |
+          # Login to ACR
+          echo "🔐 Logging into ${{ matrix.environment }} environment registry..."
+          echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login "${{ vars.ACR_NAME }}.azurecr.io" --username "${{ secrets.REGISTRY_USERNAME }}" --password-stdin
+          
+          # Build and push directly to ACR with semantic tags
+          echo "🔨 Building and pushing container image for ${{ matrix.environment }}..."
+          docker buildx build \
+            --platform linux/amd64 \
+            --build-arg VITE_AZURE_CLIENT_ID="${{ vars.VITE_AZURE_CLIENT_ID }}" \
+            --build-arg VITE_AZURE_AUTHORITY="${{ vars.VITE_AZURE_AUTHORITY }}" \
+            --build-arg VITE_AZURE_REDIRECT_URI="${{ vars.VITE_AZURE_REDIRECT_URI }}" \
+            --build-arg VITE_AZURE_POST_LOGOUT_REDIRECT_URI="${{ vars.VITE_AZURE_POST_LOGOUT_REDIRECT_URI }}" \
+            --build-arg VITE_API_BASE_URL="${{ vars.VITE_API_BASE_URL }}" \
+            --tag ${{ vars.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ env.SEMANTIC_TAG }} \
+            --tag ${{ vars.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ env.LATEST_TAG }} \
+            --cache-from type=gha \
+            --cache-to type=gha,mode=max \
+            --push \
+            .
+          
+          # Logout for security
+          docker logout "${{ vars.ACR_NAME }}.azurecr.io"
+          echo "✅ Pushed to ${{ matrix.environment }} registry with tags: ${{ env.SEMANTIC_TAG }}, ${{ env.LATEST_TAG }}"
+
+  # Job 4: Generate deployment matrix (separate from build matrix)
+  generate-matrix:
+    name: Generate Deployment Matrix
+    runs-on: ubuntu-latest
+    needs: build
+    outputs:
+      environments: ${{ steps.set-matrix.outputs.environments }}
+    steps:
+      - name: Set deployment matrix
+        id: set-matrix
+        run: |
+          if [[ "${{ github.ref_name }}" == "develop" ]]; then
+            echo 'environments=["dev"]' >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_name }}" == "main" ]] || [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo 'environments=["prod"]' >> $GITHUB_OUTPUT
+          else
+            echo 'environments=[]' >> $GITHUB_OUTPUT
+          fi
+
+  # Job 5: Deploy to environments using clean matrix strategy
+  deploy:
+    name: Deploy to ${{ matrix.environment }}
+    runs-on: ubuntu-latest
+    needs: [build, generate-matrix]
+    if: needs.generate-matrix.outputs.environments != '[]'
+    strategy:
+      matrix:
+        environment: ${{ fromJson(needs.generate-matrix.outputs.environments) }}
+      fail-fast: false
+    environment: 
+      name: ${{ matrix.environment }}
+    
+    steps:
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Set semantic image tags for deployment
+        run: |
+          if [[ "${{ matrix.environment }}" == "dev" ]]; then
+            echo "SEMANTIC_TAG=dev-${{ needs.build.outputs.image-tag }}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.environment }}" == "prod" ]]; then
+            echo "SEMANTIC_TAG=prod-${{ needs.build.outputs.image-tag }}" >> $GITHUB_ENV
+          fi
+
+      - name: Deploy to ${{ matrix.environment }} Container App  
+        uses: azure/CLI@v2
+        env:
+          ENVIRONMENT: ${{ matrix.environment }}
+          REGISTRY: ${{ vars.ACR_NAME }}.azurecr.io
+          RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+          CONTAINER_APP_NAME: ${{ vars.CONTAINER_APP_NAME }}
+          IMAGE_NAME: komatsu-apim-portal
+          
+        with:
+          inlineScript: |
+            echo "🚀 Deploying to ${{ matrix.environment }} environment..."
+            az config set extension.use_dynamic_install=yes_without_prompt
+            
+            # Update container registry settings
+            az containerapp registry set \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.RESOURCE_GROUP }} \
+              --server ${{ env.REGISTRY }} \
+              --username "${{ secrets.REGISTRY_USERNAME }}" \
+              --password "${{ secrets.REGISTRY_PASSWORD }}"
+            
+            # Build env vars list
+            ENV_VARS_LIST="VITE_AZURE_CLIENT_ID=${{ vars.VITE_AZURE_CLIENT_ID }} VITE_AZURE_AUTHORITY=${{ vars.VITE_AZURE_AUTHORITY }} VITE_AZURE_REDIRECT_URI=${{ vars.VITE_AZURE_REDIRECT_URI }} VITE_AZURE_POST_LOGOUT_REDIRECT_URI=${{ vars.VITE_AZURE_POST_LOGOUT_REDIRECT_URI }} VITE_API_BASE_URL=${{ vars.VITE_API_BASE_URL }} NODE_ENV=production"
+            
+            az containerapp update \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.RESOURCE_GROUP }} \
+              --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.SEMANTIC_TAG }} \
+              --set-env-vars $ENV_VARS_LIST
+            
+            echo "✅ Container deployment completed!"
+
+      - name: Checkout for auth config
+        uses: actions/checkout@v4
+
+      - name: Configure Easy Auth for ${{ matrix.environment }}
+        uses: azure/CLI@v2
+        env:
+          ENVIRONMENT: ${{ matrix.environment }}
+          RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+          SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          CONTAINER_APP_NAME: ${{ vars.CONTAINER_APP_NAME }}
+        with:
+          inlineScript: |
+            echo "🔐 Configuring Easy Auth (Azure AD authentication) for ${{ matrix.environment }}..."
+            
+            # Get Container App FQDN
+            CONTAINER_APP_FQDN=$(az containerapp show \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ vars.AZURE_RESOURCE_GROUP }} \
+              --query "properties.configuration.ingress.fqdn" -o tsv)
+            
+            echo "📍 Container App FQDN: $CONTAINER_APP_FQDN"
+            
+            # Build the auth config JSON with environment-specific values
+            AUTH_CONFIG=$(cat <<EOF
+            {
+              "properties": {
+                "platform": {
+                  "enabled": true
+                },
+                "globalValidation": {
+                  "unauthenticatedClientAction": "RedirectToLoginPage",
+                  "redirectToProvider": "azureactivedirectory",
+                  "excludedPaths": [
+                    "/static/*",
+                    "/assets/*",
+                    "/Logo.png",
+                    "/PartsLookup.png",
+                    "/IntelSearch.png",
+                    "/favicon.ico",
+                    "/health",
+                    "/*.js",
+                    "/*.css",
+                    "/*.png",
+                    "/*.ico",
+                    "/*.svg",
+                    "/*.woff*",
+                    "/*.ttf",
+                    "/manifest.json"
+                  ]
+                },
+                "httpSettings": {
+                  "requireHttps": true,
+                  "forwardProxy": {
+                    "convention": "Standard",
+                    "customHostHeaderName": "X-Original-Host"
+                  },
+                  "routes": {
+                    "apiPrefix": "/.auth"
+                  }
+                },
+                "identityProviders": {
+                  "azureActiveDirectory": {
+                    "enabled": true,
+                    "isAutoProvisioned": false,
+                    "registration": {
+                      "clientId": "${{ vars.VITE_AZURE_CLIENT_ID }}",
+                      "clientSecretSettingName": "microsoft-provider-authentication-secret",
+                      "openIdIssuer": "${{ vars.VITE_AZURE_AUTHORITY }}/v2.0"
+                    },
+                    "validation": {
+                      "allowedAudiences": [
+                        "${{ vars.VITE_AZURE_CLIENT_ID }}",
+                        "${{ vars.APP_URL }}",
+                        "api://${{ vars.VITE_AZURE_CLIENT_ID }}",
+                        "https://${CONTAINER_APP_FQDN}"
+                      ]
+                    }
+                  }
+                },
+                "login": {
+                  "allowedExternalRedirectUrls": [
+                    "${{ vars.APP_URL }}",
+                    "${{ vars.APP_URL }}/"
+                  ],
+                  "preserveUrlFragmentsForLogins": false
+                }
+              }
+            }
+            EOF
+            )
+            
+            # Apply the auth configuration using REST API
+            echo "📤 Applying Easy Auth configuration..."
+            echo "$AUTH_CONFIG" > /tmp/auth-config.json
+            
+            az rest --method PUT \
+              --uri "https://management.azure.com/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ vars.AZURE_RESOURCE_GROUP }}/providers/Microsoft.App/containerApps/${{ env.CONTAINER_APP_NAME }}/authConfigs/current?api-version=2024-03-01" \
+              --body @/tmp/auth-config.json
+            
+            # Cleanup
+            rm -f /tmp/auth-config.json
+            
+            echo "✅ Easy Auth configuration applied successfully!"
+
+      - name: Get application URL
+        id: app-url
+        run: |
+          APP_URL=$(az containerapp show \
+            --name ${{ vars.CONTAINER_APP_NAME }} \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP }} \
+            --query properties.configuration.ingress.fqdn \
+            --output tsv)
+          echo "url=https://$APP_URL" >> $GITHUB_OUTPUT
+
+      - name: Deployment summary
+        run: |
+          echo "### ✅ Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** ${{ matrix.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Application URL:** ${{ steps.app-url.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Image:** ${{ vars.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ env.SEMANTIC_TAG }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔐 Easy Auth configured with Azure AD" >> $GITHUB_STEP_SUMMARY

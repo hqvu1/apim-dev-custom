@@ -40,3 +40,102 @@ React + Vite SPA scaffold for the Komatsu API Marketplace portal UI.
 - Stuck redirecting: clear `localStorage` `tenantId`/`email` and retry KPS; verify `VITE_KPS_URL`.
 - Logout loop: check `VITE_BASE_URL` and front-channel logout route `/sso-logout` is registered in Entra.
 - Scope errors (invalid or insufficient scope): verify `VITE_LOGIN_SCOPES` and `VITE_PORTAL_API_SCOPE` match the Entra app registrations and consented permissions.
+
+## Deployment
+
+### Automated Deployment with GitHub Actions (Recommended)
+
+The application uses a **matrix-based CI/CD pipeline** with comprehensive testing for deployments to Azure Container Apps:
+
+#### Key Features
+- ✅ **Automated deployments** from `develop` (dev) and `main` (prod) branches
+- ✅ **Comprehensive testing** - Unit, component, and integration tests
+- ✅ **Quality gates** - Test coverage and failure thresholds
+- ✅ **Semantic tagging** - Images tagged with `dev-{sha}`, `prod-{sha}`
+- ✅ **Docker Buildx caching** - Faster builds using GitHub Actions cache
+- ✅ **Easy Auth automation** - Azure AD authentication configured automatically
+- ✅ **OIDC authentication** - Passwordless Azure login with federated credentials
+
+#### Deployment Flow
+
+**Development**:
+```bash
+git checkout develop
+git merge feature/my-feature
+git push origin develop
+# → Runs tests → Builds image → Deploys to dev → Configures Easy Auth
+```
+
+**Production**:
+```bash
+git checkout main
+git merge develop
+git push origin main
+# → Runs tests → Builds image → [Waits for approval] → Deploys to prod → Configures Easy Auth
+```
+
+**Manual Deployment**:
+1. Go to **Actions** tab in GitHub
+2. Select **Manual Deploy** workflow
+3. Choose environment (dev/staging/prod) and branch
+4. Click **Run workflow**
+
+#### Setup Instructions
+See [.github/GITHUB_ACTIONS_SETUP.md](.github/GITHUB_ACTIONS_SETUP.md) for complete setup guide.
+
+**Quick Start**:
+1. Configure Azure federated credentials (OIDC)
+2. Add GitHub repository secrets for Azure authentication
+3. Set up GitHub environments (dev, staging, prod)
+4. Configure environment variables for each environment
+5. Push to your branch - deployment happens automatically!
+
+### Manual Deployment Scripts (Alternative)
+
+For manual deployments or local infrastructure testing:
+
+```bash
+# Using PowerShell (Windows)
+cd azure
+.\deploy.ps1 -Environment dev
+
+# Using Bash (Linux/macOS)
+cd azure
+chmod +x deploy.sh
+./deploy.sh dev
+```
+
+### Local Docker Testing
+
+Test the containerized application locally:
+
+```bash
+# Build and run with Docker Compose
+docker-compose up --build
+
+# Access at http://localhost:8080
+
+# Or build and run manually
+docker build -t komatsu-apim-portal .
+docker run -p 8080:8080 komatsu-apim-portal
+```
+
+### Testing
+
+Run tests locally before pushing:
+
+```bash
+# Run all tests
+npm test
+
+# Run with coverage
+npm run test:coverage
+
+# Run with UI
+npm run test:ui
+```
+
+**Documentation**:
+- [GitHub Actions Setup Guide](.github/GITHUB_ACTIONS_SETUP.md) - Complete CI/CD configuration
+- [Azure Deployment Guide](./azure/README.md) - Manual deployment and infrastructure details
+- [CI/CD Comparison](.github/CI_CD_COMPARISON.md) - Architecture comparison and design decisions

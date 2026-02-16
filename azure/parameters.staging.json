@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": {
+      "value": "staging"
+    },
+    "location": {
+      "value": "East US 2"
+    },
+    "appName": {
+      "value": "komatsu-apim-portal"
+    },
+    "containerImage": {
+      "value": "komatsu-apim-portal:staging"
+    },
+    "azureClientId": {
+      "value": "YOUR_AZURE_AD_CLIENT_ID"
+    },
+    "azureAuthority": {
+      "value": "https://login.microsoftonline.com/YOUR_TENANT_ID"
+    },
+    "redirectUri": {
+      "value": "https://YOUR_APP_URL/auth/callback"
+    },
+    "postLogoutRedirectUri": {
+      "value": "https://YOUR_APP_URL"
+    },
+    "apiBaseUrl": {
+      "value": "https://YOUR_APIM_GATEWAY_URL"
+    }
+  }
+}
