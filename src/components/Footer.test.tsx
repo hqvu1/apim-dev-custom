@@ -4,15 +4,14 @@ import { BrowserRouter } from 'react-router-dom';
 import Footer from '../components/Footer';
 
 describe('Footer Component', () => {
-  it('renders footer with copyright text', () => {
+  it('renders portal title', () => {
     render(
       <BrowserRouter>
         <Footer />
       </BrowserRouter>
     );
     
-    const currentYear = new Date().getFullYear();
-    expect(screen.getByText(new RegExp(currentYear.toString()))).toBeInTheDocument();
+    expect(screen.getByText('Komatsu API Marketplace Portal')).toBeInTheDocument();
   });
 
   it('renders Komatsu branding', () => {
