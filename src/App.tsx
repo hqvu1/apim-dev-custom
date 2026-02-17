@@ -8,7 +8,7 @@ import Admin from "./pages/Admin";
 import ApiCatalog from "./pages/ApiCatalog";
 import ApiDetails from "./pages/ApiDetails";
 import ApiTryIt from "./pages/ApiTryIt";
-import Home from "./pages/Home";
+import Home from "./pages/home";
 import MyIntegrations from "./pages/MyIntegrations";
 import News from "./pages/News";
 import NotFound from "./pages/NotFound";
@@ -16,6 +16,7 @@ import Onboarding from "./pages/Onboarding";
 import Register from "./pages/Register";
 import Support from "./pages/Support";
 import RoleGate from "./components/RoleGate";
+import PublicLayout from "./components/PublicLayout";
 
 const App = () => {
   return (
@@ -23,9 +24,15 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="sso-logout" element={<SsoLogoutHandler />} />
+          
+          {/* Public routes - no authentication required */}
+          <Route element={<PublicLayout />}>
+            <Route index element={<Home />} />
+          </Route>
+
+          {/* Protected routes - authentication required */}
           <Route element={<PrivateRoute />}>
             <Route element={<AppShell />}>
-              <Route index element={<Home />} />
               <Route path="apis" element={<ApiCatalog />} />
               <Route path="apis/:apiId" element={<ApiDetails />} />
               <Route path="apis/:apiId/try" element={<ApiTryIt />} />

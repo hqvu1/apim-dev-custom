@@ -2,6 +2,7 @@ import {
   AppBar,
   Avatar,
   Box,
+  Button,
   IconButton,
   Menu,
   MenuItem,
@@ -12,19 +13,23 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import TranslateIcon from "@mui/icons-material/Translate";
+import LoginIcon from "@mui/icons-material/Login";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth/useAuth";
 import useLogout from "../utils/loginUtils/useLogout";
+import { initiateLogin } from "../utils/loginUtils/initiateLogin";
 
 const Header = ({
-  drawerWidth,
+  drawerWidth = 0,
   onMenuClick,
-  showMenuButton
+  showMenuButton = false,
+  isPublic = false
 }: {
-  drawerWidth: number;
-  onMenuClick: () => void;
-  showMenuButton: boolean;
+  drawerWidth?: number;
+  onMenuClick?: () => void;
+  showMenuButton?: boolean;
+  isPublic?: boolean;
 }) => {
   const { t, i18n } = useTranslation();
   const { account } = useAuth();
@@ -32,7 +37,12 @@ const Header = ({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [userAnchor, setUserAnchor] = useState<null | HTMLElement>(null);
 
+  const isAuthenticated = !!account;
   const displayName = account?.name || "Komatsu User";
+
+  const handleLogin = () => {
+    initiateLogin();
+  };
 
   return (
     <AppBar
@@ -42,12 +52,12 @@ const Header = ({
       sx={{
         backdropFilter: "blur(16px)",
         borderBottom: "1px solid rgba(15, 26, 34, 0.08)",
-        ml: { lg: `${drawerWidth}px` }
+        ml: isPublic ? 0 : { lg: `${drawerWidth}px` }
       }}
     >
       <Toolbar sx={{ justifyContent: "space-between" }}>
         <Stack direction="row" spacing={2} alignItems="center">
-          {showMenuButton && (
+          {showMenuButton && onMenuClick && (
             <IconButton onClick={onMenuClick} aria-label="Open navigation">
               <MenuIcon />
             </IconButton>
@@ -87,28 +97,43 @@ const Header = ({
               Japanese
             </MenuItem>
           </Menu>
-          <Box display="flex" alignItems="center" gap={1}>
-            <IconButton
-              onClick={(event) => setUserAnchor(event.currentTarget)}
-              aria-label="Open user menu"
-              size="small"
+          
+          {isAuthenticated ? (
+            <>
+              <Box display="flex" alignItems="center" gap={1}>
+                <IconButton
+                  onClick={(event) => setUserAnchor(event.currentTarget)}
+                  aria-label="Open user menu"
+                  size="small"
+                >
+                  <Avatar sx={{ bgcolor: "primary.main" }}>{displayName.charAt(0)}</Avatar>
+                </IconButton>
+                <Typography variant="body2" fontWeight={600}>
+                  {displayName}
+                </Typography>
+              </Box>
+              <Menu anchorEl={userAnchor} open={Boolean(userAnchor)} onClose={() => setUserAnchor(null)}>
+                <MenuItem
+                  onClick={() => {
+                    setUserAnchor(null);
+                    logout();
+                  }}
+                >
+                  Sign out
+                </MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<LoginIcon />}
+              onClick={handleLogin}
+              aria-label="Login"
             >
-              <Avatar sx={{ bgcolor: "primary.main" }}>{displayName.charAt(0)}</Avatar>
-            </IconButton>
-            <Typography variant="body2" fontWeight={600}>
-              {displayName}
-            </Typography>
-          </Box>
-          <Menu anchorEl={userAnchor} open={Boolean(userAnchor)} onClose={() => setUserAnchor(null)}>
-            <MenuItem
-              onClick={() => {
-                setUserAnchor(null);
-                logout();
-              }}
-            >
-              Sign out
-            </MenuItem>
-          </Menu>
+              {t("login", "Login")}
+            </Button>
+          )}
         </Stack>
       </Toolbar>
     </AppBar>

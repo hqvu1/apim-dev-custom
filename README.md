@@ -135,7 +135,14 @@ npm run test:coverage
 npm run test:ui
 ```
 
-**Documentation**:
+## Documentation
+
+### Project Documentation
+- [Public Landing Page Setup](docs/PUBLIC_LANDING_PAGE_SETUP.md) - Implementation details for public home page
+- [Infosys APIM Integration Guide](docs/INFOSYS_APIM_INTEGRATION_GUIDE.md) - Complete guide for APIM integration
+- [APIM Integration Checklist](docs/APIM_INTEGRATION_CHECKLIST.md) - Step-by-step integration tasks
+
+### Deployment & CI/CD
 - [GitHub Actions Setup Guide](.github/GITHUB_ACTIONS_SETUP.md) - Complete CI/CD configuration
 - [Azure Deployment Guide](./azure/README.md) - Manual deployment and infrastructure details
 - [CI/CD Comparison](.github/CI_CD_COMPARISON.md) - Architecture comparison and design decisions
