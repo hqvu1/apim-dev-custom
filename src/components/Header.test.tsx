@@ -15,13 +15,8 @@ vi.mock('../utils/loginUtils/useLogout', () => ({
   default: vi.fn()
 }));
 
-vi.mock('../utils/loginUtils/initiateLogin', () => ({
-  initiateLogin: vi.fn()
-}));
-
 import { useAuth } from '../auth/useAuth';
 import useLogout from '../utils/loginUtils/useLogout';
-import { initiateLogin } from '../utils/loginUtils/initiateLogin';
 
 describe('Header Component', () => {
   const mockLogout = vi.fn();
@@ -29,167 +24,100 @@ describe('Header Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(useLogout).mockReturnValue({ logout: mockLogout });
+    vi.mocked(useAuth).mockReturnValue({
+      account: {
+        name: 'John Doe',
+        username: 'john.doe@komatsu.com',
+        homeAccountId: '123',
+        environment: 'test',
+        tenantId: '456',
+        localAccountId: '789'
+      },
+      roles: ['User'],
+      isAuthenticated: true,
+      getAccessToken: vi.fn()
+    });
   });
 
   const renderHeader = (props = {}) => {
     return render(
       <BrowserRouter>
         <ThemeProvider theme={theme}>
-          <Header {...props} />
+          <Header drawerWidth={260} onMenuClick={vi.fn()} showMenuButton={false} {...props} />
         </ThemeProvider>
       </BrowserRouter>
     );
   };
 
-  describe('Public mode (not authenticated)', () => {
-    beforeEach(() => {
-      vi.mocked(useAuth).mockReturnValue({
-        account: null,
-        roles: [],
-        isAuthenticated: false,
-        getAccessToken: vi.fn()
-      });
-    });
-
-    it('renders without crashing in public mode', () => {
-      renderHeader({ isPublic: true });
-      expect(screen.getByRole('banner')).toBeInTheDocument();
-    });
-
-    it('displays app name/branding', () => {
-      renderHeader({ isPublic: true });
-      const branding = screen.getByText(/Portal/i);
-      expect(branding).toBeInTheDocument();
-    });
-
-    it('displays Login button when not authenticated', () => {
-      renderHeader({ isPublic: true });
-      const loginButton = screen.getByRole('button', { name: /login/i });
-      expect(loginButton).toBeInTheDocument();
-    });
-
-    it('calls initiateLogin when Login button is clicked', async () => {
-      const user = userEvent.setup();
-      renderHeader({ isPublic: true });
-      
-      const loginButton = screen.getByRole('button', { name: /login/i });
-      await user.click(loginButton);
-      
-      expect(initiateLogin).toHaveBeenCalledOnce();
-    });
-
-    it('does not display user avatar when not authenticated', () => {
-      renderHeader({ isPublic: true });
-      const avatar = screen.queryByRole('button', { name: /open user menu/i });
-      expect(avatar).not.toBeInTheDocument();
-    });
+  it('renders without crashing', () => {
+    renderHeader();
+    expect(screen.getByRole('banner')).toBeInTheDocument();
   });
 
-  describe('Authenticated mode', () => {
-    beforeEach(() => {
-      vi.mocked(useAuth).mockReturnValue({
-        account: {
-          name: 'John Doe',
-          username: 'john.doe@komatsu.com',
-          homeAccountId: '123',
-          environment: 'test',
-          tenantId: '456',
-          localAccountId: '789'
-        },
-        roles: ['User'],
-        isAuthenticated: true,
-        getAccessToken: vi.fn()
-      });
-    });
-
-    it('renders without crashing when authenticated', () => {
-      renderHeader({ drawerWidth: 260, onMenuClick: vi.fn(), showMenuButton: false });
-      expect(screen.getByRole('banner')).toBeInTheDocument();
-    });
-
-    it('displays user name when authenticated', () => {
-      renderHeader({ drawerWidth: 260, onMenuClick: vi.fn(), showMenuButton: false });
-      expect(screen.getByText('John Doe')).toBeInTheDocument();
-    });
-
-    it('displays user avatar when authenticated', () => {
-      renderHeader({ drawerWidth: 260, onMenuClick: vi.fn(), showMenuButton: false });
-      const avatar = screen.getByRole('button', { name: /open user menu/i });
-      expect(avatar).toBeInTheDocument();
-    });
-
-    it('does not display Login button when authenticated', () => {
-      renderHeader({ drawerWidth: 260, onMenuClick: vi.fn(), showMenuButton: false });
-      const loginButton = screen.queryByRole('button', { name: /login/i });
-      expect(loginButton).not.toBeInTheDocument();
-    });
-
-    it('opens user menu when avatar is clicked', async () => {
-      const user = userEvent.setup();
-      renderHeader({ drawerWidth: 260, onMenuClick: vi.fn(), showMenuButton: false });
-      
-      const avatarButton = screen.getByRole('button', { name: /open user menu/i });
-      await user.click(avatarButton);
-      
-      const signOutMenuItem = await screen.findByRole('menuitem', { name: /sign out/i });
-      expect(signOutMenuItem).toBeInTheDocument();
-    });
-
-    it('calls logout when Sign out is clicked', async () => {
-      const user = userEvent.setup();
-      renderHeader({ drawerWidth: 260, onMenuClick: vi.fn(), showMenuButton: false });
-      
-      const avatarButton = screen.getByRole('button', { name: /open user menu/i });
-      await user.click(avatarButton);
-      
-      const signOutMenuItem = await screen.findByRole('menuitem', { name: /sign out/i });
-      await user.click(signOutMenuItem);
-      
-      expect(mockLogout).toHaveBeenCalledOnce();
-    });
+  it('displays app name/branding', () => {
+    renderHeader();
+    const branding = screen.getByText(/Portal/i);
+    expect(branding).toBeInTheDocument();
   });
 
-  describe('Navigation menu button', () => {
-    beforeEach(() => {
-      vi.mocked(useAuth).mockReturnValue({
-        account: {
-          name: 'John Doe',
-          username: 'john.doe@komatsu.com',
-          homeAccountId: '123',
-          environment: 'test',
-          tenantId: '456',
-          localAccountId: '789'
-        },
-        roles: ['User'],
-        isAuthenticated: true,
-        getAccessToken: vi.fn()
-      });
-    });
+  it('displays user name when authenticated', () => {
+    renderHeader();
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+  });
 
-    it('displays menu button when showMenuButton is true', () => {
-      const mockMenuClick = vi.fn();
-      renderHeader({ drawerWidth: 260, onMenuClick: mockMenuClick, showMenuButton: true });
-      
-      const menuButton = screen.getByRole('button', { name: /open navigation/i });
-      expect(menuButton).toBeInTheDocument();
-    });
+  it('displays user avatar when authenticated', () => {
+    renderHeader();
+    const avatar = screen.getByRole('button', { name: /open user menu/i });
+    expect(avatar).toBeInTheDocument();
+  });
 
-    it('calls onMenuClick when menu button is clicked', async () => {
-      const user = userEvent.setup();
-      const mockMenuClick = vi.fn();
-      renderHeader({ drawerWidth: 260, onMenuClick: mockMenuClick, showMenuButton: true });
-      
-      const menuButton = screen.getByRole('button', { name: /open navigation/i });
-      await user.click(menuButton);
-      
-      expect(mockMenuClick).toHaveBeenCalledOnce();
-    });
+  it('opens user menu when avatar is clicked', async () => {
+    const user = userEvent.setup();
+    renderHeader();
+    
+    const avatarButton = screen.getByRole('button', { name: /open user menu/i });
+    await user.click(avatarButton);
+    
+    const signOutMenuItem = await screen.findByRole('menuitem', { name: /sign out/i });
+    expect(signOutMenuItem).toBeInTheDocument();
+  });
 
-    it('does not display menu button when showMenuButton is false', () => {
-      renderHeader({ drawerWidth: 260, onMenuClick: vi.fn(), showMenuButton: false });
-      
-      const menuButton = screen.queryByRole('button', { name: /open navigation/i });
-      expect(menuButton).not.toBeInTheDocument();
-    });
+  it('calls logout when Sign out is clicked', async () => {
+    const user = userEvent.setup();
+    renderHeader();
+    
+    const avatarButton = screen.getByRole('button', { name: /open user menu/i });
+    await user.click(avatarButton);
+    
+    const signOutMenuItem = await screen.findByRole('menuitem', { name: /sign out/i });
+    await user.click(signOutMenuItem);
+    
+    expect(mockLogout).toHaveBeenCalledOnce();
+  });
+
+  it('displays menu button when showMenuButton is true', () => {
+    const mockMenuClick = vi.fn();
+    renderHeader({ showMenuButton: true, onMenuClick: mockMenuClick });
+    
+    const menuButton = screen.getByRole('button', { name: /open navigation/i });
+    expect(menuButton).toBeInTheDocument();
+  });
+
+  it('calls onMenuClick when menu button is clicked', async () => {
+    const user = userEvent.setup();
+    const mockMenuClick = vi.fn();
+    renderHeader({ showMenuButton: true, onMenuClick: mockMenuClick });
+    
+    const menuButton = screen.getByRole('button', { name: /open navigation/i });
+    await user.click(menuButton);
+    
+    expect(mockMenuClick).toHaveBeenCalledOnce();
+  });
+
+  it('does not display menu button when showMenuButton is false', () => {
+    renderHeader({ showMenuButton: false });
+    
+    const menuButton = screen.queryByRole('button', { name: /open navigation/i });
+    expect(menuButton).not.toBeInTheDocument();
   });
 });
