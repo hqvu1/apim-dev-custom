@@ -10,33 +10,21 @@ import { theme } from "./theme";
 import "./styles.css";
 import "./i18n";
 import App from "./App";
+import { initiateLogin } from "./utils/loginUtils/initiateLogin";
 
 (async () => {
-  // Check for tenant ID from URL or localStorage without forcing redirect
-  let tenantId = localStorage.getItem("tenantId");
-  
-  const url = new URL(window.location.href);
-  const queryParams = url.searchParams;
-  const hashParams = new URLSearchParams(url.hash?.replace(/^#/, ""));
-  
-  const incomingTenant = queryParams.get("tenantId") ?? hashParams.get("tenantId");
-  const incomingEmail = queryParams.get("email") ?? hashParams.get("email");
-  
-  if (!tenantId && (incomingTenant || incomingEmail)) {
-    if (incomingTenant) {
-      localStorage.setItem("tenantId", incomingTenant);
-      tenantId = incomingTenant;
-    }
-    if (incomingEmail) {
-      localStorage.setItem("email", incomingEmail);
-    }
-    window.history.replaceState({}, "", url.origin + url.pathname);
+  const tenantId = initiateLogin();
+  if (!tenantId) {
+    const root = ReactDOM.createRoot(document.getElementById("root")!);
+    root.render(
+      <div style={{ padding: "1rem", fontFamily: "system-ui, Segoe UI, Arial, sans-serif" }}>
+        Redirecting to login...
+      </div>
+    );
+    return;
   }
 
-  // Use default tenant ID if none is found (allows public access)
-  const effectiveTenantId = tenantId || "common";
-
-  const msalConfig = getMsalConfig(effectiveTenantId);
+  const msalConfig = getMsalConfig(tenantId);
   const pca = new PublicClientApplication(msalConfig);
   await pca.initialize();
 
