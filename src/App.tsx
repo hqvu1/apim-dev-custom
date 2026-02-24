@@ -18,8 +18,20 @@ import Register from "./pages/Register";
 import Support from "./pages/Support";
 import RoleGate from "./components/RoleGate";
 
+// Runtime config helper
+const getRuntimeConfig = () => {
+  if (typeof window !== 'undefined' && (window as any).__RUNTIME_CONFIG__) {
+    return (window as any).__RUNTIME_CONFIG__;
+  }
+  return {};
+};
+
 const App = () => {
-  const isPublicHomePage = import.meta.env.VITE_PUBLIC_HOME_PAGE === "true";
+  // Check runtime config first, fallback to build-time env
+  const runtimeConfig = getRuntimeConfig();
+  const isPublicHomePage = 
+    runtimeConfig.PUBLIC_HOME_PAGE === 'true' || 
+    import.meta.env.VITE_PUBLIC_HOME_PAGE === "true";
 
   return (
     <ErrorBoundary>

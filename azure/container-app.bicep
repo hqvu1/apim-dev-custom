@@ -261,6 +261,10 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
               value: publicHomePage
             }
             {
+              name: 'PUBLIC_HOME_PAGE'
+              value: publicHomePage
+            }
+            {
               name: 'VITE_PORTAL_API_BASE'
               value: portalApiBase
             }
