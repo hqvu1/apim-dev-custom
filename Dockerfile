@@ -52,8 +52,12 @@ FROM nginx:alpine AS runtime
 # Install security updates
 RUN apk update && apk upgrade && apk add --no-cache dumb-init
 
-# Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx configuration template
+COPY nginx.conf /etc/nginx/conf.d/default.conf.template
+
+# Copy entrypoint to render template with env vars
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 # Copy built frontend from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
@@ -79,7 +83,7 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 EXPOSE 8080
 
 # Use dumb-init for proper signal handling in containers
-ENTRYPOINT ["dumb-init", "--"]
+ENTRYPOINT ["dumb-init", "--", "/docker-entrypoint.sh"]
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
