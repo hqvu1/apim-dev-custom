@@ -15,7 +15,8 @@ RUN npm ci --frozen-lockfile --prefer-offline --no-audit
 # Copy source code (including public folder)
 COPY . .
 
-# Accept build arguments for Entra ID and Portal configuration
+# Build arguments are now OPTIONAL - .env.production is used by default
+# Only pass --build-arg if you need to override specific values
 ARG VITE_ENTRA_CLIENT_ID
 ARG VITE_EXTERNAL_TENANT_ID
 ARG VITE_WORKFORCE_TENANT_ID
@@ -28,6 +29,11 @@ ARG VITE_PUBLIC_HOME_PAGE
 ARG VITE_PORTAL_API_BASE
 ARG VITE_PORTAL_API_SCOPE
 ARG VITE_DEFAULT_LOCALE
+ARG VITE_AEM_LOGOUT_URL
+ARG VITE_CDN_ICON
+ARG VITE_BASE_URL
+
+# Set as ENV only if provided (otherwise Vite uses .env.production)
 ARG VITE_AEM_LOGOUT_URL
 ARG VITE_CDN_ICON
 ARG VITE_BASE_URL

@@ -22,10 +22,17 @@ test-results/
 playwright-report/
 .vitest/
 
-# --- Environment files (commit a sample instead) ---
+# --- Environment files ---
+# Local development files (gitignored)
 .env
-.env.*
+.env.local
+.env.*.local
+
+# Environment-specific configs (committed to git)
+!.env.production
+!.env.staging
 !.env.example
+
 .npmrc
 !.npmrc.example
 
