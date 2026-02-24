@@ -99,11 +99,21 @@ if (Test-Path ".env") {
 
 # Build the image with build args
 $buildArgs = @(
-    "--build-arg", "VITE_AZURE_CLIENT_ID=$env:VITE_AZURE_CLIENT_ID",
-    "--build-arg", "VITE_AZURE_AUTHORITY=$env:VITE_AZURE_AUTHORITY",
-    "--build-arg", "VITE_AZURE_REDIRECT_URI=$env:VITE_AZURE_REDIRECT_URI",
-    "--build-arg", "VITE_AZURE_POST_LOGOUT_REDIRECT_URI=$env:VITE_AZURE_POST_LOGOUT_REDIRECT_URI",
-    "--build-arg", "VITE_API_BASE_URL=$env:VITE_API_BASE_URL"
+    "--build-arg", "VITE_ENTRA_CLIENT_ID=$env:VITE_ENTRA_CLIENT_ID",
+    "--build-arg", "VITE_EXTERNAL_TENANT_ID=$env:VITE_EXTERNAL_TENANT_ID",
+    "--build-arg", "VITE_WORKFORCE_TENANT_ID=$env:VITE_WORKFORCE_TENANT_ID",
+    "--build-arg", "VITE_CIAM_HOST=$env:VITE_CIAM_HOST",
+    "--build-arg", "VITE_KPS_URL=$env:VITE_KPS_URL",
+    "--build-arg", "VITE_LOGIN_SCOPES=$env:VITE_LOGIN_SCOPES",
+    "--build-arg", "VITE_LOGOUT_MODE=$env:VITE_LOGOUT_MODE",
+    "--build-arg", "VITE_USE_MOCK_AUTH=$env:VITE_USE_MOCK_AUTH",
+    "--build-arg", "VITE_PUBLIC_HOME_PAGE=$env:VITE_PUBLIC_HOME_PAGE",
+    "--build-arg", "VITE_PORTAL_API_BASE=$env:VITE_PORTAL_API_BASE",
+    "--build-arg", "VITE_PORTAL_API_SCOPE=$env:VITE_PORTAL_API_SCOPE",
+    "--build-arg", "VITE_DEFAULT_LOCALE=$env:VITE_DEFAULT_LOCALE",
+    "--build-arg", "VITE_AEM_LOGOUT_URL=$env:VITE_AEM_LOGOUT_URL",
+    "--build-arg", "VITE_CDN_ICON=$env:VITE_CDN_ICON",
+    "--build-arg", "VITE_BASE_URL=$env:VITE_BASE_URL"
 )
 
 docker build -t $ContainerImage -f Dockerfile . @buildArgs

@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AppShell from "./components/AppShell";
 import ErrorBoundary from "./components/ErrorBoundary";
 import PrivateRoute from "./components/PrivateRoute";
+import PublicLayout from "./components/PublicLayout";
 import SsoLogoutHandler from "./utils/loginUtils/SsoLogoutHandler";
 import AccessDenied from "./pages/AccessDenied";
 import Admin from "./pages/Admin";
@@ -18,14 +19,24 @@ import Support from "./pages/Support";
 import RoleGate from "./components/RoleGate";
 
 const App = () => {
+  const isPublicHomePage = import.meta.env.VITE_PUBLIC_HOME_PAGE === "true";
+
   return (
     <ErrorBoundary>
       <BrowserRouter>
         <Routes>
           <Route path="sso-logout" element={<SsoLogoutHandler />} />
+          
+          {/* Public home page for demos (when enabled) */}
+          {isPublicHomePage && (
+            <Route element={<PublicLayout />}>
+              <Route index element={<Home />} />
+            </Route>
+          )}
+          
           <Route element={<PrivateRoute />}>
             <Route element={<AppShell />}>
-              <Route index element={<Home />} />
+              {!isPublicHomePage && <Route index element={<Home />} />}
               <Route path="apis" element={<ApiCatalog />} />
               <Route path="apis/:apiId" element={<ApiDetails />} />
               <Route path="apis/:apiId/try" element={<ApiTryIt />} />
@@ -44,6 +55,7 @@ const App = () => {
               />
             </Route>
           </Route>
+          
           <Route path="access-denied" element={<AccessDenied />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

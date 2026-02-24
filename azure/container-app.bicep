@@ -12,20 +12,57 @@ param appName string = 'komatsu-apim-portal'
 @description('Container image')
 param containerImage string = 'komatsu-apim-portal:latest'
 
-@description('Azure AD Client ID')
-param azureClientId string
+@description('Microsoft Entra ID Client ID')
+param entraClientId string
 
-@description('Azure AD Authority (Tenant ID)')
-param azureAuthority string
+@description('External (CIAM) Tenant ID')
+param externalTenantId string
 
-@description('Redirect URI after login')
-param redirectUri string
+@description('Workforce Tenant ID')
+param workforceTenantId string
 
-@description('Post Logout Redirect URI')
-param postLogoutRedirectUri string
+@description('CIAM Host')
+param ciamHost string = 'kltdexternaliddev.ciamlogin.com'
 
-@description('API Base URL (APIM Gateway URL)')
-param apiBaseUrl string
+@description('Komatsu Portal System URL')
+param kpsUrl string
+
+@description('OAuth Login Scopes')
+param loginScopes string = 'User.Read'
+
+@description('Logout Mode')
+@allowed(['msal-plus-bff', 'msal-only', 'direct'])
+param logoutMode string = 'msal-plus-bff'
+
+@description('Use mock authentication')
+param useMockAuth string = 'false'
+
+@description('Allow public home page')
+param publicHomePage string = 'false'
+
+@description('Portal API Base URL (APIM Gateway URL)')
+param portalApiBase string
+
+@description('Portal API OAuth Scope')
+param portalApiScope string = 'api://komatsu-apim-portal/.default'
+
+@description('Default Locale')
+param defaultLocale string = 'en'
+
+@description('AEM Logout URL (optional)')
+param aemLogoutUrl string = ''
+
+@description('CDN Icon URL (optional)')
+param cdnIcon string = ''
+
+@description('Base URL for redirects (optional)')
+param baseUrl string = ''
+
+@description('Portal API Backend URL for Nginx proxy')
+param portalApiBackendUrl string
+
+@description('Azure Container Registry name (optional, auto-generated if not provided)')
+param acrNameOverride string = ''
 
 // Variables
 var resourcePrefix = '${appName}-${environment}'
@@ -33,7 +70,7 @@ var containerAppName = '${resourcePrefix}-ca'
 var containerAppEnvName = '${resourcePrefix}-env'
 var logAnalyticsName = '${resourcePrefix}-logs'
 var appInsightsName = '${resourcePrefix}-ai'
-var acrName = replace('${resourcePrefix}acr', '-', '')
+var acrName = !empty(acrNameOverride) ? acrNameOverride : replace('${resourcePrefix}acr', '-', '')
 
 var commonTags = {
   Environment: environment
@@ -163,8 +200,12 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
           value: acr.listCredentials().passwords[0].value
         }
         {
-          name: 'azure-client-id'
-          value: azureClientId
+          name: 'entra-client-id'
+          value: entraClientId
+        }
+        {
+          name: 'portal-api-scope'
+          value: portalApiScope
         }
         {
           name: 'app-insights-key'
@@ -184,24 +225,68 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
           }
           env: [
             {
-              name: 'VITE_AZURE_CLIENT_ID'
-              secretRef: 'azure-client-id'
+              name: 'VITE_ENTRA_CLIENT_ID'
+              secretRef: 'entra-client-id'
             }
             {
-              name: 'VITE_AZURE_AUTHORITY'
-              value: azureAuthority
+              name: 'VITE_EXTERNAL_TENANT_ID'
+              value: externalTenantId
             }
             {
-              name: 'VITE_AZURE_REDIRECT_URI'
-              value: redirectUri
+              name: 'VITE_WORKFORCE_TENANT_ID'
+              value: workforceTenantId
             }
             {
-              name: 'VITE_AZURE_POST_LOGOUT_REDIRECT_URI'
-              value: postLogoutRedirectUri
+              name: 'VITE_CIAM_HOST'
+              value: ciamHost
             }
             {
-              name: 'VITE_API_BASE_URL'
-              value: apiBaseUrl
+              name: 'VITE_KPS_URL'
+              value: kpsUrl
+            }
+            {
+              name: 'VITE_LOGIN_SCOPES'
+              value: loginScopes
+            }
+            {
+              name: 'VITE_LOGOUT_MODE'
+              value: logoutMode
+            }
+            {
+              name: 'VITE_USE_MOCK_AUTH'
+              value: useMockAuth
+            }
+            {
+              name: 'VITE_PUBLIC_HOME_PAGE'
+              value: publicHomePage
+            }
+            {
+              name: 'VITE_PORTAL_API_BASE'
+              value: portalApiBase
+            }
+            {
+              name: 'VITE_PORTAL_API_SCOPE'
+              secretRef: 'portal-api-scope'
+            }
+            {
+              name: 'VITE_DEFAULT_LOCALE'
+              value: defaultLocale
+            }
+            {
+              name: 'VITE_AEM_LOGOUT_URL'
+              value: aemLogoutUrl
+            }
+            {
+              name: 'VITE_CDN_ICON'
+              value: cdnIcon
+            }
+            {
+              name: 'VITE_BASE_URL'
+              value: baseUrl
+            }
+            {
+              name: 'PORTAL_API_BACKEND_URL'
+              value: portalApiBackendUrl
             }
             {
               name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'

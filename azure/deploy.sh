@@ -94,11 +94,21 @@ fi
 
 # Build the image with build args
 docker build -t "$CONTAINER_IMAGE" \
-    --build-arg "VITE_AZURE_CLIENT_ID=${VITE_AZURE_CLIENT_ID}" \
-    --build-arg "VITE_AZURE_AUTHORITY=${VITE_AZURE_AUTHORITY}" \
-    --build-arg "VITE_AZURE_REDIRECT_URI=${VITE_AZURE_REDIRECT_URI}" \
-    --build-arg "VITE_AZURE_POST_LOGOUT_REDIRECT_URI=${VITE_AZURE_POST_LOGOUT_REDIRECT_URI}" \
-    --build-arg "VITE_API_BASE_URL=${VITE_API_BASE_URL}" \
+    --build-arg "VITE_ENTRA_CLIENT_ID=${VITE_ENTRA_CLIENT_ID}" \
+    --build-arg "VITE_EXTERNAL_TENANT_ID=${VITE_EXTERNAL_TENANT_ID}" \
+    --build-arg "VITE_WORKFORCE_TENANT_ID=${VITE_WORKFORCE_TENANT_ID}" \
+    --build-arg "VITE_CIAM_HOST=${VITE_CIAM_HOST}" \
+    --build-arg "VITE_KPS_URL=${VITE_KPS_URL}" \
+    --build-arg "VITE_LOGIN_SCOPES=${VITE_LOGIN_SCOPES}" \
+    --build-arg "VITE_LOGOUT_MODE=${VITE_LOGOUT_MODE}" \
+    --build-arg "VITE_USE_MOCK_AUTH=${VITE_USE_MOCK_AUTH}" \
+    --build-arg "VITE_PUBLIC_HOME_PAGE=${VITE_PUBLIC_HOME_PAGE}" \
+    --build-arg "VITE_PORTAL_API_BASE=${VITE_PORTAL_API_BASE}" \
+    --build-arg "VITE_PORTAL_API_SCOPE=${VITE_PORTAL_API_SCOPE}" \
+    --build-arg "VITE_DEFAULT_LOCALE=${VITE_DEFAULT_LOCALE}" \
+    --build-arg "VITE_AEM_LOGOUT_URL=${VITE_AEM_LOGOUT_URL}" \
+    --build-arg "VITE_CDN_ICON=${VITE_CDN_ICON}" \
+    --build-arg "VITE_BASE_URL=${VITE_BASE_URL}" \
     -f Dockerfile .
 
 echo "✅ Docker image built successfully"

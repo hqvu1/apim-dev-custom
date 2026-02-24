@@ -14,20 +14,53 @@
     "containerImage": {
       "value": "komatsu-apim-portal:staging"
     },
-    "azureClientId": {
-      "value": "YOUR_AZURE_AD_CLIENT_ID"
+    "entraClientId": {
+      "value": "YOUR_ENTRA_CLIENT_ID"
     },
-    "azureAuthority": {
-      "value": "https://login.microsoftonline.com/YOUR_TENANT_ID"
+    "externalTenantId": {
+      "value": "YOUR_EXTERNAL_TENANT_ID"
     },
-    "redirectUri": {
-      "value": "https://YOUR_APP_URL/auth/callback"
+    "workforceTenantId": {
+      "value": "YOUR_WORKFORCE_TENANT_ID"
     },
-    "postLogoutRedirectUri": {
-      "value": "https://YOUR_APP_URL"
+    "ciamHost": {
+      "value": "kltdexternaliddev.ciamlogin.com"
     },
-    "apiBaseUrl": {
-      "value": "https://YOUR_APIM_GATEWAY_URL"
+    "kpsUrl": {
+      "value": "https://login-uat.komatsu.com/spa"
+    },
+    "loginScopes": {
+      "value": "User.Read"
+    },
+    "logoutMode": {
+      "value": "msal-plus-bff"
+    },
+    "useMockAuth": {
+      "value": "false"
+    },
+    "publicHomePage": {
+      "value": "false"
+    },
+    "portalApiBase": {
+      "value": "https://staging-apim.developer.azure-api.net"
+    },
+    "portalApiScope": {
+      "value": "api://komatsu-apim-portal/.default"
+    },
+    "defaultLocale": {
+      "value": "en"
+    },
+    "aemLogoutUrl": {
+      "value": ""
+    },
+    "cdnIcon": {
+      "value": ""
+    },
+    "baseUrl": {
+      "value": ""
+    },
+    "portalApiBackendUrl": {
+      "value": "https://staging-apim.developer.azure-api.net"
     }
   }
 }

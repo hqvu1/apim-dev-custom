@@ -15,6 +15,7 @@ React + Vite SPA scaffold for the Komatsu API Marketplace portal UI.
 - The app expects a Portal API base at `VITE_PORTAL_API_BASE` (default `/api`).
 - Login uses the KPS tenant-selection flow before MSAL redirects.
 - `VITE_USE_MOCK_AUTH` allows local UI work without Entra ID/KPS.
+- `VITE_PUBLIC_HOME_PAGE` makes the home page publicly accessible without authentication (useful for demos).
 
 ## Auth Flow
 
@@ -33,6 +34,8 @@ React + Vite SPA scaffold for the Komatsu API Marketplace portal UI.
 - `VITE_LOGOUT_MODE`: `client-only`, `msal-only`, `full`, `msal-plus-bff`.
 - `VITE_AEM_LOGOUT_URL` or `VITE_CDN_ICON`: SLO helper for AEM logout.
 - `VITE_BASE_URL`: Base for post-logout redirect (defaults to origin).
+- `VITE_USE_MOCK_AUTH`: Bypass all authentication (for local development).
+- `VITE_PUBLIC_HOME_PAGE`: Allow public access to home page without authentication (for demos).
 
 ## Troubleshooting Login
 

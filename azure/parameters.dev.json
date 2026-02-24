@@ -6,7 +6,7 @@
       "value": "dev"
     },
     "location": {
-      "value": "East US 2"
+      "value": "eastus"
     },
     "appName": {
       "value": "komatsu-apim-portal"
@@ -14,20 +14,56 @@
     "containerImage": {
       "value": "komatsu-apim-portal:dev"
     },
-    "azureClientId": {
-      "value": "YOUR_AZURE_AD_CLIENT_ID"
+    "entraClientId": {
+      "value": "2ba49c18-f3b7-41e8-b1a8-15b95f3e662a"
     },
-    "azureAuthority": {
-      "value": "https://login.microsoftonline.com/YOUR_TENANT_ID"
+    "externalTenantId": {
+      "value": "511e2453-090d-480c-abeb-d2d95388a675"
     },
-    "redirectUri": {
-      "value": "https://YOUR_APP_URL/auth/callback"
+    "workforceTenantId": {
+      "value": "58be8688-6625-4e52-80d8-c17f3a9ae08a"
     },
-    "postLogoutRedirectUri": {
-      "value": "https://YOUR_APP_URL"
+    "ciamHost": {
+      "value": "kltdexternaliddev.ciamlogin.com"
     },
-    "apiBaseUrl": {
-      "value": "https://YOUR_APIM_GATEWAY_URL"
+    "kpsUrl": {
+      "value": "https://login-uat.komatsu.com/spa"
+    },
+    "loginScopes": {
+      "value": "User.Read"
+    },
+    "logoutMode": {
+      "value": "msal-plus-bff"
+    },
+    "useMockAuth": {
+      "value": "false"
+    },
+    "publicHomePage": {
+      "value": "false"
+    },
+    "portalApiBase": {
+      "value": "https://d-apim.developer.azure-api.net"
+    },
+    "portalApiScope": {
+      "value": "api://komatsu-apim-portal/.default"
+    },
+    "defaultLocale": {
+      "value": "en"
+    },
+    "aemLogoutUrl": {
+      "value": ""
+    },
+    "cdnIcon": {
+      "value": ""
+    },
+    "baseUrl": {
+      "value": ""
+    },
+    "portalApiBackendUrl": {
+      "value": "https://d-apim.developer.azure-api.net"
+    },
+    "acrNameOverride": {
+      "value": "kapimdevacr"
     }
   }
 }
