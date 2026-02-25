@@ -5,26 +5,30 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
   /**
-   * In local dev the SPA calls /api/... which Vite proxies to the APIM
-   * data-plane (or a local BFF).  Set VITE_PORTAL_API_BASE in your .env file:
+   * In local dev the SPA calls /api/... which Vite proxies to the BFF server.
+   * Set VITE_BFF_URL in your .env file:
    *
-   *   VITE_PORTAL_API_BASE=https://<your-instance>.azure-api.net
+   *   VITE_BFF_URL=http://localhost:3001
    *
    * The proxy strips the /api prefix so the target URL path stays clean.
-   * The BFF (or APIM policy) is responsible for injecting Ocp-Apim-Subscription-Key.
+   * The BFF (or APIM policy) is responsible for authentication.
    */
-  const apimTarget = env.VITE_PORTAL_API_BASE ?? "http://localhost:3001";
+  const bffTarget = env.VITE_BFF_URL || "http://localhost:3001";
 
   return {
     plugins: [react()],
+    // Enable source maps for debugging
+    build: {
+      sourcemap: true,
+    },
     server: {
       port: 5173,
       proxy: {
         "/api": {
-          target: apimTarget,
+          target: bffTarget,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ""),
-          secure: apimTarget.startsWith("https"),
+          secure: bffTarget.startsWith("https"),
         },
       },
     },

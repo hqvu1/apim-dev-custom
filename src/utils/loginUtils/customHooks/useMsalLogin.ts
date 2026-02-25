@@ -13,8 +13,12 @@ const parseScopes = () => {
 
 const useMsalLogin = () => {
   const { instance, accounts } = useMsal();
+  const useMockAuth = import.meta.env.VITE_USE_MOCK_AUTH === "true";
 
   useEffect(() => {
+    // Skip authentication in mock mode
+    if (useMockAuth) return;
+
     const qp = new URL(window.location.href).searchParams;
     const isLogoutFlow =
       qp.get("action") === "userlogout" ||
@@ -44,7 +48,7 @@ const useMsalLogin = () => {
       .catch(() => {
         sessionStorage.removeItem(marker);
       });
-  }, [instance, accounts.length]);
+  }, [instance, accounts.length, useMockAuth]);
 };
 
 export default useMsalLogin;

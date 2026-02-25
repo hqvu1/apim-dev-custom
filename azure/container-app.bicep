@@ -58,11 +58,26 @@ param cdnIcon string = ''
 @description('Base URL for redirects (optional)')
 param baseUrl string = ''
 
-@description('Portal API Backend URL for Nginx proxy')
+@description('Portal API Backend URL for Nginx proxy / APIM Management URL')
 param portalApiBackendUrl string
+
+@description('Azure Subscription ID for ARM API calls')
+param azureSubscriptionId string
+
+@description('Azure Resource Group containing the APIM instance')
+param azureResourceGroup string
+
+@description('APIM Service Name')
+param apimServiceName string
 
 @description('Azure Container Registry name (optional, auto-generated if not provided)')
 param acrNameOverride string = ''
+
+@description('Existing User-Assigned Managed Identity Resource ID (full resource ID)')
+param existingManagedIdentityId string = ''
+
+@description('Existing User-Assigned Managed Identity Client ID')
+param existingManagedIdentityClientId string = ''
 
 // Variables
 var resourcePrefix = '${appName}-${environment}'
@@ -71,6 +86,9 @@ var containerAppEnvName = '${resourcePrefix}-env'
 var logAnalyticsName = '${resourcePrefix}-logs'
 var appInsightsName = '${resourcePrefix}-ai'
 var acrName = !empty(acrNameOverride) ? acrNameOverride : replace('${resourcePrefix}acr', '-', '')
+
+// Determine if using existing identity
+var useExistingIdentity = !empty(existingManagedIdentityId) && !empty(existingManagedIdentityClientId)
 
 var commonTags = {
   Environment: environment
@@ -163,12 +181,17 @@ resource containerAppEnv 'Microsoft.App/managedEnvironments@2023-05-01' = {
   }
 }
 
-// Container App
+// Container App - Using existing managed identity
 resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
   name: containerAppName
   location: location
   tags: commonTags
-  identity: {
+  identity: useExistingIdentity ? {
+    type: 'SystemAssigned,UserAssigned'
+    userAssignedIdentities: {
+      '${existingManagedIdentityId}': {}
+    }
+  } : {
     type: 'SystemAssigned'
   }
   properties: {
@@ -300,6 +323,34 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
               name: 'NODE_ENV'
               value: 'production'
             }
+            {
+              name: 'BFF_PORT'
+              value: '3001'
+            }
+            {
+              name: 'USE_MOCK_MODE'
+              value: 'false'
+            }
+            {
+              name: 'MANAGED_IDENTITY_CLIENT_ID'
+              value: useExistingIdentity ? existingManagedIdentityClientId : ''
+            }
+            {
+              name: 'AZURE_SUBSCRIPTION_ID'
+              value: azureSubscriptionId
+            }
+            {
+              name: 'AZURE_RESOURCE_GROUP'
+              value: azureResourceGroup
+            }
+            {
+              name: 'APIM_SERVICE_NAME'
+              value: apimServiceName
+            }
+            {
+              name: 'APIM_API_VERSION'
+              value: '2022-08-01'
+            }
           ]
           probes: [
             {
@@ -353,3 +404,4 @@ output containerRegistryLoginServer string = acr.properties.loginServer
 output containerAppName string = containerApp.name
 output appInsightsInstrumentationKey string = appInsights.properties.InstrumentationKey
 output appInsightsConnectionString string = appInsights.properties.ConnectionString
+output managedIdentityClientId string = useExistingIdentity ? existingManagedIdentityClientId : 'system-assigned'

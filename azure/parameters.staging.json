@@ -61,6 +61,15 @@
     },
     "portalApiBackendUrl": {
       "value": "https://staging-apim.developer.azure-api.net"
+    },
+    "azureSubscriptionId": {
+      "value": "YOUR_STAGING_SUBSCRIPTION_ID"
+    },
+    "azureResourceGroup": {
+      "value": "YOUR_STAGING_RESOURCE_GROUP"
+    },
+    "apimServiceName": {
+      "value": "YOUR_STAGING_APIM_SERVICE_NAME"
     }
   }
 }

@@ -61,6 +61,15 @@
     },
     "portalApiBackendUrl": {
       "value": "https://apim.developer.azure-api.net"
+    },
+    "azureSubscriptionId": {
+      "value": "YOUR_PROD_SUBSCRIPTION_ID"
+    },
+    "azureResourceGroup": {
+      "value": "YOUR_PROD_RESOURCE_GROUP"
+    },
+    "apimServiceName": {
+      "value": "YOUR_PROD_APIM_SERVICE_NAME"
     }
   }
 }

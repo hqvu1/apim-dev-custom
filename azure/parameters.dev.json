@@ -42,7 +42,7 @@
       "value": "false"
     },
     "portalApiBase": {
-      "value": "https://d-apim.developer.azure-api.net"
+      "value": "https://demo-apim-feb.azure-api.net"
     },
     "portalApiScope": {
       "value": "api://komatsu-apim-portal/.default"
@@ -60,10 +60,25 @@
       "value": ""
     },
     "portalApiBackendUrl": {
-      "value": "https://d-apim.developer.azure-api.net"
+      "value": "https://demo-apim-feb.azure-api.net"
+    },
+    "azureSubscriptionId": {
+      "value": "121789fa-2321-4e44-8aee-c6f1cd5d7045"
+    },
+    "azureResourceGroup": {
+      "value": "kac_apimarketplace_eus_dev_rg"
+    },
+    "apimServiceName": {
+      "value": "demo-apim-feb"
     },
     "acrNameOverride": {
       "value": "kapimdevacr"
+    },
+    "existingManagedIdentityId": {
+      "value": "/subscriptions/121789fa-2321-4e44-8aee-c6f1cd5d7045/resourceGroups/kac_apimarketplace_eus_dev_rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/demo-apim-managed-identity"
+    },
+    "existingManagedIdentityClientId": {
+      "value": "2c46c615-a962-4ce7-a2f9-cc0610ff2043"
     }
   }
 }

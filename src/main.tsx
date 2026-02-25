@@ -12,16 +12,26 @@ import "./i18n";
 import App from "./App";
 import { initiateLogin } from "./utils/loginUtils/initiateLogin";
 
+const useMockAuth = import.meta.env.VITE_USE_MOCK_AUTH === "true";
+
 (async () => {
-  const tenantId = initiateLogin();
-  if (!tenantId) {
-    const root = ReactDOM.createRoot(document.getElementById("root")!);
-    root.render(
-      <div style={{ padding: "1rem", fontFamily: "system-ui, Segoe UI, Arial, sans-serif" }}>
-        Redirecting to login...
-      </div>
-    );
-    return;
+  let tenantId: string | null;
+
+  if (useMockAuth) {
+    // In mock mode, use external tenant ID for MSAL initialization (won't actually authenticate)
+    tenantId = import.meta.env.VITE_EXTERNAL_TENANT_ID || "mock-tenant";
+  } else {
+    // In production mode, initiate real login flow
+    tenantId = initiateLogin();
+    if (!tenantId) {
+      const root = ReactDOM.createRoot(document.getElementById("root")!);
+      root.render(
+        <div style={{ padding: "1rem", fontFamily: "system-ui, Segoe UI, Arial, sans-serif" }}>
+          Redirecting to login...
+        </div>
+      );
+      return;
+    }
   }
 
   const msalConfig = getMsalConfig(tenantId);
