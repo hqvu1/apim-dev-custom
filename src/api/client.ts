@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import { useAuth } from "../auth/useAuth";
 import {
   ApimApiContract,
@@ -93,21 +94,39 @@ async function request<T>(
 export const usePortalApi = () => {
   const { getAccessToken } = useAuth();
 
-  return {
-    get: <T,>(path: string) => request<T>(getAccessToken, path),
-    post: <T,>(path: string, body: unknown) =>
+  const get = useCallback(
+    <T,>(path: string) => request<T>(getAccessToken, path),
+    [getAccessToken]
+  );
+
+  const post = useCallback(
+    <T,>(path: string, body: unknown) =>
       request<T>(getAccessToken, path, {
         method: "POST",
         body: JSON.stringify(body),
       }),
-    patch: <T,>(path: string, body: unknown) =>
+    [getAccessToken]
+  );
+
+  const patch = useCallback(
+    <T,>(path: string, body: unknown) =>
       request<T>(getAccessToken, path, {
         method: "PATCH",
         body: JSON.stringify(body),
       }),
-    delete: <T,>(path: string) =>
+    [getAccessToken]
+  );
+
+  const del = useCallback(
+    <T,>(path: string) =>
       request<T>(getAccessToken, path, { method: "DELETE" }),
-  };
+    [getAccessToken]
+  );
+
+  return useMemo(
+    () => ({ get, post, patch, delete: del }),
+    [get, post, patch, del]
+  );
 };
 
 // ─── APIM Catalog API ─────────────────────────────────────────────────────────

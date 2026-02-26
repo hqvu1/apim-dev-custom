@@ -1,11 +1,15 @@
 import {
   Box,
+  Chip,
+  CircularProgress,
   Grid,
+  InputAdornment,
   MenuItem,
   Stack,
   TextField,
   Typography
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useMemo, useState } from "react";
 import { usePortalApi } from "../api/client";
 import { apiCatalog } from "../api/mockData";
@@ -17,32 +21,53 @@ import { useToast } from "../components/useToast";
 const ApiCatalog = () => {
   const { get } = usePortalApi();
   const toast = useToast();
-  const [apis, setApis] = useState<ApiSummary[]>(apiCatalog);
+  const [apis, setApis] = useState<ApiSummary[]>([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [plan, setPlan] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const load = async () => {
-      const result = await get<ApiSummary[]>(
-        `/apis?search=${encodeURIComponent(search)}&category=${encodeURIComponent(
-          category
-        )}&plan=${encodeURIComponent(plan)}`
-      );
+    let cancelled = false;
 
-      if (result.data) {
+    const load = async () => {
+      setLoading(true);
+      const result = await get<ApiSummary[]>("/apis");
+
+      if (cancelled) return;
+
+      if (result.data && Array.isArray(result.data)) {
         setApis(result.data);
       } else if (result.error) {
+        setApis(apiCatalog);
         toast.notify("Using local catalog data until the portal API is ready.", "info");
       }
+      setLoading(false);
     };
 
     load();
-  }, [get, search, category, plan, toast]);
+    return () => { cancelled = true; };
+  }, [get, toast]);
+
+  // Dynamically compute unique categories and plans from the data
+  const categories = useMemo(() => {
+    const set = new Set(apis.map((a) => a.category).filter(Boolean));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [apis]);
+
+  const plans = useMemo(() => {
+    const set = new Set(apis.map((a) => a.plan).filter(Boolean));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [apis]);
 
   const filtered = useMemo(() => {
+    const q = search.toLowerCase();
     return apis.filter((api) => {
-      const matchesSearch = api.name.toLowerCase().includes(search.toLowerCase());
+      const matchesSearch =
+        !q ||
+        api.name.toLowerCase().includes(q) ||
+        (api.description || "").toLowerCase().includes(q) ||
+        (api.path || "").toLowerCase().includes(q);
       const matchesCategory = category ? api.category === category : true;
       const matchesPlan = plan ? api.plan === plan : true;
       return matchesSearch && matchesCategory && matchesPlan;
@@ -53,14 +78,24 @@ const ApiCatalog = () => {
     <Box>
       <PageHeader
         title="API Catalog"
-        subtitle="Search the Infosys APIM catalog and filter by category, environment, or plan."
+        subtitle="Discover and explore APIs available on the Komatsu API Management platform."
       />
+
+      {/* Search and filter bar */}
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} mb={3}>
         <TextField
-          label="Search APIs"
+          placeholder="Search by name, description, or path..."
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           fullWidth
+          size="small"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon color="action" />
+              </InputAdornment>
+            )
+          }}
         />
         <TextField
           label="Category"
@@ -68,11 +103,12 @@ const ApiCatalog = () => {
           value={category}
           onChange={(event) => setCategory(event.target.value)}
           sx={{ minWidth: 180 }}
+          size="small"
         >
-          <MenuItem value="">All</MenuItem>
-          <MenuItem value="Warranty">Warranty</MenuItem>
-          <MenuItem value="Equipment">Equipment</MenuItem>
-          <MenuItem value="Commerce">Commerce</MenuItem>
+          <MenuItem value="">All Categories</MenuItem>
+          {categories.map((c) => (
+            <MenuItem key={c} value={c}>{c}</MenuItem>
+          ))}
         </TextField>
         <TextField
           label="Plan"
@@ -80,23 +116,73 @@ const ApiCatalog = () => {
           value={plan}
           onChange={(event) => setPlan(event.target.value)}
           sx={{ minWidth: 160 }}
+          size="small"
         >
-          <MenuItem value="">All</MenuItem>
-          <MenuItem value="Free">Free</MenuItem>
-          <MenuItem value="Paid">Paid</MenuItem>
-          <MenuItem value="Internal">Internal</MenuItem>
+          <MenuItem value="">All Plans</MenuItem>
+          {plans.map((p) => (
+            <MenuItem key={p} value={p}>{p}</MenuItem>
+          ))}
         </TextField>
       </Stack>
-      <Typography variant="subtitle2" color="text.secondary" mb={2}>
-        {filtered.length} APIs available
-      </Typography>
-      <Grid container spacing={3}>
-        {filtered.map((api) => (
-          <Grid item xs={12} md={6} lg={4} key={api.id}>
-            <ApiCard api={api} />
-          </Grid>
-        ))}
-      </Grid>
+
+      {/* Active filters */}
+      {(category || plan) && (
+        <Stack direction="row" spacing={1} mb={2}>
+          {category && (
+            <Chip
+              label={`Category: ${category}`}
+              size="small"
+              onDelete={() => setCategory("")}
+            />
+          )}
+          {plan && (
+            <Chip
+              label={`Plan: ${plan}`}
+              size="small"
+              onDelete={() => setPlan("")}
+            />
+          )}
+        </Stack>
+      )}
+
+      {/* Results count */}
+      {!loading && (
+        <Typography variant="subtitle2" color="text.secondary" mb={2}>
+          {filtered.length} {filtered.length === 1 ? "API" : "APIs"} available
+        </Typography>
+      )}
+
+      {/* Loading state */}
+      {loading && (
+        <Box display="flex" justifyContent="center" py={6}>
+          <CircularProgress />
+        </Box>
+      )}
+
+      {/* Empty state */}
+      {!loading && filtered.length === 0 && (
+        <Box textAlign="center" py={6}>
+          <Typography variant="h6" color="text.secondary" gutterBottom>
+            No APIs found
+          </Typography>
+          <Typography color="text.secondary">
+            {search || category || plan
+              ? "Try adjusting your search or filter criteria."
+              : "No APIs are currently published."}
+          </Typography>
+        </Box>
+      )}
+
+      {/* API Grid */}
+      {!loading && filtered.length > 0 && (
+        <Grid container spacing={3}>
+          {filtered.map((api) => (
+            <Grid item xs={12} md={6} lg={4} key={api.id}>
+              <ApiCard api={api} />
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </Box>
   );
 };

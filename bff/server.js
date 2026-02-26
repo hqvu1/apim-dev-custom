@@ -162,7 +162,8 @@ function transformArmApiToDetails(armItem, operations = [], products = []) {
   return {
     ...summary,
     overview: props.description || summary.description || `API documentation for ${summary.name}`,
-    documentationUrl: `/api-docs/${summary.id}`,
+    documentationUrl: `https://${APIM_SERVICE_NAME}.developer.azure-api.net/api-details#api=${summary.id}`,
+    openApiUrl: `/apis/${summary.id}/openapi`,
     plans,
     operations: ops,
     contact: props.contact,
@@ -285,6 +286,17 @@ if (USE_MOCK_MODE) {
         category: 'System',
       },
     ]);
+  });
+
+  // Mock stats endpoint
+  app.get('/stats', (req, res) => {
+    console.log('🧪 Returning mock stats data');
+    res.json({
+      availableApis: 3,
+      products: 2,
+      subscriptions: 5,
+      uptime: '99.9%',
+    });
   });
 
   // Mock APIs list endpoint
@@ -586,6 +598,38 @@ if (USE_MOCK_MODE) {
   // ============================================================================
 
   /**
+   * GET /stats — Platform statistics from real APIM data.
+   * Returns counts of APIs, products, subscriptions, and users.
+   */
+  app.get('/stats', async (req, res) => {
+    try {
+      const [apisData, productsData, subscriptionsData, usersData] = await Promise.allSettled([
+        fetchFromArm('apis'),
+        fetchFromArm('products'),
+        fetchFromArm('subscriptions'),
+        fetchFromArm('users'),
+      ]);
+
+      const apiCount = apisData.status === 'fulfilled' ? (apisData.value.value || []).length : 0;
+      const productCount = productsData.status === 'fulfilled' ? (productsData.value.value || []).length : 0;
+      const subscriptionCount = subscriptionsData.status === 'fulfilled' ? (subscriptionsData.value.value || []).length : 0;
+      const userCount = usersData.status === 'fulfilled' ? (usersData.value.value || []).length : 0;
+
+      console.log(`✅ Stats: ${apiCount} APIs, ${productCount} products, ${subscriptionCount} subscriptions, ${userCount} users`);
+      res.json({
+        availableApis: apiCount,
+        products: productCount,
+        subscriptions: subscriptionCount,
+        users: userCount,
+        uptime: '99.9%',
+      });
+    } catch (error) {
+      console.error('❌ Error fetching stats:', error.message);
+      res.status(500).json({ error: 'Failed to fetch stats' });
+    }
+  });
+
+  /**
    * GET /apis — List all APIs from APIM via ARM, transformed to flat ApiSummary[] array.
    */
   app.get('/apis', async (req, res) => {
@@ -661,6 +705,56 @@ if (USE_MOCK_MODE) {
     // This would require querying subscriptions and filtering by scope.
     // For now, return a default status.
     res.json({ status: 'Not subscribed' });
+  });
+
+  /**
+   * GET /apis/:apiId/openapi — Export the OpenAPI/Swagger specification for an API.
+   * Supports ?format=openapi+json (default), openapi+json-link, swagger-json, swagger-link, wadl-link-json
+   */
+  app.get('/apis/:apiId/openapi', async (req, res) => {
+    try {
+      const { apiId } = req.params;
+      const format = req.query.format || 'swagger-link';
+      const token = await getAccessToken();
+
+      // ARM export endpoint for API schema
+      const exportUrl = `${APIM_ARM_BASE_URL}/apis/${apiId}?format=${format}&export=true&api-version=${APIM_API_VERSION}`;
+      console.log(`🔄 Exporting OpenAPI spec: GET ${exportUrl}`);
+
+      const response = await fetch(exportUrl, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const body = await response.text();
+        console.error(`❌ OpenAPI export error: ${response.status} - ${body}`);
+        return res.status(response.status).json({ error: 'Failed to export OpenAPI spec' });
+      }
+
+      const data = await response.json();
+
+      // ARM export returns { properties: { value: { link: "<url>" } } } for link formats
+      // or inline spec for non-link formats
+      const link = data?.properties?.value?.link || data?.properties?.link;
+      if (link && typeof link === 'string' && link.startsWith('http')) {
+        return res.redirect(link);
+      }
+
+      // For string value that is a URL
+      const specLink = data?.properties?.value;
+      if (specLink && typeof specLink === 'string' && specLink.startsWith('http')) {
+        return res.redirect(specLink);
+      }
+
+      // Return the spec inline
+      res.json(data);
+    } catch (error) {
+      console.error(`❌ Error exporting OpenAPI spec for ${req.params.apiId}:`, error.message);
+      res.status(500).json({ error: 'Failed to export OpenAPI spec' });
+    }
   });
 }
 

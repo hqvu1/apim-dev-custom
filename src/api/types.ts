@@ -85,6 +85,7 @@ export type ApiSummary = {
 export type ApiDetails = ApiSummary & {
   overview: string;
   documentationUrl: string;
+  openApiUrl?: string;
   plans: Array<{ name: string; quota: string; notes: string }>;
   operations?: ApiOperation[];
   contact?: { name?: string; url?: string; email?: string };

@@ -208,16 +208,14 @@ Write-Host "✅ Image pushed to ACR: $AcrImageName" -ForegroundColor Green
 Write-Host "`n[6/6] Updating Azure Container App..." -ForegroundColor Cyan
 
 # The container app is already configured by Bicep to pull from ACR
-# We just need to trigger a new revision
+# We just need to trigger a new revision with the updated image
+# All env vars (ARM config, managed identity, etc.) are set by the Bicep template
 Write-Host "Creating new revision with updated image..." -ForegroundColor Yellow
 
 az containerapp update `
     --name $ContainerAppNameOutput `
     --resource-group $ResourceGroup `
-    --image $AcrImageName `
-    --set-env-vars `
-        "PORTAL_API_BACKEND_URL=$env:PORTAL_API_BACKEND_URL" `
-        "NODE_ENV=production"
+    --image $AcrImageName
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "⚠️ Container app update had issues, but may still be running" -ForegroundColor Yellow

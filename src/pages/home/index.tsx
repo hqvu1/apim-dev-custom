@@ -34,7 +34,6 @@ import {
 } from "@mui/icons-material";
 
 import { usePortalApi } from "../../api/client";
-import { apiHighlights } from "../../api/mockData";
 import { ApiSummary } from "../../api/types";
 import StatCard from "../../components/StatCard";
 import { useToast } from "../../components/useToast";
@@ -42,7 +41,7 @@ import { useToast } from "../../components/useToast";
 import HeroSection from "./HeroSection";
 import FeatureCard from "./FeatureCard";
 import QuickActionCard from "./QuickActionCard";
-import { PLATFORM_FEATURES, DEFAULT_STATS } from "./constants";
+import { PLATFORM_FEATURES } from "./constants";
 import { QuickAction } from "./types";
 
 /**
@@ -55,8 +54,9 @@ const Home = () => {
   const toast = useToast();
 
   // State management
-  const [highlights, setHighlights] = useState<ApiSummary[]>(apiHighlights);
+  const [highlights, setHighlights] = useState<ApiSummary[]>([]);
   const [news, setNews] = useState<string[]>([]);
+  const [stats, setStats] = useState<{ availableApis: number; products: number; subscriptions: number; users: number; uptime: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Navigation handlers - memoized to prevent unnecessary re-renders
@@ -111,11 +111,14 @@ const Home = () => {
 
   // Load data on mount
   useEffect(() => {
+    let cancelled = false;
+
     const loadData = async () => {
       try {
-        const [newsResult, highlightsResult] = await Promise.all([
+        const [newsResult, highlightsResult, statsResult] = await Promise.all([
           get<{ title: string }[]>("/news"),
-          get<ApiSummary[]>("/apis/highlights")
+          get<ApiSummary[]>("/apis/highlights"),
+          get<{ availableApis: number; products: number; subscriptions: number; users: number; uptime: string }>("/stats")
         ]);
 
         if (newsResult.data) {
@@ -126,6 +129,10 @@ const Home = () => {
           setHighlights(highlightsResult.data);
         }
 
+        if (statsResult.data) {
+          setStats(statsResult.data);
+        }
+
         if (newsResult.error || highlightsResult.error) {
           toast.notify("Using local highlight data until the portal API is ready.", "info");
         }
@@ -133,11 +140,12 @@ const Home = () => {
         console.error("Failed to load home page data:", error);
         toast.notify("Failed to load some data. Using cached content.", "warning");
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
     loadData();
+    return () => { cancelled = true; };
   }, [get, toast]);
 
   return (
@@ -149,16 +157,16 @@ const Home = () => {
       <Box component="section" aria-label="Platform statistics" sx={{ mb: 6 }}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <StatCard label="Available APIs" value={DEFAULT_STATS.availableApis} />
+            <StatCard label="Available APIs" value={stats ? String(stats.availableApis) : "—"} />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <StatCard label="Active Users" value={DEFAULT_STATS.activeUsers} />
+            <StatCard label="Products" value={stats ? String(stats.products) : "—"} />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <StatCard label="API Calls Today" value={DEFAULT_STATS.apiCallsToday} />
+            <StatCard label="Subscriptions" value={stats ? String(stats.subscriptions) : "—"} />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <StatCard label="Uptime" value={DEFAULT_STATS.uptime} />
+            <StatCard label="Uptime" value={stats?.uptime || "—"} />
           </Grid>
         </Grid>
       </Box>
@@ -203,6 +211,11 @@ const Home = () => {
                     Loading highlights...
                   </Typography>
                 )}
+                {!loading && highlights.length === 0 && (
+                  <Typography color="text.secondary" variant="body2" sx={{ py: 2, textAlign: "center" }}>
+                    No featured APIs available yet.
+                  </Typography>
+                )}
                 {!loading &&
                   highlights.map((api) => (
                     <Card
@@ -224,7 +237,7 @@ const Home = () => {
                               {api.name}
                             </Typography>
                             <Typography color="text.secondary" variant="body2">
-                              {api.description}
+                              {api.description || "No description available."}
                             </Typography>
                           </Box>
                           <Stack direction="row" spacing={1} flexWrap="wrap">

@@ -32,16 +32,9 @@ WORKDIR /app
 RUN ls -la public/ && echo "Found $(ls public/ | wc -l) files in public folder"
 
 # Build the Vite React app
-# Support Docker BuildKit secrets for potentially sensitive build-time values
-# Note: For SPAs, build-time env vars are embedded in the bundle
-# Use secrets only when absolutely necessary (e.g., API keys for build-time operations)
+# .env.production provides all VITE_* variables at build time
 # Skip TypeScript type checking for faster builds (use: npx vite build)
-RUN --mount=type=secret,id=buildenv,required=false \
-    if [ -f /run/secrets/buildenv ]; then \
-        echo "Loading additional build environment from secrets..." && \
-        set -a && . /run/secrets/buildenv && set +a; \
-    fi && \
-    npx vite build --mode production
+RUN npx vite build --mode production
 
 # Verify build output
 RUN ls -la dist/ && echo "Build completed successfully"
