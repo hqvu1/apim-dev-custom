@@ -263,7 +263,7 @@ if (USE_MOCK_MODE) {
         title: 'Welcome to APIM Developer Portal',
         excerpt: 'Get started with our API catalog and developer resources.',
         date: new Date().toISOString(),
-        content: 'Welcome to the Infosys APIM Developer Portal. Start exploring our API catalog to integrate with Komatsu services.',
+        content: 'Welcome to the Komatsu NA APIM Developer Portal. Start exploring our API catalog to integrate with Komatsu services.',
         author: 'APIM Team',
         category: 'Announcement',
       },
