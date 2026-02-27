@@ -1,8 +1,8 @@
-# Infosys APIM Customization Framework - Integration Preparation Guide
+# Komatsu APIM Customization Framework - Integration Preparation Guide
 
 ## Overview
 
-This guide outlines all necessary preparations to integrate the Komatsu API Marketplace Portal with the **Infosys APIM Customization Framework** for Azure API Management.
+This guide outlines all necessary preparations to integrate the Komatsu API Marketplace Portal with the **Komatsu APIM Customization Framework** for Azure API Management.
 
 ## Current State Analysis
 
@@ -16,7 +16,7 @@ This guide outlines all necessary preparations to integrate the Komatsu API Mark
 - **Environment variable configuration** system
 
 ### ❌ What's Missing
-- **Backend API service** to interface with Infosys APIM
+- **Backend API service** to interface with Komatsu APIM
 - **API subscription key management** UI/logic
 - **APIM-specific headers** (Ocp-Apim-Subscription-Key, etc.)
 - **APIM webhook handlers** for notifications
@@ -27,7 +27,7 @@ This guide outlines all necessary preparations to integrate the Komatsu API Mark
 ## 1. Backend Service Requirements
 
 ### Option A: Node.js/Express BFF (Recommended)
-Create a Backend-for-Frontend service that interfaces with the Infosys APIM Customization Framework.
+Create a Backend-for-Frontend service that interfaces with the Komatsu APIM Customization Framework.
 
 **Required Endpoints:**
 
@@ -85,7 +85,7 @@ server/
 │   │   ├── users.routes.ts
 │   │   └── analytics.routes.ts
 │   ├── services/
-│   │   ├── apim.service.ts      # Infosys APIM client
+│   │   ├── apim.service.ts      # Komatsu APIM client
 │   │   ├── cache.service.ts     # Redis caching
 │   │   └── analytics.service.ts
 │   └── types/
@@ -95,9 +95,9 @@ server/
 └── .env.example
 ```
 
-### Option B: Use Infosys APIM REST APIs Directly
+### Option B: Use Komatsu APIM REST APIs Directly
 
-If the Infosys framework provides direct REST APIs, you can call them from the frontend with proper CORS configuration.
+If the Komatsu framework provides direct REST APIs, you can call them from the frontend with proper CORS configuration.
 
 **Required Configuration:**
 ```typescript
@@ -140,7 +140,7 @@ VITE_PORTAL_API_SCOPE=
 
 ### **ADD: APIM-Specific Variables**
 ```env
-# Infosys APIM Configuration
+# Komatsu APIM Configuration
 VITE_APIM_GATEWAY_URL=https://komatsu-apim-dev.azure-api.net
 VITE_APIM_PORTAL_API_URL=https://komatsu-apim-portal-api-dev.azurewebsites.net
 VITE_APIM_MANAGEMENT_API_URL=https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{rg}/providers/Microsoft.ApiManagement/service/{apimName}
@@ -632,11 +632,11 @@ resource apimKeySecret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
 
 ---
 
-## 5. Infosys APIM Framework Integration Points
+## 5. Komatsu APIM Framework Integration Points
 
-### Required Documentation from Infosys
+### Required Documentation from Komatsu
 
-Request the following from your Infosys team:
+Request the following from your Komatsu team:
 
 1. **API Endpoints Documentation**
    - RESTful API endpoints for developer portal operations
@@ -668,7 +668,7 @@ Request the following from your Infosys team:
    - Export formats (CSV, JSON)
    - Real-time vs. batch data
 
-### Sample Integration Questions for Infosys
+### Sample Integration Questions for Komatsu
 
 ```
 1. What is the base URL for the APIM Customization Framework REST API?
@@ -777,7 +777,7 @@ describe('APIM Integration Tests', () => {
 ## 7. Deployment Checklist
 
 ### Pre-Deployment
-- [ ] Obtain Infosys APIM framework documentation
+- [ ] Obtain Komatsu APIM framework documentation
 - [ ] Set up APIM instance in Azure
 - [ ] Configure Entra ID app registration with APIM permissions
 - [ ] Create service principal for backend API
@@ -905,7 +905,7 @@ GET /health
 5. Create basic subscription management
 
 ### Phase 2: APIM Integration (Week 3-4)
-1. Connect backend to Infosys APIM framework
+1. Connect backend to Komatsu APIM framework
 2. Implement API catalog synchronization
 3. Add subscription key management
 4. Integrate analytics endpoints
@@ -929,7 +929,7 @@ GET /health
 
 ## 11. Next Steps
 
-1. **Schedule meeting with Infosys team** to review their APIM Customization Framework
+1. **Schedule meeting with Komatsu team** to review their APIM Customization Framework
 2. **Request API documentation** and authentication details
 3. **Set up development APIM instance** for testing
 4. **Create backend service** (Node.js/Express recommended)

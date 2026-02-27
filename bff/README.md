@@ -4,8 +4,9 @@
 
 This Node.js Express service acts as a Backend-for-Frontend (BFF) that:
 - Runs alongside the React frontend in the same container
-- Uses **Azure Managed Identity** to authenticate to APIM Management API
-- Proxies all `/api/*` requests from the React app to APIM
+- Uses the **APIM Data API** (same data source as the portal's `DataApiClient`)
+- Authenticates via **Azure Managed Identity → ARM → SAS Token**
+- Proxies all `/api/*` requests from the React app to the APIM Data API
 - Eliminates the need for client-side authentication to APIM
 
 ## Architecture
@@ -19,10 +20,11 @@ This Node.js Express service acts as a Backend-for-Frontend (BFF) that:
 │  │  (Port 80) │              │ (Port 3001)  │         │
 │  └────────────┘              └──────────────┘         │
 │       │                             │                  │
-│       │ static files                │ Managed Identity │
-│       │                             │ + Bearer token   │
+│       │ static files                │ MI → ARM → SAS   │
+│       │                             │                  │
 │       ▼                             ▼                  │
-│  React App                  APIM Management API       │
+│  React App                  APIM Data API             │
+│                      <svc>.developer.azure-api.net    │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -31,17 +33,25 @@ This Node.js Express service acts as a Backend-for-Frontend (BFF) that:
 1. **Browser** requests data from React app
 2. **React app** calls `/api/apis` (or other APIM endpoints)
 3. **Nginx** proxies request to `localhost:3001` (BFF)
-4. **BFF** uses Managed Identity to get Azure AD token
-5. **BFF** calls APIM Management API with Bearer token
-6. **BFF** returns response to React app
+4. **BFF** uses Managed Identity to get ARM Bearer token
+5. **BFF** discovers Data API URL from ARM service description (cached)
+6. **BFF** generates SAS token via ARM `/users/1/token` (cached ~55 min)
+7. **BFF** calls APIM Data API with SAS token (flat contracts, no `.properties` wrapper)
+8. **BFF** transforms and returns response to React app
 
 ## Environment Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `BFF_PORT` | `3001` | Port the BFF listens on (internal) |
-| `APIM_MANAGEMENT_URL` | `https://demo-apim-feb.management.azure-api.net` | APIM Management API URL |
-| `APIM_API_VERSION` | `2021-08-01` | APIM API version |
+| `AZURE_SUBSCRIPTION_ID` | (required) | Azure subscription ID |
+| `AZURE_RESOURCE_GROUP` | (required) | Resource group containing APIM |
+| `APIM_SERVICE_NAME` | (required) | APIM service instance name |
+| `APIM_API_VERSION` | `2022-08-01` | ARM API version (for discovery + SAS) |
+| `APIM_DATA_API_VERSION` | `2022-04-01-preview` | Data API version |
+| `APIM_DATA_API_URL` | (auto-discovered) | Override Data API URL (optional) |
+| `USE_MOCK_MODE` | `false` | Use mock data for local dev |
+| `AZURE_CLIENT_ID` | (optional) | User-assigned Managed Identity client ID |
 | `NODE_ENV` | `production` | Node environment |
 
 ## Managed Identity Setup

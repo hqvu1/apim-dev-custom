@@ -1,14 +1,14 @@
-# Infosys APIM Integration - Quick Checklist
+# Komatsu APIM Integration - Quick Checklist
 
 > **Status:** 🚧 Not Started  
 > **Target Completion:** TBD  
-> **Dependencies:** Infosys APIM Customization Framework setup
+> **Dependencies:** Komatsu APIM Customization Framework setup
 
 ---
 
 ## 📋 Pre-Integration Requirements
 
-### Documentation from Infosys Team
+### Documentation from Komatsu Team
 - [ ] **APIM Framework API Documentation**
   - REST API endpoints specification
   - Request/response schemas (OpenAPI/Swagger)
@@ -266,7 +266,7 @@
 
 ## 📞 Contacts
 
-### Infosys Team
+### Komatsu Team
 - **APIM Framework Lead:** [Name] - [Email]
 - **Integration Support:** [Name] - [Email]
 - **DevOps Contact:** [Name] - [Email]
@@ -277,8 +277,8 @@
 - **DevOps Lead:** [Name] - [Email]
 
 ### Escalation
-- **Level 1:** Infosys Support Team
-- **Level 2:** Infosys APIM Architect
+- **Level 1:** Komatsu Support Team
+- **Level 2:** Komatsu APIM Architect
 - **Level 3:** Microsoft Azure Support
 
 ---

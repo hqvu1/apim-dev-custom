@@ -142,7 +142,7 @@ npm run test:ui
 
 ### Project Documentation
 - [Public Landing Page Setup](docs/PUBLIC_LANDING_PAGE_SETUP.md) - Implementation details for public home page
-- [Infosys APIM Integration Guide](docs/INFOSYS_APIM_INTEGRATION_GUIDE.md) - Complete guide for APIM integration
+- [Komatsu APIM Integration Guide](docs/KOMATSU_APIM_INTEGRATION_GUIDE.md) - Complete guide for APIM integration
 - [APIM Integration Checklist](docs/APIM_INTEGRATION_CHECKLIST.md) - Step-by-step integration tasks
 
 ### Deployment & CI/CD
