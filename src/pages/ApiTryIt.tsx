@@ -40,7 +40,7 @@ const ApiTryIt = () => {
     <Box>
       <PageHeader
         title="Try-It Console"
-        subtitle="Experiment with sandbox endpoints using short-lived keys from Komatsu APIM."
+        subtitle="Experiment with sandbox endpoints using short-lived keys from Infosys APIM."
       />
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>

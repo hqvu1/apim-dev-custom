@@ -21,11 +21,6 @@ const APIM_API_VERSION = process.env.APIM_API_VERSION || '2022-08-01';
 // Construct the ARM base URL for APIM
 const APIM_ARM_BASE_URL = `https://management.azure.com/subscriptions/${AZURE_SUBSCRIPTION_ID}/resourceGroups/${AZURE_RESOURCE_GROUP}/providers/Microsoft.ApiManagement/service/${APIM_SERVICE_NAME}`;
 
-// APIM Data API configuration (same data source as the portal's DataApiClient)
-// If not set, auto-discovered from ARM service description on first use.
-const APIM_DATA_API_URL = process.env.APIM_DATA_API_URL || null;
-const APIM_DATA_API_VERSION = process.env.APIM_DATA_API_VERSION || '2022-04-01-preview';
-
 // Mock mode for local development (set to 'true' to use mock data)
 const USE_MOCK_MODE = process.env.USE_MOCK_MODE === 'true' || false;
 
@@ -97,222 +92,88 @@ async function getAccessToken() {
 }
 
 // ============================================================================
-// Data API Discovery & SAS Token Management
-// ============================================================================
-
-let dataApiBaseUrl = APIM_DATA_API_URL;
-let sasToken = null;
-let sasTokenExpiry = null;
-
-/**
- * Auto-discover the Data API URL from the ARM service description.
- * Mirrors api-management-developer-portal's ArmService.loadSettings():
- *   const dataApiUrl = serviceDescription.properties.dataApiUrl;
- *   backendUrl = serviceDescription.properties.developerPortalUrl;
- *   return directDataApi ? dataApiUrl : `${backendUrl}/developer`;
- */
-async function ensureDataApiUrl() {
-  if (dataApiBaseUrl) return dataApiBaseUrl;
-
-  console.log('\u{1F50D} Discovering Data API URL from ARM service description...');
-  const token = await getAccessToken();
-  const url = `${APIM_ARM_BASE_URL}?api-version=${APIM_API_VERSION}`;
-
-  const response = await fetch(url, {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Accept': 'application/json',
-    },
-  });
-
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(`Failed to discover APIM service: ${response.status} - ${body}`);
-  }
-
-  const service = await response.json();
-  const portalUrl = (service.properties.developerPortalUrl || '').replace(/\/$/, '');
-
-  // DataApiClient uses: backendUrl + '/developer' (when directDataApi is falsy)
-  // or dataApiUrl directly (when directDataApi is truthy).
-  // We prefer the explicit dataApiUrl if available, otherwise portal + /developer.
-  dataApiBaseUrl = service.properties.dataApiUrl || `${portalUrl}/developer`;
-
-  console.log(`\u2705 Data API URL: ${dataApiBaseUrl}`);
-  return dataApiBaseUrl;
-}
-
-/**
- * Generate a SAS token for Data API access via ARM.
- * Mirrors api-management-developer-portal's ArmService.getUserAccessToken().
- * POST /users/1/token → SharedAccessSignature uid=1&ex=...&sn=...
- */
-async function getDataApiSasToken() {
-  if (USE_MOCK_MODE) return 'mock-sas-token';
-
-  const now = Date.now();
-  // Return cached token if still valid (with 5 min buffer)
-  if (sasToken && sasTokenExpiry && now < sasTokenExpiry - 300000) {
-    return sasToken;
-  }
-
-  const armToken = await getAccessToken();
-  const exp = new Date(now + 60 * 60 * 1000).toISOString();
-  const tokenUrl = `${APIM_ARM_BASE_URL}/users/1/token?api-version=${APIM_API_VERSION}`;
-
-  console.log(`\u{1F511} Generating Data API SAS token (expires ${exp})...`);
-
-  const response = await fetch(tokenUrl, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${armToken}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ keyType: 'primary', expiry: exp }),
-  });
-
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(`Failed to generate SAS token: ${response.status} - ${body}`);
-  }
-
-  const data = await response.json();
-  sasToken = data.value;
-  sasTokenExpiry = now + 55 * 60 * 1000; // refresh 5 min before actual expiry
-
-  console.log('\u{1F511} Data API SAS token acquired');
-  return sasToken;
-}
-
-/**
- * Fetch data from the APIM Data API.
- * Mirrors the DataApiClient request flow: base URL + path + api-version + SAS auth.
- */
-async function fetchFromDataApi(path, method = 'GET', body = null) {
-  const baseUrl = await ensureDataApiUrl();
-  const token = await getDataApiSasToken();
-
-  // Build the full URL: base + path + api-version
-  const hasSlash = path.startsWith('/');
-  const fullPath = `${baseUrl}${hasSlash ? '' : '/'}${path}`;
-  const targetUrl = new URL(fullPath);
-
-  if (!targetUrl.searchParams.has('api-version')) {
-    targetUrl.searchParams.set('api-version', APIM_DATA_API_VERSION);
-  }
-
-  console.log(`\u{1F504} Data API: ${method} ${targetUrl.toString()}`);
-
-  const options = {
-    method,
-    headers: {
-      'Authorization': token,
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-  };
-
-  if (body && method !== 'GET' && method !== 'HEAD') {
-    options.body = typeof body === 'string' ? body : JSON.stringify(body);
-  }
-
-  const response = await fetch(targetUrl.toString(), options);
-
-  if (!response.ok) {
-    const errorBody = await response.text();
-    console.error(`\u274C Data API error: ${response.status} - ${errorBody}`);
-    const error = new Error(`Data API returned ${response.status}`);
-    error.status = response.status;
-    error.body = errorBody;
-    throw error;
-  }
-
-  return response.json();
-}
-
-// ============================================================================
-// Data API Response Transformers
+// ARM Response Transformers
 // ============================================================================
 
 /**
- * Transform a Data API item to the flat ApiSummary format expected by the frontend.
- * Data API returns flat contracts (no ARM .properties wrapper):
- *   { id: "echo-api", name: "Echo API", description: "...", path: "echo", ... }
- * This mirrors the mapApimApiToSummary() mapper in the frontend types.ts.
+ * Transform an ARM API item to the flat ApiSummary format expected by the frontend.
+ * ARM format: { id: "/subscriptions/.../apis/echo-api", name: "echo-api", properties: { displayName, ... } }
+ * Frontend format: { id: "echo-api", name: "Echo API", description: "...", status: "Production", ... }
  */
-function transformDataApiToSummary(item) {
-  const shortId = item.id || item.name || 'unknown';
+function transformArmApiToSummary(armItem) {
+  const props = armItem.properties || {};
+  const shortId = armItem.name || armItem.id?.split('/').pop() || 'unknown';
 
   // Derive status from name/path hints (APIM has no native status field)
-  const lowerName = (item.name || shortId || '').toLowerCase();
-  const lowerPath = (item.path || '').toLowerCase();
+  const lowerName = (shortId).toLowerCase();
+  const lowerPath = (props.path || '').toLowerCase();
   let status = 'Production';
   if (lowerName.includes('sandbox') || lowerPath.includes('sandbox') || lowerName.includes('test')) {
     status = 'Sandbox';
   }
 
-  const tags = Array.isArray(item.tags) ? item.tags : [];
-  const plan = item.subscriptionRequired ? 'Paid' : 'Free';
+  // Derive plan from subscriptionRequired flag
+  const plan = props.subscriptionRequired ? 'Paid' : 'Free';
 
   return {
     id: shortId,
-    name: item.name || shortId,
-    description: item.description || '',
+    name: props.displayName || shortId,
+    description: props.description || '',
     status,
-    owner: item.contact?.name || 'Komatsu',
-    tags,
-    category: tags.length > 0 ? tags[0] : 'General',
+    owner: props.contact?.name || 'Komatsu',
+    tags: [],
+    category: 'General',
     plan,
-    path: item.path,
-    protocols: item.protocols,
-    apiVersion: item.apiVersion,
-    type: item.type || 'http',
-    subscriptionRequired: item.subscriptionRequired,
+    path: props.path,
+    protocols: props.protocols,
+    apiVersion: props.apiVersion,
+    type: props.type || 'http',
+    subscriptionRequired: props.subscriptionRequired,
   };
 }
 
 /**
- * Transform a Data API item to the full ApiDetails format expected by the frontend.
- * Data API operations and products are also flat contracts.
+ * Transform an ARM API item to the full ApiDetails format expected by the frontend.
+ * Includes overview, documentation URL, and plans (derived from products if available).
  */
-function transformDataApiToDetails(item, operations = [], products = []) {
-  const summary = transformDataApiToSummary(item);
+function transformArmApiToDetails(armItem, operations = [], products = []) {
+  const summary = transformArmApiToSummary(armItem);
+  const props = armItem.properties || {};
 
   // Build plans from products, or provide a default
   const plans = products.length > 0
     ? products.map(p => ({
-        name: p.displayName || p.name || 'Default',
-        quota: p.subscriptionRequired ? 'Subscription required' : 'Open',
-        notes: p.description || '',
+        name: p.properties?.displayName || p.name || 'Default',
+        quota: p.properties?.subscriptionRequired ? 'Subscription required' : 'Open',
+        notes: p.properties?.description || '',
       }))
     : [{ name: summary.plan, quota: summary.subscriptionRequired ? 'Subscription required' : 'Open access', notes: '' }];
 
-  // Transform operations — Data API returns flat operation contracts
+  // Transform operations
   const ops = operations.map(op => ({
-    id: op.id || op.name || 'unknown',
-    name: op.name || '',
-    method: op.method || 'GET',
-    urlTemplate: op.urlTemplate || '',
-    displayName: op.displayName || op.name || '',
-    description: op.description || '',
+    id: op.name || op.id?.split('/').pop() || 'unknown',
+    name: op.name || op.properties?.name || '',
+    method: op.properties?.method || 'GET',
+    urlTemplate: op.properties?.urlTemplate || '',
+    displayName: op.properties?.displayName || op.name || '',
+    description: op.properties?.description || '',
   }));
 
   return {
     ...summary,
-    overview: item.description || summary.description || `API documentation for ${summary.name}`,
+    overview: props.description || summary.description || `API documentation for ${summary.name}`,
     documentationUrl: `https://${APIM_SERVICE_NAME}.developer.azure-api.net/api-details#api=${summary.id}`,
     openApiUrl: `/apis/${summary.id}/openapi`,
     plans,
     operations: ops,
-    contact: item.contact,
-    license: item.license,
-    termsOfServiceUrl: item.termsOfServiceUrl,
+    contact: props.contact,
+    license: props.license,
+    termsOfServiceUrl: props.termsOfServiceUrl,
   };
 }
 
 /**
- * Helper: Fetch data from ARM API with authentication.
- * Kept for auto-discovery of the Data API URL and SAS token generation.
+ * Helper: Fetch data from ARM API with authentication
  */
 async function fetchFromArm(path, queryParams = {}) {
   const token = await getAccessToken();
@@ -324,7 +185,7 @@ async function fetchFromArm(path, queryParams = {}) {
     targetUrl.searchParams.set(key, value);
   }
 
-  console.log(`\u{1F504} ARM request: GET ${targetUrl.toString()}`);
+  console.log(`🔄 ARM request: GET ${targetUrl.toString()}`);
 
   const response = await fetch(targetUrl.toString(), {
     method: 'GET',
@@ -337,7 +198,7 @@ async function fetchFromArm(path, queryParams = {}) {
 
   if (!response.ok) {
     const errorBody = await response.text();
-    console.error(`\u274C ARM API error: ${response.status} - ${errorBody}`);
+    console.error(`❌ ARM API error: ${response.status} - ${errorBody}`);
     const error = new Error(`ARM API returned ${response.status}`);
     error.status = response.status;
     error.body = errorBody;
@@ -402,7 +263,7 @@ if (USE_MOCK_MODE) {
         title: 'Welcome to APIM Developer Portal',
         excerpt: 'Get started with our API catalog and developer resources.',
         date: new Date().toISOString(),
-        content: 'Welcome to the Komatsu APIM Developer Portal. Start exploring our API catalog to integrate with Komatsu services.',
+        content: 'Welcome to the Infosys APIM Developer Portal. Start exploring our API catalog to integrate with Komatsu services.',
         author: 'APIM Team',
         category: 'Announcement',
       },
@@ -733,28 +594,28 @@ if (USE_MOCK_MODE) {
   });
 } else {
   // ============================================================================
-  // Real-mode Route Handlers (Data API — same source as DataApiClient)
+  // Real-mode Route Handlers (ARM response transformation)
   // ============================================================================
 
   /**
-   * GET /stats — Platform statistics from real APIM Data API.
-   * Aggregates counts of APIs, products, subscriptions, and users.
+   * GET /stats — Platform statistics from real APIM data.
+   * Returns counts of APIs, products, subscriptions, and users.
    */
   app.get('/stats', async (req, res) => {
     try {
       const [apisData, productsData, subscriptionsData, usersData] = await Promise.allSettled([
-        fetchFromDataApi('/apis?$top=1'),
-        fetchFromDataApi('/products?$top=1'),
-        fetchFromDataApi('/subscriptions?$top=1'),
-        fetchFromDataApi('/users?$top=1'),
+        fetchFromArm('apis'),
+        fetchFromArm('products'),
+        fetchFromArm('subscriptions'),
+        fetchFromArm('users'),
       ]);
 
-      const apiCount = apisData.status === 'fulfilled' ? (apisData.value.count ?? (apisData.value.value || []).length) : 0;
-      const productCount = productsData.status === 'fulfilled' ? (productsData.value.count ?? (productsData.value.value || []).length) : 0;
-      const subscriptionCount = subscriptionsData.status === 'fulfilled' ? (subscriptionsData.value.count ?? (subscriptionsData.value.value || []).length) : 0;
-      const userCount = usersData.status === 'fulfilled' ? (usersData.value.count ?? (usersData.value.value || []).length) : 0;
+      const apiCount = apisData.status === 'fulfilled' ? (apisData.value.value || []).length : 0;
+      const productCount = productsData.status === 'fulfilled' ? (productsData.value.value || []).length : 0;
+      const subscriptionCount = subscriptionsData.status === 'fulfilled' ? (subscriptionsData.value.value || []).length : 0;
+      const userCount = usersData.status === 'fulfilled' ? (usersData.value.value || []).length : 0;
 
-      console.log(`\u2705 Stats: ${apiCount} APIs, ${productCount} products, ${subscriptionCount} subscriptions, ${userCount} users`);
+      console.log(`✅ Stats: ${apiCount} APIs, ${productCount} products, ${subscriptionCount} subscriptions, ${userCount} users`);
       res.json({
         availableApis: apiCount,
         products: productCount,
@@ -763,27 +624,22 @@ if (USE_MOCK_MODE) {
         uptime: '99.9%',
       });
     } catch (error) {
-      console.error('\u274C Error fetching stats:', error.message);
+      console.error('❌ Error fetching stats:', error.message);
       res.status(500).json({ error: 'Failed to fetch stats' });
     }
   });
 
   /**
-   * GET /apis — List all APIs from the APIM Data API, transformed to flat ApiSummary[] array.
-   * Data API returns flat contracts (no ARM .properties wrapper).
+   * GET /apis — List all APIs from APIM via ARM, transformed to flat ApiSummary[] array.
    */
   app.get('/apis', async (req, res) => {
     try {
-      // Forward OData query params from the frontend (e.g. $top, $skip, $filter)
-      const qs = req.originalUrl.includes('?') ? req.originalUrl.split('?')[1] : '';
-      const path = qs ? `/apis?${qs}` : '/apis';
-
-      const data = await fetchFromDataApi(path);
-      const apis = (data.value || []).map(transformDataApiToSummary);
-      console.log(`\u2705 Transformed ${apis.length} APIs from Data API`);
+      const data = await fetchFromArm('apis');
+      const apis = (data.value || []).map(transformArmApiToSummary);
+      console.log(`✅ Transformed ${apis.length} APIs from ARM response`);
       res.json(apis);
     } catch (error) {
-      console.error('\u274C Error fetching APIs:', error.message);
+      console.error('❌ Error fetching APIs:', error.message);
       res.status(error.status || 500).json({
         error: 'Failed to fetch APIs',
         message: error.message,
@@ -792,15 +648,16 @@ if (USE_MOCK_MODE) {
   });
 
   /**
-   * GET /apis/highlights — Returns top APIs as highlights.
+   * GET /apis/highlights — Returns the same list as /apis (can be filtered later).
    */
   app.get('/apis/highlights', async (req, res) => {
     try {
-      const data = await fetchFromDataApi('/apis?$top=3');
-      const apis = (data.value || []).map(transformDataApiToSummary);
-      res.json(apis);
+      const data = await fetchFromArm('apis');
+      const apis = (data.value || []).map(transformArmApiToSummary);
+      // Return top 3 as highlights
+      res.json(apis.slice(0, 3));
     } catch (error) {
-      console.error('\u274C Error fetching API highlights:', error.message);
+      console.error('❌ Error fetching API highlights:', error.message);
       res.status(error.status || 500).json({
         error: 'Failed to fetch API highlights',
         message: error.message,
@@ -809,30 +666,30 @@ if (USE_MOCK_MODE) {
   });
 
   /**
-   * GET /apis/:apiId — Fetch single API details, operations, and products from Data API.
+   * GET /apis/:apiId — Fetch single API details, operations, and products from ARM.
    * Returns a flat ApiDetails object with operations inlined.
    */
   app.get('/apis/:apiId', async (req, res) => {
     try {
       const { apiId } = req.params;
 
-      // Fetch API, operations, and products in parallel from Data API
+      // Fetch API, operations, and products in parallel
       const [apiData, opsData, prodsData] = await Promise.all([
-        fetchFromDataApi(`/apis/${apiId}`),
-        fetchFromDataApi(`/apis/${apiId}/operations?$top=100`).catch(() => ({ value: [] })),
-        fetchFromDataApi(`/apis/${apiId}/products?$top=50`).catch(() => ({ value: [] })),
+        fetchFromArm(`apis/${apiId}`),
+        fetchFromArm(`apis/${apiId}/operations`).catch(() => ({ value: [] })),
+        fetchFromArm(`apis/${apiId}/products`).catch(() => ({ value: [] })),
       ]);
 
-      const details = transformDataApiToDetails(
+      const details = transformArmApiToDetails(
         apiData,
         opsData.value || [],
         prodsData.value || [],
       );
 
-      console.log(`\u2705 Transformed API details for: ${apiId}`);
+      console.log(`✅ Transformed API details for: ${apiId}`);
       res.json(details);
     } catch (error) {
-      console.error(`\u274C Error fetching API ${req.params.apiId}:`, error.message);
+      console.error(`❌ Error fetching API ${req.params.apiId}:`, error.message);
       res.status(error.status || 500).json({
         error: 'Failed to fetch API details',
         message: error.message,
@@ -841,22 +698,18 @@ if (USE_MOCK_MODE) {
   });
 
   /**
-   * GET /apis/:apiId/subscription — Subscription status for a specific API.
+   * GET /apis/:apiId/subscription — Subscription status (placeholder for real implementation).
    */
   app.get('/apis/:apiId/subscription', async (req, res) => {
-    try {
-      // Data API supports listing subscriptions scoped to an API
-      const data = await fetchFromDataApi(`/subscriptions?$filter=endswith(scope,'/apis/${req.params.apiId}')&$top=1`);
-      const sub = (data.value || [])[0];
-      res.json({ status: sub ? (sub.state || 'Active') : 'Not subscribed' });
-    } catch {
-      res.json({ status: 'Not subscribed' });
-    }
+    // ARM doesn't have a direct "subscription status per API" endpoint.
+    // This would require querying subscriptions and filtering by scope.
+    // For now, return a default status.
+    res.json({ status: 'Not subscribed' });
   });
 
   /**
-   * GET /apis/:apiId/openapi — Export the OpenAPI specification via ARM.
-   * Note: Schema export still uses ARM as the Data API doesn't expose this directly.
+   * GET /apis/:apiId/openapi — Export the OpenAPI/Swagger specification for an API.
+   * Supports ?format=openapi+json (default), openapi+json-link, swagger-json, swagger-link, wadl-link-json
    */
   app.get('/apis/:apiId/openapi', async (req, res) => {
     try {
@@ -864,8 +717,9 @@ if (USE_MOCK_MODE) {
       const format = req.query.format || 'swagger-link';
       const token = await getAccessToken();
 
+      // ARM export endpoint for API schema
       const exportUrl = `${APIM_ARM_BASE_URL}/apis/${apiId}?format=${format}&export=true&api-version=${APIM_API_VERSION}`;
-      console.log(`\u{1F504} Exporting OpenAPI spec: GET ${exportUrl}`);
+      console.log(`🔄 Exporting OpenAPI spec: GET ${exportUrl}`);
 
       const response = await fetch(exportUrl, {
         headers: {
@@ -876,77 +730,36 @@ if (USE_MOCK_MODE) {
 
       if (!response.ok) {
         const body = await response.text();
-        console.error(`\u274C OpenAPI export error: ${response.status} - ${body}`);
+        console.error(`❌ OpenAPI export error: ${response.status} - ${body}`);
         return res.status(response.status).json({ error: 'Failed to export OpenAPI spec' });
       }
 
       const data = await response.json();
 
       // ARM export returns { properties: { value: { link: "<url>" } } } for link formats
+      // or inline spec for non-link formats
       const link = data?.properties?.value?.link || data?.properties?.link;
       if (link && typeof link === 'string' && link.startsWith('http')) {
         return res.redirect(link);
       }
 
+      // For string value that is a URL
       const specLink = data?.properties?.value;
       if (specLink && typeof specLink === 'string' && specLink.startsWith('http')) {
         return res.redirect(specLink);
       }
 
+      // Return the spec inline
       res.json(data);
     } catch (error) {
-      console.error(`\u274C Error exporting OpenAPI spec for ${req.params.apiId}:`, error.message);
+      console.error(`❌ Error exporting OpenAPI spec for ${req.params.apiId}:`, error.message);
       res.status(500).json({ error: 'Failed to export OpenAPI spec' });
-    }
-  });
-
-  /**
-   * GET /products — List all published products from the Data API.
-   */
-  app.get('/products', async (req, res) => {
-    try {
-      const qs = req.originalUrl.includes('?') ? req.originalUrl.split('?')[1] : '';
-      const path = qs ? `/products?${qs}` : "/products?$filter=state eq 'published'";
-      const data = await fetchFromDataApi(path);
-      const products = (data.value || []).map(p => ({
-        id: p.id || p.name,
-        name: p.displayName || p.name,
-        description: p.description || '',
-        plan: p.subscriptionRequired ? 'Paid' : 'Free',
-        subscriptionRequired: p.subscriptionRequired,
-      }));
-      res.json(products);
-    } catch (error) {
-      console.error('\u274C Error fetching products:', error.message);
-      res.status(error.status || 500).json({ error: 'Failed to fetch products' });
-    }
-  });
-
-  /**
-   * GET /subscriptions — List current subscriptions from the Data API.
-   */
-  app.get('/subscriptions', async (req, res) => {
-    try {
-      const data = await fetchFromDataApi('/subscriptions?$top=100');
-      const subs = (data.value || []).map(s => ({
-        id: s.id || s.name,
-        name: s.displayName || s.name,
-        scope: s.scope,
-        state: s.state || 'active',
-        primaryKey: s.primaryKey,
-        secondaryKey: s.secondaryKey,
-      }));
-      res.json(subs);
-    } catch (error) {
-      console.error('\u274C Error fetching subscriptions:', error.message);
-      res.status(error.status || 500).json({ error: 'Failed to fetch subscriptions' });
     }
   });
 }
 
 /**
- * Catch-all: Proxy unmatched requests to the APIM Data API.
- * This replaces the ARM proxy — Data API returns flat contracts directly.
+ * Proxy all requests to APIM Management API with Managed Identity auth
  */
 app.use('*', async (req, res) => {
   try {
@@ -956,31 +769,63 @@ app.use('*', async (req, res) => {
         value: [
           {
             id: 'mock-item-1',
-            name: 'Mock Data for Local Development',
-            description: 'This is generic mock data - consider adding a specific endpoint in server.js',
+            name: 'Mock Item',
+            properties: {
+              displayName: 'Mock Data for Local Development',
+              description: 'This is generic mock data - consider adding a specific endpoint in server.js',
+            },
           },
         ],
-        message: 'Generic mock data (USE_MOCK_MODE=true) - no specific endpoint defined',
+        message: '🧪 Generic mock data (USE_MOCK_MODE=true) - no specific endpoint defined',
         path: req.originalUrl,
       };
-      console.log(`\u{1F9EA} Returning generic mock data for: ${req.originalUrl}`);
+      console.log(`🧪 Returning generic mock data for: ${req.originalUrl}`);
       return res.json(mockData);
     }
 
-    // Forward to Data API (flat contracts, no ARM wrapper)
-    const path = req.originalUrl.startsWith('/') ? req.originalUrl : `/${req.originalUrl}`;
-    const body = req.method !== 'GET' && req.method !== 'HEAD' ? req.body : null;
+    // Get access token using Managed Identity
+    const token = await getAccessToken();
 
-    console.log(`\u{1F504} Proxying to Data API: ${req.method} ${path}`);
+    // Build ARM target URL
+    const path = req.originalUrl.startsWith('/') ? req.originalUrl.slice(1) : req.originalUrl;
+    
+    // Construct the full ARM URL: base + path + api-version
+    const targetUrl = new URL(`${APIM_ARM_BASE_URL}/${path}`);
+    if (!targetUrl.searchParams.has('api-version')) {
+      targetUrl.searchParams.set('api-version', APIM_API_VERSION);
+    }
 
-    const data = await fetchFromDataApi(path, req.method, body);
-    res.json(data);
+    console.log(`🔄 Proxying to ARM: ${targetUrl.toString()}`);
 
-    console.log(`\u2705 Data API response forwarded for: ${path}`);
+    // Forward request to APIM via ARM
+    const apimResponse = await fetch(targetUrl.toString(), {
+      method: req.method,
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: req.method !== 'GET' && req.method !== 'HEAD' ? JSON.stringify(req.body) : undefined,
+    });
+
+    // Get response body
+    const contentType = apimResponse.headers.get('content-type') || '';
+    let data;
+    
+    if (contentType.includes('application/json')) {
+      data = await apimResponse.json();
+    } else {
+      data = await apimResponse.text();
+    }
+
+    // Forward response
+    res.status(apimResponse.status).json(data);
+
+    console.log(`✅ Response: ${apimResponse.status} ${apimResponse.statusText}`);
 
   } catch (error) {
-    console.error('\u274C Data API proxy error:', error);
-    res.status(error.status || 500).json({
+    console.error('❌ Proxy error:', error);
+    res.status(500).json({
       error: 'BFF proxy error',
       message: error.message,
       timestamp: new Date().toISOString(),
@@ -1009,16 +854,14 @@ app.listen(PORT, () => {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('🚀 APIM Portal BFF Server Started');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log(`\u{1F4E1} Port:          ${PORT}`);
-  console.log(`\u{1F517} APIM:          ${APIM_SERVICE_NAME} (${AZURE_RESOURCE_GROUP})`);
-  console.log(`\u{1F517} Data API:      ${APIM_DATA_API_URL || '(auto-discover from ARM)'}`);
-  console.log(`\u{1F517} Data API ver:  ${APIM_DATA_API_VERSION}`);
-  console.log(`\u{1F517} ARM Base:      ${APIM_ARM_BASE_URL}`);
-  console.log(`\u{1F512} Auth:          ${USE_MOCK_MODE ? 'Mock Mode (Development)' : 'Azure MI → SAS Token'}`);
-  console.log(`\u{1F30D} Environment:   ${NODE_ENV}`);
+  console.log(`📡 Port:          ${PORT}`);
+  console.log(`🔗 APIM:          ${APIM_SERVICE_NAME} (${AZURE_RESOURCE_GROUP})`);
+  console.log(`🔗 ARM Base:      ${APIM_ARM_BASE_URL}`);
+  console.log(`🔐 Auth:          ${USE_MOCK_MODE ? '🧪 Mock Mode (Development)' : 'Azure Managed Identity'}`);
+  console.log(`🌍 Environment:   ${NODE_ENV}`);
   if (USE_MOCK_MODE) {
     console.log('');
-    console.log('\u26A0\uFE0F  WARNING: Running in MOCK MODE');
+    console.log('⚠️  WARNING: Running in MOCK MODE');
     console.log('    All API calls will return mock data');
     console.log('    Set USE_MOCK_MODE=false to use real Azure authentication');
   }

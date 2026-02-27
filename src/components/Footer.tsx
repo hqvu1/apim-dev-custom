@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <Box mt={6} py={3} textAlign="center" color="text.secondary">
       <Typography variant="body2">Komatsu API Marketplace Portal</Typography>
-      <Typography variant="caption">Powered by Komatsu APIM customization on Azure</Typography>
+      <Typography variant="caption">Powered by Infosys APIM customization on Azure</Typography>
     </Box>
   );
 };

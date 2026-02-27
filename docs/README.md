@@ -12,8 +12,8 @@ This directory contains all project documentation for the Komatsu API Marketplac
   - Authentication flow updates
 
 ### APIM Integration
-- **[Komatsu_APIM_INTEGRATION_GUIDE.md](Komatsu_APIM_INTEGRATION_GUIDE.md)**  
-  Comprehensive guide for integrating with Komatsu APIM Customization Framework:
+- **[INFOSYS_APIM_INTEGRATION_GUIDE.md](INFOSYS_APIM_INTEGRATION_GUIDE.md)**  
+  Comprehensive guide for integrating with Infosys APIM Customization Framework:
   - Backend service requirements and architecture
   - Frontend code updates needed
   - Environment variable configuration
@@ -53,7 +53,7 @@ This directory contains all project documentation for the Komatsu API Marketplac
 | Document | Last Updated | Status |
 |----------|--------------|--------|
 | PUBLIC_LANDING_PAGE_SETUP.md | 2026-02-17 | ✅ Complete |
-| Komatsu_APIM_INTEGRATION_GUIDE.md | 2026-02-17 | ✅ Complete |
+| INFOSYS_APIM_INTEGRATION_GUIDE.md | 2026-02-17 | ✅ Complete |
 | APIM_INTEGRATION_CHECKLIST.md | 2026-02-17 | ⚠️ In Progress |
 
 ## 📝 Contributing to Documentation
@@ -78,6 +78,6 @@ When adding new documentation:
 - [Azure Deployment](../azure/README.md) - Infrastructure deployment
 
 **For Integrators:**
-- [APIM Integration Guide](Komatsu_APIM_INTEGRATION_GUIDE.md) - Complete integration guide
+- [APIM Integration Guide](INFOSYS_APIM_INTEGRATION_GUIDE.md) - Complete integration guide
 - [APIM Checklist](APIM_INTEGRATION_CHECKLIST.md) - Integration tasks
 

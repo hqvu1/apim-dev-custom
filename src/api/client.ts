@@ -23,11 +23,10 @@ import {
  * In local dev: /api (proxied by Vite to the BFF or APIM data plane).
  * In container: nginx proxies /api → VITE_PORTAL_API_BASE at build time.
  *
- * The BFF uses the APIM Data API (same source as the portal's DataApiClient):
- *   https://<apim-instance>.developer.azure-api.net/developer
- * Auth: Azure Managed Identity → ARM token → SAS token injected server-side.
- * Data API returns flat contracts (no ARM .properties wrapper), matching the
- * ApimApiContract / ApimPageContract<T> types in types.ts.
+ * The BFF is expected to forward requests to the APIM data-plane URL:
+ *   https://<apim-instance>.azure-api.net
+ * and inject the Ocp-Apim-Subscription-Key header server-side, so the SPA
+ * never holds the management key.
  */
 const API_BASE = import.meta.env.VITE_PORTAL_API_BASE ?? "/api";
 
