@@ -1,42 +1,27 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import { appConfig } from "./config";
+import en from "./i18n/en.json";
+import ja from "./i18n/ja.json";
 
-const defaultLocale = import.meta.env.VITE_DEFAULT_LOCALE || "en";
-
+/**
+ * i18next configuration.
+ *
+ * Translations live in `src/i18n/{locale}.json` so they can be maintained
+ * independently from code and sent for professional translation.
+ *
+ * @see docs/ARCHITECTURE_DESIGN.md §10 — Recommended: src/i18n/ JSON files
+ */
 i18n.use(initReactI18next).init({
-  lng: defaultLocale,
+  lng: appConfig.defaultLocale,
   fallbackLng: "en",
   resources: {
-    en: {
-      translation: {
-        appName: "Komatsu API Marketplace",
-        nav: {
-          home: "Home",
-          apis: "API Catalog",
-          integrations: "My Integrations",
-          support: "Support",
-          news: "News",
-          admin: "Admin"
-        }
-      }
-    },
-    ja: {
-      translation: {
-        appName: "Komatsu API Marketplace",
-        nav: {
-          home: "Home",
-          apis: "API Catalog",
-          integrations: "My Integrations",
-          support: "Support",
-          news: "News",
-          admin: "Admin"
-        }
-      }
-    }
+    en: { translation: en },
+    ja: { translation: ja },
   },
   interpolation: {
-    escapeValue: false
-  }
+    escapeValue: false,
+  },
 });
 
 export default i18n;

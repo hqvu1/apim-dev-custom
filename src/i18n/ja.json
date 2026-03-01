@@ -1,0 +1,101 @@
+{
+  "appName": "Komatsu APIマーケットプレイス",
+  "nav": {
+    "home": "ホーム",
+    "apis": "APIカタログ",
+    "integrations": "マイ連携",
+    "support": "サポート",
+    "news": "ニュース",
+    "admin": "管理"
+  },
+  "common": {
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました",
+    "retry": "再試行",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "delete": "削除",
+    "search": "検索",
+    "noResults": "結果が見つかりません",
+    "signOut": "サインアウト",
+    "language": "言語",
+    "back": "戻る"
+  },
+  "auth": {
+    "signingIn": "サインイン中...",
+    "redirecting": "Entra IDにリダイレクト中...",
+    "unauthorized": "未認証 – トークンが期限切れの可能性があります。",
+    "forbidden": "禁止 – 権限が不足しています。",
+    "accessDenied": "アクセス拒否",
+    "accessDeniedMessage": "このページにアクセスする権限がありません。"
+  },
+  "home": {
+    "heroTitle": "Komatsu APIマーケットプレイス",
+    "heroSubtitle": "コマツのデジタルエコシステムを支えるAPIを発見・探索・統合しましょう。"
+  },
+  "catalog": {
+    "title": "APIカタログ",
+    "subtitle": "Komatsu API管理プラットフォームで利用可能なAPIを発見し、探索してください。",
+    "searchPlaceholder": "名前、説明、またはパスで検索...",
+    "allCategories": "すべてのカテゴリ",
+    "allPlans": "すべてのプラン",
+    "noApis": "APIが見つかりません",
+    "adjustFilters": "検索条件やフィルタ条件を調整してみてください。",
+    "noPublished": "現在公開されているAPIはありません。",
+    "apisAvailable": "{{count}}件のAPIが利用可能",
+    "apisAvailable_plural": "{{count}}件のAPIが利用可能",
+    "fallbackNotice": "ポータルAPIの準備が整うまで、ローカルカタログデータを使用しています。"
+  },
+  "apiDetails": {
+    "backToCatalog": "カタログに戻る",
+    "overview": "概要",
+    "operations": "オペレーション",
+    "method": "メソッド",
+    "endpoint": "エンドポイント",
+    "description": "説明",
+    "noDescription": "このAPIの説明はありません。",
+    "viewDocs": "ドキュメントを表示",
+    "exportSpec": "OpenAPI仕様をエクスポート",
+    "subscription": "サブスクリプション",
+    "requestAccess": "アクセスをリクエスト",
+    "testApi": "このAPIをテスト",
+    "testApiDescription": "インタラクティブコンソールを使用してリクエストを送信し、リアルタイムでレスポンスを表示します。",
+    "openTryIt": "Try-Itコンソールを開く",
+    "availablePlans": "利用可能なプラン",
+    "contact": "連絡先",
+    "license": "ライセンス",
+    "additionalInfo": "追加情報",
+    "notFound": "APIが見つかりません。"
+  },
+  "tryIt": {
+    "title": "Try-Itコンソール",
+    "subtitle": "Komatsu NA APIMの短期キーを使用してサンドボックスエンドポイントを試してください。",
+    "operations": "オペレーション",
+    "requestBuilder": "リクエストビルダー",
+    "requestUrl": "リクエストURL",
+    "headers": "ヘッダー",
+    "jsonBody": "JSONボディ",
+    "sendRequest": "リクエスト送信",
+    "response": "レスポンス"
+  },
+  "support": {
+    "title": "サポート",
+    "subtitle": "API連携のサポート、問題の報告、または新機能のリクエストを行います。"
+  },
+  "news": {
+    "title": "ニュース・お知らせ",
+    "subtitle": "APIの変更、非推奨、新機能の最新情報をお届けします。"
+  },
+  "admin": {
+    "title": "管理パネル",
+    "subtitle": "API、ユーザー、ポータル設定を管理します。"
+  },
+  "register": {
+    "title": "登録",
+    "subtitle": "Komatsu APIマーケットプレイスへのアクセスをリクエストします。"
+  },
+  "onboarding": {
+    "title": "はじめに",
+    "subtitle": "APIマーケットプレイスの使用を開始するには、以下の手順を完了してください。"
+  }
+}

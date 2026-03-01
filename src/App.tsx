@@ -1,76 +1,74 @@
+import { Suspense, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AppShell from "./components/AppShell";
 import ErrorBoundary from "./components/ErrorBoundary";
+import LoadingScreen from "./components/LoadingScreen";
 import PrivateRoute from "./components/PrivateRoute";
 import PublicLayout from "./components/PublicLayout";
-import SsoLogoutHandler from "./utils/loginUtils/SsoLogoutHandler";
-import AccessDenied from "./pages/AccessDenied";
-import Admin from "./pages/Admin";
-import ApiCatalog from "./pages/ApiCatalog";
-import ApiDetails from "./pages/ApiDetails";
-import ApiTryIt from "./pages/ApiTryIt";
-import Home from "./pages/home";
-import MyIntegrations from "./pages/MyIntegrations";
-import News from "./pages/News";
-import NotFound from "./pages/NotFound";
-import Onboarding from "./pages/Onboarding";
-import Register from "./pages/Register";
-import Support from "./pages/Support";
 import RoleGate from "./components/RoleGate";
+import { appConfig, ROUTES } from "./config";
 
-// Runtime config helper
-const getRuntimeConfig = () => {
-  if (typeof window !== 'undefined' && (window as any).__RUNTIME_CONFIG__) {
-    return (window as any).__RUNTIME_CONFIG__;
-  }
-  return {};
-};
+// ─── Route-level code-splitting ───────────────────────────────────────────────
+// Each page is lazily loaded so the initial bundle stays small.
+// Critical shell components (AppShell, Header, SideNav) are eagerly loaded.
+// @see docs/ARCHITECTURE_DESIGN.md §2 — Frontend Architecture
+const AppShell = lazy(() => import("./components/AppShell"));
+const SsoLogoutHandler = lazy(() => import("./utils/loginUtils/SsoLogoutHandler"));
+const AccessDenied = lazy(() => import("./pages/AccessDenied"));
+const Admin = lazy(() => import("./pages/Admin"));
+const ApiCatalog = lazy(() => import("./pages/ApiCatalog"));
+const ApiDetails = lazy(() => import("./pages/ApiDetails"));
+const ApiTryIt = lazy(() => import("./pages/ApiTryIt"));
+const Home = lazy(() => import("./pages/home"));
+const MyIntegrations = lazy(() => import("./pages/MyIntegrations"));
+const News = lazy(() => import("./pages/News"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Onboarding = lazy(() => import("./pages/Onboarding"));
+const Register = lazy(() => import("./pages/Register"));
+const Support = lazy(() => import("./pages/Support"));
 
 const App = () => {
-  // Check runtime config first, fallback to build-time env
-  const runtimeConfig = getRuntimeConfig();
-  const isPublicHomePage = 
-    runtimeConfig.PUBLIC_HOME_PAGE === 'true' || 
-    import.meta.env.VITE_PUBLIC_HOME_PAGE === "true";
+  const isPublicHomePage = appConfig.publicHomePage;
 
   return (
     <ErrorBoundary>
       <BrowserRouter>
-        <Routes>
-          <Route path="sso-logout" element={<SsoLogoutHandler />} />
-          
-          {/* Public home page for demos (when enabled) */}
-          {isPublicHomePage && (
-            <Route element={<PublicLayout />}>
-              <Route index element={<Home />} />
+        <Suspense fallback={<LoadingScreen message="Loading page..." />}>
+          <Routes>
+            <Route path={ROUTES.SSO_LOGOUT} element={<SsoLogoutHandler />} />
+
+            {/* Public home page for demos (when enabled) */}
+            {isPublicHomePage && (
+              <Route element={<PublicLayout />}>
+                <Route index element={<Home />} />
+              </Route>
+            )}
+
+            <Route element={<PrivateRoute />}>
+              <Route element={<AppShell />}>
+                {!isPublicHomePage && <Route index element={<Home />} />}
+                <Route path={ROUTES.API_CATALOG} element={<ApiCatalog />} />
+                <Route path={ROUTES.API_DETAILS} element={<ApiDetails />} />
+                <Route path={ROUTES.API_TRY_IT} element={<ApiTryIt />} />
+                <Route path={ROUTES.REGISTER} element={<Register />} />
+                <Route path={ROUTES.ONBOARDING} element={<Onboarding />} />
+                <Route path={ROUTES.MY_INTEGRATIONS} element={<MyIntegrations />} />
+                <Route path={ROUTES.SUPPORT} element={<Support />} />
+                <Route path={ROUTES.NEWS} element={<News />} />
+                <Route
+                  path={ROUTES.ADMIN}
+                  element={
+                    <RoleGate roles={["Admin", "GlobalAdmin"]}>
+                      <Admin />
+                    </RoleGate>
+                  }
+                />
+              </Route>
             </Route>
-          )}
-          
-          <Route element={<PrivateRoute />}>
-            <Route element={<AppShell />}>
-              {!isPublicHomePage && <Route index element={<Home />} />}
-              <Route path="apis" element={<ApiCatalog />} />
-              <Route path="apis/:apiId" element={<ApiDetails />} />
-              <Route path="apis/:apiId/try" element={<ApiTryIt />} />
-              <Route path="register" element={<Register />} />
-              <Route path="profile/onboarding" element={<Onboarding />} />
-              <Route path="my/integrations" element={<MyIntegrations />} />
-              <Route path="support" element={<Support />} />
-              <Route path="news" element={<News />} />
-              <Route
-                path="admin"
-                element={
-                  <RoleGate roles={["Admin", "GlobalAdmin"]}>
-                    <Admin />
-                  </RoleGate>
-                }
-              />
-            </Route>
-          </Route>
-          
-          <Route path="access-denied" element={<AccessDenied />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+
+            <Route path={ROUTES.ACCESS_DENIED} element={<AccessDenied />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </ErrorBoundary>
   );

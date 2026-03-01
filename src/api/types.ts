@@ -66,6 +66,15 @@ export type ApimSubscriptionContract = {
 
 // ─── Internal domain types used across apim-dev-custom ───────────────────────
 
+/**
+ * Indicates whether the API is sourced from APIM Data API or an external
+ * (non-APIM) backend. The BFF's Backend Router pattern uses the api-registry
+ * to dispatch to the correct upstream.
+ *
+ * @see docs/BFF_EVOLUTION_ANALYSIS.md §2 — Backend Router Pattern
+ */
+export type ApiSource = "apim" | "external";
+
 export type ApiSummary = {
   id: string;
   name: string;
@@ -80,6 +89,8 @@ export type ApiSummary = {
   apiVersion?: string;
   type?: string;
   subscriptionRequired?: boolean;
+  /** Backend source — APIM Data API or external adapter. Defaults to "apim". */
+  source?: ApiSource;
 };
 
 export type ApiDetails = ApiSummary & {
@@ -157,6 +168,7 @@ export function mapApimApiToSummary(contract: ApimApiContract): ApiSummary {
     apiVersion: contract.apiVersion,
     type: contract.type,
     subscriptionRequired: contract.subscriptionRequired,
+    source: "apim", // APIM-sourced by default; external adapters override this
   };
 }
 

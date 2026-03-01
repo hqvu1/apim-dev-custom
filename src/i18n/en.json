@@ -1,0 +1,101 @@
+{
+  "appName": "Komatsu API Marketplace",
+  "nav": {
+    "home": "Home",
+    "apis": "API Catalog",
+    "integrations": "My Integrations",
+    "support": "Support",
+    "news": "News",
+    "admin": "Admin"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "search": "Search",
+    "noResults": "No results found",
+    "signOut": "Sign out",
+    "language": "Language",
+    "back": "Back"
+  },
+  "auth": {
+    "signingIn": "Signing you in...",
+    "redirecting": "Redirecting to Entra ID...",
+    "unauthorized": "Unauthorized – token may have expired.",
+    "forbidden": "Forbidden – insufficient permissions.",
+    "accessDenied": "Access Denied",
+    "accessDeniedMessage": "You do not have permission to access this page."
+  },
+  "home": {
+    "heroTitle": "Komatsu API Marketplace",
+    "heroSubtitle": "Discover, explore, and integrate with APIs powering Komatsu's digital ecosystem."
+  },
+  "catalog": {
+    "title": "API Catalog",
+    "subtitle": "Discover and explore APIs available on the Komatsu API Management platform.",
+    "searchPlaceholder": "Search by name, description, or path...",
+    "allCategories": "All Categories",
+    "allPlans": "All Plans",
+    "noApis": "No APIs found",
+    "adjustFilters": "Try adjusting your search or filter criteria.",
+    "noPublished": "No APIs are currently published.",
+    "apisAvailable": "{{count}} API available",
+    "apisAvailable_plural": "{{count}} APIs available",
+    "fallbackNotice": "Using local catalog data until the portal API is ready."
+  },
+  "apiDetails": {
+    "backToCatalog": "Back to catalog",
+    "overview": "Overview",
+    "operations": "Operations",
+    "method": "Method",
+    "endpoint": "Endpoint",
+    "description": "Description",
+    "noDescription": "No description available for this API.",
+    "viewDocs": "View documentation",
+    "exportSpec": "Export OpenAPI spec",
+    "subscription": "Subscription",
+    "requestAccess": "Request access",
+    "testApi": "Test this API",
+    "testApiDescription": "Use the interactive console to send requests and view responses in real time.",
+    "openTryIt": "Open Try-It Console",
+    "availablePlans": "Available Plans",
+    "contact": "Contact",
+    "license": "License",
+    "additionalInfo": "Additional Information",
+    "notFound": "API not found."
+  },
+  "tryIt": {
+    "title": "Try-It Console",
+    "subtitle": "Experiment with sandbox endpoints using short-lived keys from Komatsu NA APIM.",
+    "operations": "Operations",
+    "requestBuilder": "Request Builder",
+    "requestUrl": "Request URL",
+    "headers": "Headers",
+    "jsonBody": "JSON Body",
+    "sendRequest": "Send Request",
+    "response": "Response"
+  },
+  "support": {
+    "title": "Support",
+    "subtitle": "Get help with API integration, report issues, or request new features."
+  },
+  "news": {
+    "title": "News & Announcements",
+    "subtitle": "Stay up to date with API changes, deprecations, and new features."
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "subtitle": "Manage APIs, users, and portal settings."
+  },
+  "register": {
+    "title": "Register",
+    "subtitle": "Request access to the Komatsu API Marketplace."
+  },
+  "onboarding": {
+    "title": "Getting Started",
+    "subtitle": "Complete these steps to start using the API Marketplace."
+  }
+}

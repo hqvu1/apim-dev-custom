@@ -17,15 +17,23 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth/useAuth";
 import useLogout from "../utils/loginUtils/useLogout";
 
+type HeaderProps = {
+  /** Width of the side drawer (irrelevant in public mode). */
+  drawerWidth?: number;
+  /** Callback when the hamburger menu is clicked. */
+  onMenuClick?: () => void;
+  /** Whether to show the hamburger menu button. */
+  showMenuButton?: boolean;
+  /** When true, renders a simplified header without user menu/auth controls. */
+  isPublic?: boolean;
+};
+
 const Header = ({
-  drawerWidth,
+  drawerWidth = 0,
   onMenuClick,
-  showMenuButton
-}: {
-  drawerWidth: number;
-  onMenuClick: () => void;
-  showMenuButton: boolean;
-}) => {
+  showMenuButton = false,
+  isPublic = false,
+}: HeaderProps) => {
   const { t, i18n } = useTranslation();
   const { account } = useAuth();
   const { logout } = useLogout();
@@ -87,28 +95,32 @@ const Header = ({
               Japanese
             </MenuItem>
           </Menu>
-          <Box display="flex" alignItems="center" gap={1}>
-            <IconButton
-              onClick={(event) => setUserAnchor(event.currentTarget)}
-              aria-label="Open user menu"
-              size="small"
-            >
-              <Avatar sx={{ bgcolor: "primary.main" }}>{displayName.charAt(0)}</Avatar>
-            </IconButton>
-            <Typography variant="body2" fontWeight={600}>
-              {displayName}
-            </Typography>
-          </Box>
-          <Menu anchorEl={userAnchor} open={Boolean(userAnchor)} onClose={() => setUserAnchor(null)}>
-            <MenuItem
-              onClick={() => {
-                setUserAnchor(null);
-                logout();
-              }}
-            >
-              Sign out
-            </MenuItem>
-          </Menu>
+          {!isPublic && (
+            <>
+              <Box display="flex" alignItems="center" gap={1}>
+                <IconButton
+                  onClick={(event) => setUserAnchor(event.currentTarget)}
+                  aria-label="Open user menu"
+                  size="small"
+                >
+                  <Avatar sx={{ bgcolor: "primary.main" }}>{displayName.charAt(0)}</Avatar>
+                </IconButton>
+                <Typography variant="body2" fontWeight={600}>
+                  {displayName}
+                </Typography>
+              </Box>
+              <Menu anchorEl={userAnchor} open={Boolean(userAnchor)} onClose={() => setUserAnchor(null)}>
+                <MenuItem
+                  onClick={() => {
+                    setUserAnchor(null);
+                    logout();
+                  }}
+                >
+                  Sign out
+                </MenuItem>
+              </Menu>
+            </>
+          )}
         </Stack>
       </Toolbar>
     </AppBar>

@@ -1,18 +1,21 @@
 import { List, ListItem, ListItemButton, ListItemText, Stack, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth/useAuth";
-
-const navItems = [
-  { label: "Home", to: "/", roles: [] },
-  { label: "API Catalog", to: "/apis", roles: [] },
-  { label: "My Integrations", to: "/my/integrations", roles: [] },
-  { label: "Support", to: "/support", roles: [] },
-  { label: "News", to: "/news", roles: [] },
-  { label: "Admin", to: "/admin", roles: ["Admin", "GlobalAdmin"] }
-];
+import { ROUTES } from "../config";
 
 const SideNav = () => {
   const { roles } = useAuth();
+  const { t } = useTranslation();
+
+  const navItems = [
+    { label: t("nav.home"), to: ROUTES.HOME, roles: [] as string[] },
+    { label: t("nav.apis"), to: ROUTES.API_CATALOG, roles: [] as string[] },
+    { label: t("nav.integrations"), to: ROUTES.MY_INTEGRATIONS, roles: [] as string[] },
+    { label: t("nav.support"), to: ROUTES.SUPPORT, roles: [] as string[] },
+    { label: t("nav.news"), to: ROUTES.NEWS, roles: [] as string[] },
+    { label: t("nav.admin"), to: ROUTES.ADMIN, roles: ["Admin", "GlobalAdmin"] },
+  ];
 
   const allowed = (itemRoles: string[]) =>
     itemRoles.length === 0 || itemRoles.some((role) => roles.includes(role));

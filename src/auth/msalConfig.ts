@@ -1,9 +1,10 @@
 import { Configuration, LogLevel } from "@azure/msal-browser";
+import { appConfig } from "../config";
 
-const clientId = import.meta.env.VITE_ENTRA_CLIENT_ID || "";
-const externalTenantId = import.meta.env.VITE_EXTERNAL_TENANT_ID || "";
-const workforceTenantId = import.meta.env.VITE_WORKFORCE_TENANT_ID || "";
-const ciamHost = import.meta.env.VITE_CIAM_HOST || "kltdexternaliddev.ciamlogin.com";
+const clientId = appConfig.entra.clientId;
+const externalTenantId = appConfig.entra.externalTenantId;
+const workforceTenantId = appConfig.entra.workforceTenantId;
+const ciamHost = appConfig.entra.ciamHost;
 
 const TENANT_DETAILS: Record<string, Configuration["auth"]> = {
   ...(externalTenantId
@@ -11,8 +12,8 @@ const TENANT_DETAILS: Record<string, Configuration["auth"]> = {
         [externalTenantId]: {
           clientId,
           authority: `https://${ciamHost}/${externalTenantId}`,
-          redirectUri: window.location.origin,
-          postLogoutRedirectUri: `${window.location.origin}/`
+          redirectUri: globalThis.location.origin,
+          postLogoutRedirectUri: `${globalThis.location.origin}/`
         }
       }
     : {}),
@@ -21,8 +22,8 @@ const TENANT_DETAILS: Record<string, Configuration["auth"]> = {
         [workforceTenantId]: {
           clientId,
           authority: `https://login.microsoftonline.com/${workforceTenantId}`,
-          redirectUri: window.location.origin,
-          postLogoutRedirectUri: `${window.location.origin}/`
+          redirectUri: globalThis.location.origin,
+          postLogoutRedirectUri: `${globalThis.location.origin}/`
         }
       }
     : {})
@@ -39,8 +40,8 @@ export const getMsalConfig = (tenantId: string): Configuration => {
     ({
       clientId,
       authority: fallbackAuthority,
-      redirectUri: window.location.origin,
-      postLogoutRedirectUri: `${window.location.origin}/`
+      redirectUri: globalThis.location.origin,
+      postLogoutRedirectUri: `${globalThis.location.origin}/`
     } satisfies Configuration["auth"]);
 
   return {
@@ -78,5 +79,5 @@ export const getMsalConfig = (tenantId: string): Configuration => {
 };
 
 export const loginRequest = {
-  scopes: [import.meta.env.VITE_PORTAL_API_SCOPE || "User.Read"]
+  scopes: [appConfig.entra.portalApiScope]
 };

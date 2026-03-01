@@ -130,6 +130,16 @@ const ApiCard = ({ api }: { api: ApiSummary }) => {
                 sx={{ fontFamily: "monospace", fontSize: "0.65rem" }}
               />
             )}
+            {/* Source badge — indicates APIM vs external (non-APIM) backend */}
+            {api.source === "external" && (
+              <Chip
+                label="External"
+                size="small"
+                variant="outlined"
+                color="info"
+                sx={{ fontWeight: 500 }}
+              />
+            )}
           </Stack>
         </CardContent>
       </CardActionArea>

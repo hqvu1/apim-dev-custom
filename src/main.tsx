@@ -6,20 +6,19 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { getMsalConfig } from "./auth/msalConfig";
 import { AuthProvider } from "./auth/AuthProvider";
 import ToastProvider from "./components/ToastProvider";
+import { appConfig } from "./config";
 import { theme } from "./theme";
 import "./styles.css";
 import "./i18n";
 import App from "./App";
 import { initiateLogin } from "./utils/loginUtils/initiateLogin";
 
-const useMockAuth = import.meta.env.VITE_USE_MOCK_AUTH === "true";
-
 (async () => {
   let tenantId: string | null;
 
-  if (useMockAuth) {
+  if (appConfig.useMockAuth) {
     // In mock mode, use external tenant ID for MSAL initialization (won't actually authenticate)
-    tenantId = import.meta.env.VITE_EXTERNAL_TENANT_ID || "mock-tenant";
+    tenantId = appConfig.entra.externalTenantId || "mock-tenant";
   } else {
     // In production mode, initiate real login flow
     tenantId = initiateLogin();
