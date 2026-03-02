@@ -21,6 +21,7 @@ describe('Footer Component', () => {
       </BrowserRouter>
     );
     
-    expect(screen.getByText(/Komatsu/i)).toBeInTheDocument();
+    const matches = screen.getAllByText(/Komatsu/i);
+    expect(matches.length).toBeGreaterThanOrEqual(1);
   });
 });

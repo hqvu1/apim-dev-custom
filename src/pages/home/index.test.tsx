@@ -63,6 +63,14 @@ describe('Home Page', () => {
     { title: 'Maintenance Update' }
   ];
 
+  const mockStatsData = {
+    availableApis: 42,
+    products: 15,
+    subscriptions: 128,
+    users: 1247,
+    uptime: '99.9%'
+  };
+
   const mockGet = vi.fn();
 
   beforeEach(() => {
@@ -76,6 +84,9 @@ describe('Home Page', () => {
       }
       if (url === '/apis/highlights') {
         return Promise.resolve({ data: mockApiData, error: null });
+      }
+      if (url === '/stats') {
+        return Promise.resolve({ data: mockStatsData, error: null });
       }
       return Promise.resolve({ data: null, error: null });
     });
@@ -112,8 +123,8 @@ describe('Home Page', () => {
     it('displays statistics cards', () => {
       renderComponent();
       expect(screen.getByText('Available APIs')).toBeInTheDocument();
-      expect(screen.getByText('Active Users')).toBeInTheDocument();
-      expect(screen.getByText('API Calls Today')).toBeInTheDocument();
+      expect(screen.getByText('Products')).toBeInTheDocument();
+      expect(screen.getByText('Subscriptions')).toBeInTheDocument();
       expect(screen.getByText('Uptime')).toBeInTheDocument();
     });
 
@@ -129,11 +140,15 @@ describe('Home Page', () => {
   });
 
   describe('Statistics Section', () => {
-    it('displays correct statistic values', () => {
+    it('displays correct statistic values after loading', async () => {
       renderComponent();
-      expect(screen.getByText('42')).toBeInTheDocument();
-      expect(screen.getByText('1,247')).toBeInTheDocument();
-      expect(screen.getByText('2.4M')).toBeInTheDocument();
+
+      await waitFor(() => {
+        expect(screen.getByText('42')).toBeInTheDocument();
+      });
+
+      expect(screen.getByText('15')).toBeInTheDocument();
+      expect(screen.getByText('128')).toBeInTheDocument();
       expect(screen.getByText('99.9%')).toBeInTheDocument();
     });
   });
@@ -422,6 +437,7 @@ describe('Home Page', () => {
       await waitFor(() => {
         expect(mockGet).toHaveBeenCalledWith('/news');
         expect(mockGet).toHaveBeenCalledWith('/apis/highlights');
+        expect(mockGet).toHaveBeenCalledWith('/stats');
       });
     });
 
@@ -429,7 +445,7 @@ describe('Home Page', () => {
       renderComponent();
 
       await waitFor(() => {
-        expect(mockGet).toHaveBeenCalledTimes(2);
+        expect(mockGet).toHaveBeenCalledTimes(3);
       });
     });
   });
