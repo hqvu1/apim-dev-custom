@@ -1,0 +1,29 @@
+{
+  "policies": [
+    {
+      "role": "Admin",
+      "apis": ["*"],
+      "permissions": ["read", "tryit", "subscribe", "manage"]
+    },
+    {
+      "role": "GlobalAdmin",
+      "apis": ["*"],
+      "permissions": ["read", "tryit", "subscribe", "manage"]
+    },
+    {
+      "role": "Developer",
+      "apis": ["warranty-api", "punchout-api", "equipment-api"],
+      "permissions": ["read", "tryit", "subscribe"]
+    },
+    {
+      "role": "Tester",
+      "apis": ["warranty-api", "punchout-api", "equipment-api"],
+      "permissions": ["read", "tryit"]
+    },
+    {
+      "role": "Viewer",
+      "apis": ["*"],
+      "permissions": ["read"]
+    }
+  ]
+}

@@ -208,7 +208,7 @@ All code thoroughly documented:
 ## 🔄 Migration Notes
 
 ### Changes Required
-- ✅ Updated [App.tsx](/c:/Users/hvu/source/repos/mykomatsu-apim-dev-custom/src/App.tsx) import: `./pages/Home` → `./pages/home`
+- ✅ Updated [App.tsx](/c:/Users/hvu/source/repos/kx-apim-dev-custom/src/App.tsx) import: `./pages/Home` → `./pages/home`
 
 ### Backward Compatibility
 - ✅ No breaking changes to API

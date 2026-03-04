@@ -27,7 +27,7 @@ export default defineConfig(({ mode }) => {
         "/api": {
           target: bffTarget,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ""),
+          // .NET BFF routes already include /api prefix — no rewrite needed
           secure: bffTarget.startsWith("https"),
         },
       },

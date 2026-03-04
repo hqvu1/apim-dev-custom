@@ -2,7 +2,7 @@
 
 ## Overview Comparison
 
-| Aspect | **mykomatsu-apim-dev-custom** | **undercarriage-trackshoe-lookup-frontend** |
+| Aspect | **kx-apim-dev-custom** | **undercarriage-trackshoe-lookup-frontend** |
 |--------|-------------------------------|---------------------------------------------|
 | **Infrastructure** | Bicep templates | Bicep templates |
 | **Container Runtime** | Nginx (static SPA) | Node.js + Express (with backend API) |
@@ -22,7 +22,7 @@
 
 ### 1. **Workflow Structure**
 
-#### **mykomatsu-apim-dev-custom**
+#### **kx-apim-dev-custom**
 ```
 .github/workflows/
 ├── build-test.yml       # Build validation on PRs
@@ -55,7 +55,7 @@
 
 ### 2. **Build Process**
 
-#### **mykomatsu-apim-dev-custom**
+#### **kx-apim-dev-custom**
 ```yaml
 # Uses Azure ACR Build directly
 az acr build \
@@ -106,7 +106,7 @@ docker buildx build \
 
 ### 3. **Deployment Strategy**
 
-#### **mykomatsu-apim-dev-custom**
+#### **kx-apim-dev-custom**
 ```yaml
 # Deploy Bicep first, then build image, then update
 1. Deploy Bicep infrastructure (azure/arm-deploy action)
@@ -140,7 +140,7 @@ docker buildx build \
 
 ### 4. **Secrets & Configuration Management**
 
-#### **mykomatsu-apim-dev-custom**
+#### **kx-apim-dev-custom**
 
 **Build-time secrets (passed as build args):**
 ```yaml
@@ -181,7 +181,7 @@ az containerapp update \
 
 ### 5. **Testing & Quality Gates**
 
-#### **mykomatsu-apim-dev-custom**
+#### **kx-apim-dev-custom**
 ```yaml
 # build-test.yml
 - TypeScript compilation check
@@ -212,7 +212,7 @@ az containerapp update \
 
 ### 6. **Environment Management**
 
-#### **mykomatsu-apim-dev-custom**
+#### **kx-apim-dev-custom**
 
 **Environments:**
 - `development` (develop branch)
@@ -247,7 +247,7 @@ rg-komatsu-apim-portal-prod
 
 ### 7. **Advanced Features**
 
-#### **mykomatsu-apim-dev-custom**
+#### **kx-apim-dev-custom**
 - ✅ Federated credentials (passwordless)
 - ✅ Deployment summaries with URLs
 - ✅ Path ignore for docs/markdown
@@ -273,7 +273,7 @@ rg-komatsu-apim-portal-prod
 
 ## Image Tagging Strategy
 
-### **mykomatsu-apim-dev-custom**
+### **kx-apim-dev-custom**
 ```
 komatsuapimportaldevacr.azurecr.io/komatsu-apim-portal:abc1234  # SHA
 komatsuapimportaldevacr.azurecr.io/komatsu-apim-portal:latest   # Latest
@@ -343,7 +343,7 @@ tsalookupprodacr.azurecr.io/tsa-lookup-ui:prod-latest
 
 ## Architecture Decision Summary
 
-### When to use **mykomatsu-apim-dev-custom** approach:
+### When to use **kx-apim-dev-custom** approach:
 - ✅ Static SPA with no backend
 - ✅ Simple deployment requirements
 - ✅ Want minimal complexity

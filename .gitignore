@@ -85,3 +85,31 @@ server/env.local
 .vscode/settings.json
 # --- Data folder ---
 data/
+
+# --- .NET / C# ---
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]uild[Ll]og.*
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# NuGet
+**/packages/
+*.nuget.props
+*.nuget.targets
+
+# .NET tool artifacts
+.dotnet/
+*.DotSettings.user

@@ -1,0 +1,16 @@
+{
+  "apis": {
+    "warranty-api": {
+      "source": "apim",
+      "apimApiId": "warranty-api"
+    },
+    "punchout-api": {
+      "source": "apim",
+      "apimApiId": "punchout-api"
+    },
+    "equipment-api": {
+      "source": "apim",
+      "apimApiId": "equipment-api"
+    }
+  }
+}

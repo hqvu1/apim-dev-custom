@@ -1,7 +1,7 @@
 # APIM Data API Communication Comparison
 
 > **Official Portal:** `api-management-developer-portal` (self-hosted)
-> **Custom Portal:** `mykomatsu-apim-dev-custom` (Vite + React SPA + Express BFF)
+> **Custom Portal:** `kx-apim-dev-custom` (Vite + React SPA + Express BFF)
 
 This document compares how the official Azure APIM Developer Portal runtime communicates with the APIM backend versus what the custom Komatsu portal currently implements, and recommends what to add.
 
@@ -392,4 +392,4 @@ app.get('/reports/:type', requireRole('Admin', 'GlobalAdmin'), reportsHandler);
 
 ---
 
-*Comparison based on analysis of `api-management-developer-portal/src/services/` and `api-management-developer-portal/src/clients/` against `mykomatsu-apim-dev-custom/bff/server.js`.*
+*Comparison based on analysis of `api-management-developer-portal/src/services/` and `api-management-developer-portal/src/clients/` against `kx-apim-dev-custom/bff/server.js`.*

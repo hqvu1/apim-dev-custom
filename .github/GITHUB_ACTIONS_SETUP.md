@@ -31,7 +31,7 @@ The GitHub Actions workflows use a **matrix-based deployment strategy** with com
 APP_NAME="github-komatsu-apim-portal"
 SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 REPO_OWNER="your-github-org"
-REPO_NAME="mykomatsu-apim-dev-custom"
+REPO_NAME="kx-apim-dev-custom"
 
 # Create the Azure AD application
 APP_ID=$(az ad app create --display-name "$APP_NAME" --query appId -o tsv)
