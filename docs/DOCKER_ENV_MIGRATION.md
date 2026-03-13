@@ -3,6 +3,8 @@
 ## Overview
 The Dockerfile and deployment files were using **outdated environment variable names** from an old Azure AD configuration. They have been updated to match the current Entra ID multi-tenant authentication setup.
 
+> **Note (March 2026):** The BFF has been fully migrated from Node.js (`bff/server.js`) to ASP.NET Core 10 (`bff-dotnet/`). The Dockerfile now has a 3-stage build: frontend (node:20-alpine), BFF (`dotnet/sdk:10.0-preview`), and runtime (nginx:alpine + ASP.NET Core runtime). The .NET BFF uses `appsettings.json` with environment variable overrides (using `__` separator, e.g., `Apim__SubscriptionId`). The frontend `VITE_*` build args below still apply. See [BFF_IMPLEMENTATION.md](BFF_IMPLEMENTATION.md) for the current .NET BFF configuration.
+
 ## Changes Made
 
 ### ✅ Updated Files
@@ -118,9 +120,16 @@ docker build \
   --build-arg VITE_DEFAULT_LOCALE="en" \
   -t komatsu-apim-portal:test .
 
-# Test the container
+# Test the container (with .NET BFF env vars)
 docker run -p 8080:8080 \
-  -e PORTAL_API_BACKEND_URL="https://d-apim.developer.azure-api.net" \
+  -e ASPNETCORE_ENVIRONMENT="Production" \
+  -e ASPNETCORE_URLS="http://+:3001" \
+  -e Apim__SubscriptionId="121789fa-2321-4e44-8aee-c6f1cd5d7045" \
+  -e Apim__ResourceGroup="kac_apimarketplace_eus_dev_rg" \
+  -e Apim__ServiceName="demo-apim-feb" \
+  -e EntraId__TenantId="58be8688-6625-4e52-80d8-c17f3a9ae08a" \
+  -e EntraId__ClientId="bd400d26-7db1-44fd-82b7-8c7af757e249" \
+  -e Features__UseMockMode="false" \
   komatsu-apim-portal:test
 ```
 

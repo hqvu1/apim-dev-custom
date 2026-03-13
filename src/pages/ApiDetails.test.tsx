@@ -47,6 +47,7 @@ describe("ApiDetails", () => {
   const fullDetails: ApiDetailsType = {
     id: "test-api-1",
     name: "Fleet Management API",
+    displayName: "Fleet Management API",
     description: "API for fleet management",
     status: "Production",
     owner: "Fleet Team",

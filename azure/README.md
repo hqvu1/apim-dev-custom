@@ -115,11 +115,16 @@ The application requires these environment variables:
 
 | Variable | Description | Required | Example |
 |----------|-------------|----------|---------|
-| `VITE_AZURE_CLIENT_ID` | Azure AD Application (Client) ID | Yes | `12345678-1234-1234-1234-123456789012` |
-| `VITE_AZURE_AUTHORITY` | Azure AD Authority URL with Tenant ID | Yes | `https://login.microsoftonline.com/YOUR_TENANT_ID` |
-| `VITE_AZURE_REDIRECT_URI` | Redirect URI after login | Yes | `https://your-app.azurecontainerapps.io/auth/callback` |
-| `VITE_AZURE_POST_LOGOUT_REDIRECT_URI` | Redirect URI after logout | Yes | `https://your-app.azurecontainerapps.io` |
-| `VITE_API_BASE_URL` | Azure APIM Gateway URL | Yes | `https://your-apim.azure-api.net` |
+| `VITE_ENTRA_CLIENT_ID` | Entra ID Application (Client) ID | Yes | `bd400d26-7db1-44fd-82b7-8c7af757e249` |
+| `VITE_EXTERNAL_TENANT_ID` | CIAM tenant id (external users) | Yes | `511e2453-090d-480c-abeb-d2d95388a675` |
+| `VITE_WORKFORCE_TENANT_ID` | Workforce tenant id | Yes | `58be8688-6625-4e52-80d8-c17f3a9ae08a` |
+| `VITE_CIAM_HOST` | CIAM host | Yes | `kltdexternaliddev.ciamlogin.com` |
+| `VITE_PORTAL_API_BASE` | BFF API base URL | Yes | `/api` |
+| `Apim__ServicePrincipal__TenantId` | SP tenant for BFF ARM/Data API auth | Yes | `58be8688-...` |
+| `Apim__ServicePrincipal__ClientId` | SP client ID | Yes | `<your-sp-client-id>` |
+| `Apim__ServicePrincipal__ClientSecret` | SP client secret (stored as Container App secret) | Yes | `<your-sp-secret>` |
+| `Apim__ArmScope` | ARM API token scope | Yes | `https://management.azure.com/.default` |
+| `Apim__DataApiScope` | Data API token scope | Yes | `https://management.azure.com/.default` |
 
 ### Parameter Files
 
@@ -212,16 +217,18 @@ az containerapp update \
 
 ## 🔒 Security Best Practices
 
-### 1. Use Managed Identity
+### 1. Use App Registration (Service Principal) for BFF Auth
 
-Enable managed identity for accessing Azure resources:
+The BFF authenticates to ARM/Data API using an App Registration (service principal) with `ClientSecretCredential`:
 
 ```bash
-az containerapp identity assign \
-  --name komatsu-apim-portal-prod-ca \
-  --resource-group rg-komatsu-apim-portal-prod \
-  --system-assigned
+# The SP credentials are configured via:
+# - Bicep parameters (apimSpTenantId, apimSpClientId, apimSpClientSecret)
+# - Container App secrets (for the client secret)
+# - Environment variables (Apim__ServicePrincipal__*)
 ```
+
+> **Note:** A User-Assigned Managed Identity is still attached to the Container App for other Azure resource access (e.g., ACR pull), but BFF API calls use the service principal.
 
 ### 2. Store Secrets in Key Vault
 

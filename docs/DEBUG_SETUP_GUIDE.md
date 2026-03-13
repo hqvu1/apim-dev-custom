@@ -3,11 +3,13 @@
 ## 🎯 Quick Start
 
 ### Prerequisites
-1. **Node.js** (v20 or higher)
-2. **VS Code** with extensions:
+1. **Node.js** (v20 or higher) — for frontend build (BFF is now .NET only in deployment)
+2. **.NET 10 SDK** — for the .NET BFF (`dotnet --version` → 10.x)
+3. **VS Code** with extensions:
    - **JavaScript Debugger** (built-in)
+   - **C# Dev Kit** (for .NET BFF debugging)
    - **Debugger for Chrome** or **Debugger for Edge** (for browser debugging)
-3. **Azure CLI** (if using Azure Managed Identity locally)
+4. **Azure CLI** (if using Azure Managed Identity locally)
 
 ### Initial Setup
 
@@ -16,7 +18,12 @@
    # Install frontend dependencies
    npm install
    
-   # Install BFF dependencies
+   # Install .NET BFF dependencies
+   cd bff-dotnet
+   dotnet restore --source https://api.nuget.org/v3/index.json
+   cd ..
+
+   # (Legacy) Install Node.js BFF dependencies
    cd bff
    npm install
    cd ..
@@ -27,16 +34,19 @@
    Create a `.env` file in the root directory for frontend:
    ```env
    VITE_BFF_URL=http://localhost:3001
-   VITE_MSAL_CLIENT_ID=your-client-id
-   VITE_MSAL_AUTHORITY=https://login.microsoftonline.com/your-tenant-id
+   VITE_MSAL_CLIENT_ID=bd400d26-7db1-44fd-82b7-8c7af757e249
+   VITE_MSAL_AUTHORITY=https://login.microsoftonline.com/58be8688-6625-4e52-80d8-c17f3a9ae08a
    ```
 
-   Create a `.env` file in the `bff/` directory:
-   ```env
-   NODE_ENV=development
-   BFF_PORT=3001
-   APIM_MANAGEMENT_URL=https://demo-apim-feb.management.azure-api.net
-   APIM_API_VERSION=2021-08-01
+   The .NET BFF uses `appsettings.Development.json` (no `.env` file needed):
+   ```json
+   {
+     "Features": { "UseMockMode": true },
+     "EntraId": {
+       "TenantId": "58be8688-6625-4e52-80d8-c17f3a9ae08a",
+       "ClientId": "bd400d26-7db1-44fd-82b7-8c7af757e249"
+     }
+   }
    ```
 
 ## 🐛 Debugging Configurations
@@ -69,8 +79,26 @@ npm run dev
 3. Press `F5`
 4. Set breakpoints in your `.tsx` or `.ts` files
 
-### 3. ⚙️ Debug BFF Server
-Debug the Node.js Express backend
+### 3. ⚙️ Debug BFF Server (.NET)
+Debug the ASP.NET Core 10 BFF (recommended)
+
+**How to use:**
+1. Set breakpoints in `bff-dotnet/*.cs` files (e.g., `Endpoints/ApisEndpoints.cs`, `Services/ArmApiService.cs`)
+2. Select "⚙️ Debug .NET BFF" or use `dotnet run` in the `bff-dotnet/` folder
+3. The BFF starts in mock mode by default (Development environment)
+4. Access the Scalar API docs at http://localhost:3001/scalar/v1
+
+```powershell
+# Start .NET BFF manually (mock mode)
+cd bff-dotnet
+dotnet run
+```
+
+### 3b. ⚙️ Debug BFF Server (Node.js Legacy)
+
+> **⚠️ Deprecated:** The Node.js BFF is no longer used in Docker/ACA deployments. Use the .NET BFF (section 3a) for active development.
+
+Debug the Node.js Express backend (legacy, retained for reference)
 
 **How to use:**
 1. Set breakpoints in `bff/server.js`
@@ -164,7 +192,18 @@ export async function fetchData() {
 }
 ```
 
-**Backend side:**
+**Backend side (.NET BFF — current):**
+```csharp
+// bff-dotnet/Endpoints/ApisEndpoints.cs
+group.MapGet("/", async (IArmApiService api, HttpContext ctx, ...) =>
+{
+    // Set breakpoint here in VS Code
+    var result = await api.GetApisAsync(top, skip, filter);
+    return Results.Ok(result);
+});
+```
+
+**Backend side (Node.js BFF — legacy):**
 ```javascript
 // bff/server.js
 app.get('/api/endpoint', async (req, res) => {
@@ -254,22 +293,41 @@ For local development without Azure credentials, you may need to mock the authen
 ### Frontend (.env in root)
 ```env
 VITE_BFF_URL=http://localhost:3001
-VITE_MSAL_CLIENT_ID=<your-entra-app-client-id>
-VITE_MSAL_AUTHORITY=https://login.microsoftonline.com/<tenant-id>
+VITE_MSAL_CLIENT_ID=bd400d26-7db1-44fd-82b7-8c7af757e249
+VITE_MSAL_AUTHORITY=https://login.microsoftonline.com/58be8688-6625-4e52-80d8-c17f3a9ae08a
 VITE_MSAL_REDIRECT_URI=http://localhost:5173
 ```
 
-### Backend (.env in bff/)
+### .NET BFF (bff-dotnet/appsettings.Development.json)
+```json
+{
+  "Features": { "UseMockMode": true },
+  "Apim": {
+    "SubscriptionId": "121789fa-2321-4e44-8aee-c6f1cd5d7045",
+    "ResourceGroup": "kac_apimarketplace_eus_dev_rg",
+    "ServiceName": "demo-apim-feb",
+    "ApiVersion": "2022-08-01"
+  },
+  "EntraId": {
+    "TenantId": "58be8688-6625-4e52-80d8-c17f3a9ae08a",
+    "ExternalTenantId": "511e2453-090d-480c-abeb-d2d95388a675",
+    "CiamHost": "kltdexternaliddev.ciamlogin.com",
+    "ClientId": "bd400d26-7db1-44fd-82b7-8c7af757e249"
+  },
+  "Cors": {
+    "AllowedOrigins": "http://localhost:5173,http://localhost:3000"
+  }
+}
+```
+
+### Legacy Node.js BFF (.env in bff/)
 ```env
 NODE_ENV=development
 BFF_PORT=3001
-APIM_MANAGEMENT_URL=https://<your-apim>.management.azure-api.net
-APIM_API_VERSION=2021-08-01
-
-# Optional: For local development with service principal
-AZURE_CLIENT_ID=<service-principal-client-id>
-AZURE_CLIENT_SECRET=<service-principal-secret>
-AZURE_TENANT_ID=<tenant-id>
+AZURE_SUBSCRIPTION_ID=121789fa-2321-4e44-8aee-c6f1cd5d7045
+AZURE_RESOURCE_GROUP=kac_apimarketplace_eus_dev_rg
+APIM_SERVICE_NAME=demo-apim-feb
+APIM_API_VERSION=2022-08-01
 ```
 
 ## � Switching Between Mock Mode and Real APIM Data
@@ -291,10 +349,8 @@ The application supports two modes for local development:
 
 ### 🧪 Switch to Mock Mode
 
-**1. Configure BFF Server** (file: `bff/.env`):
-```env
-USE_MOCK_MODE=true
-```
+**1. Configure .NET BFF** (file: `bff-dotnet/appsettings.Development.json`):
+Mock mode is **enabled by default** in the Development environment. The .NET BFF (`Features:UseMockMode=true`) returns static data from `MockApiService`.
 
 **2. Configure Frontend** (file: `.env.local` or `.env.development`):
 ```env
@@ -302,14 +358,11 @@ VITE_USE_MOCK_AUTH=true
 VITE_USE_MOCK_DATA=true
 ```
 
-**3. Restart Both Servers:**
+**3. Start Servers:**
 ```powershell
-# Stop all Node processes
-taskkill /F /IM node.exe
-
-# Start BFF server
-cd bff
-npm start
+# Start .NET BFF (mock mode — default in Development)
+cd bff-dotnet
+dotnet run
 
 # Start frontend (in a new terminal)
 cd ..
@@ -318,13 +371,14 @@ npm run dev
 
 **4. Verify Mock Mode:**
 ```powershell
-# Test mock endpoints
-curl http://localhost:3001/news
-curl http://localhost:3001/apis
-curl http://localhost:3001/users/me/subscriptions
+# Test mock endpoints (.NET BFF)
+curl http://localhost:3001/api/news
+curl http://localhost:3001/api/apis
+curl http://localhost:3001/api/health
 ```
 
 You should see mock data returned immediately without Azure authentication.
+Access the Scalar API explorer at http://localhost:3001/scalar/v1
 
 ---
 
@@ -351,17 +405,18 @@ az account list --output table
 az account set --subscription "KAC_DigitalOffice_devtest_sub_01"
 ```
 
-**2. Configure BFF Server** (file: `bff/.env`):
-```env
-# Disable mock mode
-USE_MOCK_MODE=false
-
-# Azure APIM Configuration
-APIM_MANAGEMENT_URL=https://demo-apim-feb.management.azure-api.net
-APIM_API_VERSION=2021-08-01
-
-# User-Assigned Managed Identity (if applicable)
-MANAGED_IDENTITY_CLIENT_ID=2c46c615-a962-4ce7-a2f9-cc0610ff2043
+**2. Configure .NET BFF** (file: `bff-dotnet/appsettings.Development.json`):
+Set `UseMockMode` to `false`:
+```json
+{
+  "Features": { "UseMockMode": false },
+  "Apim": {
+    "SubscriptionId": "121789fa-2321-4e44-8aee-c6f1cd5d7045",
+    "ResourceGroup": "kac_apimarketplace_eus_dev_rg",
+    "ServiceName": "demo-apim-feb",
+    "ApiVersion": "2022-08-01"
+  }
+}
 ```
 
 **3. Configure Frontend** (file: `.env.local`):
@@ -371,7 +426,7 @@ VITE_USE_MOCK_AUTH=false
 VITE_USE_MOCK_DATA=false
 
 # Real Azure AD Configuration
-VITE_ENTRA_CLIENT_ID=2ba49c18-f3b7-41e8-b1a8-15b95f3e662a
+VITE_ENTRA_CLIENT_ID=bd400d26-7db1-44fd-82b7-8c7af757e249
 VITE_EXTERNAL_TENANT_ID=511e2453-090d-480c-abeb-d2d95388a675
 VITE_WORKFORCE_TENANT_ID=58be8688-6625-4e52-80d8-c17f3a9ae08a
 
@@ -379,14 +434,11 @@ VITE_WORKFORCE_TENANT_ID=58be8688-6625-4e52-80d8-c17f3a9ae08a
 VITE_BFF_URL=http://localhost:3001
 ```
 
-**4. Restart Both Servers:**
+**4. Start Servers:**
 ```powershell
-# Stop all Node processes
-taskkill /F /IM node.exe
-
-# Start BFF server
-cd bff
-npm start
+# Start .NET BFF (real ARM mode)
+cd bff-dotnet
+dotnet run --environment Production
 
 # Start frontend (in a new terminal)
 cd ..
@@ -397,16 +449,18 @@ npm run dev
 
 Check BFF terminal output for:
 ```
-✅ Azure Managed Identity credential initialized
-🔑 Access token acquired, expires at 2026-02-25T17:51:15.000Z
-🔄 Proxying to: https://demo-apim-feb.management.azure-api.net/apis?api-version=2021-08-01
-✅ Response: 200 OK
+APIM Portal BFF (.NET 10) Started
+Port:          http://localhost:3001
+APIM:          demo-apim-feb (kac_apimarketplace_eus_dev_rg)
+API Mode:      ARM Management API
+Auth:          Azure Managed Identity + JWT Bearer
 ```
 
 Test endpoints:
 ```powershell
-# Test real APIM connection
-curl "http://localhost:3001/apis?api-version=2021-08-01"
+# Test real APIM connection (will need a valid Bearer token)
+curl http://localhost:3001/api/apis
+curl http://localhost:3001/api/health
 ```
 
 ---
@@ -498,12 +552,13 @@ npm start
 
 | Component | Mock Mode | Real APIM Mode |
 |-----------|-----------|----------------|
-| **BFF (`bff/.env`)** | `USE_MOCK_MODE=true` | `USE_MOCK_MODE=false` |
-| **Frontend (`.env.local`)** | `VITE_USE_MOCK_AUTH=true`<br/>`VITE_USE_MOCK_DATA=true` | `VITE_USE_MOCK_AUTH=false`<br/>`VITE_USE_MOCK_DATA=false` |
+| **.NET BFF** (`appsettings.Development.json`) | `"UseMockMode": true` (default) | `"UseMockMode": false` |
+| **Frontend** (`.env.local`) | `VITE_USE_MOCK_AUTH=true`<br/>`VITE_USE_MOCK_DATA=true` | `VITE_USE_MOCK_AUTH=false`<br/>`VITE_USE_MOCK_DATA=false` |
 | **Azure CLI** | Not required | Required (`az login`) |
 | **RBAC Permissions** | None needed | Reader/Contributor role |
-| **Authentication** | Bypassed | Full MSAL + Managed Identity |
-| **Data Source** | Local mock data | Azure APIM Management API |
+| **Authentication** | Mock identity (Admin role) | Full MSAL + Managed Identity |
+| **Data Source** | `MockApiService` (static data) | `ArmApiService` (ARM Management API) |
+| **API Explorer** | http://localhost:3001/scalar/v1 | http://localhost:3001/scalar/v1 |
 
 ---
 

@@ -13,8 +13,8 @@ describe("i18n", () => {
     expect(i18n.hasResourceBundle("en", "translation")).toBe(true);
   });
 
-  it("has Japanese as a language", () => {
-    expect(i18n.hasResourceBundle("ja", "translation")).toBe(true);
+  it("has Spanish as a language", () => {
+    expect(i18n.hasResourceBundle("es", "translation")).toBe(true);
   });
 
   it("translates a known key in English", () => {

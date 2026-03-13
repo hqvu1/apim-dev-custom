@@ -33,6 +33,7 @@ import { ApiDetails as ApiDetailsType, ApiOperation } from "../api/types";
 import PageHeader from "../components/PageHeader";
 import SectionCard from "../components/SectionCard";
 import { useToast } from "../components/useToast";
+import { useTranslation } from "react-i18next";
 
 const METHOD_COLORS: Record<string, string> = {
   GET: "#61affe",
@@ -70,10 +71,11 @@ const ApiDetails = () => {
   const { apiId } = useParams();
   const { get, post } = usePortalApi();
   const toast = useToast();
+  const { t } = useTranslation();
   const [details, setDetails] = useState<ApiDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [subStatus, setSubStatus] = useState<string>("Not subscribed");
+  const [subStatus, setSubStatus] = useState<string>(t("apiDetails.notSubscribed"));
 
   useEffect(() => {
     let cancelled = false;
@@ -91,19 +93,18 @@ const ApiDetails = () => {
         if (detailsResult.data) {
           setDetails(detailsResult.data);
         } else {
-          setError("API not found.");
+          setError(t("apiDetails.notFound"));
         }
 
         if (subResult.data) {
           setSubStatus(subResult.data.status);
         }
       } catch {
-        if (!cancelled) setError("Failed to load API details.");
+        if (!cancelled) setError(t("apiDetails.loadError"));
       } finally {
         if (!cancelled) setLoading(false);
       }
     };
-
     load();
     return () => { cancelled = true; };
   }, [apiId, get, toast]);
@@ -119,9 +120,9 @@ const ApiDetails = () => {
   if (error || !details) {
     return (
       <Box py={4}>
-        <Alert severity="error">{error ?? "API not found."}</Alert>
+        <Alert severity="error">{error ?? t("apiDetails.notFound")}</Alert>
         <Button startIcon={<ArrowBack />} onClick={() => navigate("/apis")} sx={{ mt: 2 }}>
-          Back to catalog
+          {t("apiDetails.backToCatalog")}
         </Button>
       </Box>
     );
@@ -134,7 +135,7 @@ const ApiDetails = () => {
     <Box>
       {/* Back button */}
       <Button startIcon={<ArrowBack />} onClick={() => navigate("/apis")} sx={{ mb: 2 }}>
-        Back to catalog
+        {t("apiDetails.backToCatalog")}
       </Button>
 
       <PageHeader title={details.name} subtitle={details.description || undefined} />
@@ -155,7 +156,7 @@ const ApiDetails = () => {
         <Chip label={details.plan} size="small" variant="outlined" />
         {details.category && <Chip label={details.category} size="small" variant="outlined" />}
         {details.subscriptionRequired && (
-          <Chip icon={<LockOutlined sx={{ fontSize: 14 }} />} label="Subscription required" size="small" variant="outlined" color="warning" />
+          <Chip icon={<LockOutlined sx={{ fontSize: 14 }} />} label={t("apiDetails.subscriptionRequired")} size="small" variant="outlined" color="warning" />
         )}
         {details.protocols && details.protocols.length > 0 && (
           <Chip icon={<HttpOutlined sx={{ fontSize: 14 }} />} label={details.protocols.join(", ").toUpperCase()} size="small" variant="outlined" />
@@ -176,9 +177,9 @@ const ApiDetails = () => {
         {/* Left column – Overview + Operations */}
         <Grid item xs={12} lg={8}>
           {/* Overview */}
-          <SectionCard title="Overview">
+          <SectionCard title={t("apiDetails.overview")}>
             <Typography color="text.secondary" sx={{ mb: 2 }}>
-              {details.overview || details.description || "No description available for this API."}
+              {details.overview || details.description || t("apiDetails.noDescription")}
             </Typography>
             {details.documentationUrl && (
               <Button
@@ -190,7 +191,7 @@ const ApiDetails = () => {
                 size="small"
                 startIcon={<OpenInNew />}
               >
-                View documentation
+                {t("apiDetails.viewDocs")}
               </Button>
             )}
             {details.openApiUrl && (
@@ -204,7 +205,7 @@ const ApiDetails = () => {
                 startIcon={<OpenInNew />}
                 sx={{ ml: 1 }}
               >
-                Export OpenAPI spec
+                {t("apiDetails.exportSpec")}
               </Button>
             )}
           </SectionCard>
@@ -212,14 +213,14 @@ const ApiDetails = () => {
           {/* Operations */}
           {operations.length > 0 && (
             <Box mt={3}>
-              <SectionCard title={`Operations (${operations.length})`}>
+              <SectionCard title={t("apiDetails.operationsTitle", { count: operations.length })}>
                 <TableContainer>
                   <Table size="small">
                     <TableHead>
                       <TableRow>
-                        <TableCell sx={{ fontWeight: 600 }}>Method</TableCell>
-                        <TableCell sx={{ fontWeight: 600 }}>Endpoint</TableCell>
-                        <TableCell sx={{ fontWeight: 600 }}>Description</TableCell>
+                        <TableCell sx={{ fontWeight: 600 }}>{t("apiDetails.method")}</TableCell>
+                        <TableCell sx={{ fontWeight: 600 }}>{t("apiDetails.endpoint")}</TableCell>
+                        <TableCell sx={{ fontWeight: 600 }}>{t("apiDetails.description")}</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -255,10 +256,10 @@ const ApiDetails = () => {
           {/* Contact / License */}
           {(details.contact || details.license) && (
             <Box mt={3}>
-              <SectionCard title="Additional Information">
+              <SectionCard title={t("apiDetails.additionalInfo")}>
                 {details.contact && (
                   <Box mb={1}>
-                    <Typography variant="subtitle2" fontWeight={600}>Contact</Typography>
+                    <Typography variant="subtitle2" fontWeight={600}>{t("apiDetails.contact")}</Typography>
                     <Typography variant="body2" color="text.secondary">
                       {details.contact.name ?? "—"}{details.contact.email ? ` · ${details.contact.email}` : ""}
                       {details.contact.url && (
@@ -269,11 +270,11 @@ const ApiDetails = () => {
                 )}
                 {details.license && (
                   <Box>
-                    <Typography variant="subtitle2" fontWeight={600}>License</Typography>
+                    <Typography variant="subtitle2" fontWeight={600}>{t("apiDetails.license")}</Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {details.license.name ?? "Unknown"}
+                      {details.license.name ?? t("apiDetails.unknownLicense")}
                       {details.license.url && (
-                        <> · <a href={details.license.url} target="_blank" rel="noopener">View license</a></>
+                        <> · <a href={details.license.url} target="_blank" rel="noopener">{t("apiDetails.viewLicense")}</a></>
                       )}
                     </Typography>
                   </Box>
@@ -286,16 +287,16 @@ const ApiDetails = () => {
         {/* Right column – Subscription + Plans + Try-It */}
         <Grid item xs={12} lg={4}>
           {/* Subscription */}
-          <SectionCard title="Subscription">
+          <SectionCard title={t("apiDetails.subscription")}>
             <Typography color="text.secondary" sx={{ mb: 2 }}>
-              Status: <strong>{subStatus}</strong>
+              {t("apiDetails.statusLabel")} <strong>{subStatus}</strong>
             </Typography>
             <Button
               variant="contained"
               fullWidth
               onClick={() => post(`/apis/${apiId}/subscriptions`, { action: "request" })}
             >
-              Request access
+              {t("apiDetails.requestAccess")}
             </Button>
           </SectionCard>
 
@@ -303,10 +304,10 @@ const ApiDetails = () => {
           <Card sx={{ mt: 2 }}>
             <CardContent>
               <Typography variant="subtitle1" fontWeight={600} gutterBottom>
-                Test this API
+                {t("apiDetails.testTitle")}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                Use the interactive console to send requests and view responses in real time.
+                {t("apiDetails.testDescription")}
               </Typography>
               <Button
                 variant="outlined"
@@ -315,7 +316,7 @@ const ApiDetails = () => {
                 to={`/apis/${apiId}/try`}
                 startIcon={<PlayArrowOutlined />}
               >
-                Open Try-It Console
+                {t("apiDetails.openTryIt")}
               </Button>
             </CardContent>
           </Card>
@@ -324,7 +325,7 @@ const ApiDetails = () => {
           {plans.length > 0 && (
             <Box mt={2}>
               <Typography variant="subtitle1" fontWeight={600} gutterBottom>
-                Available Plans
+                {t("apiDetails.availablePlans")}
               </Typography>
               <Divider sx={{ mb: 1 }} />
               <Stack spacing={1}>
@@ -336,7 +337,7 @@ const ApiDetails = () => {
                       </Typography>
                       {plan.quota && (
                         <Typography variant="caption" color="text.secondary">
-                          Quota: {plan.quota}
+                          {t("apiDetails.quotaLabel")} {plan.quota}
                         </Typography>
                       )}
                       {plan.notes && (

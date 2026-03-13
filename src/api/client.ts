@@ -56,6 +56,19 @@ export type ApiResult<T> = {
   error: ApiError | null;
 };
 
+/**
+ * Unwraps a BFF response that may be either a flat array or a paged
+ * `{ value: T[] }` envelope (PagedResult). Returns the inner array,
+ * or `null` if the data is neither shape.
+ */
+export function unwrapArray<T>(data: unknown): T[] | null {
+  if (Array.isArray(data)) return data as T[];
+  if (data && typeof data === "object" && "value" in data && Array.isArray((data as Record<string, unknown>).value)) {
+    return (data as Record<string, unknown>).value as T[];
+  }
+  return null;
+}
+
 // ─── Low-level helpers ────────────────────────────────────────────────────────
 
 /** Exponential backoff delay for retry logic. */
@@ -306,7 +319,7 @@ export const useApimCatalog = () => {
 
     const details: ApiDetails = {
       ...summary,
-      overview: result.data.description ?? summary.description,
+      overview: result.data.description ?? summary.description ?? "",
       documentationUrl: `/api-docs/${apiId}`,
       plans: products.map((p) => ({
         name: p.name,

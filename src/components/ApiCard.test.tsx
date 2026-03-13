@@ -1,7 +1,7 @@
 /**
  * Unit tests for ApiCard component
  */
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
@@ -24,9 +24,10 @@ describe("ApiCard", () => {
   const baseApi: ApiSummary = {
     id: "warranty-api",
     name: "Warranty API",
+    displayName: "Warranty API",
     description: "Manage warranty claims and registrations.",
     status: "Production",
-    plan: "Premium",
+    plan: "Paid",
     owner: "Warranty Team",
     tags: ["warranty", "claims"],
     category: "Enterprise",

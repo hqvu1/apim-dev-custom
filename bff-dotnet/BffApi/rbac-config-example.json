@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json.schemastore.org/rbac-schema.json",
+  "Rbac": {
+    "roles": [
+      {
+        "name": "Admin",
+        "description": "Full administrative access to all APIs, products, and portal features",
+        "permissions": [
+          "Read",
+          "TryIt",
+          "Subscribe",
+          "Manage"
+        ],
+        "inheritsFrom": [],
+        "resourceScopes": {}
+      },
+      {
+        "name": "SalesManager",
+        "description": "Sales manager with administrative access to assigned products",
+        "permissions": [
+          "Read",
+          "TryIt",
+          "Subscribe",
+          "Manage"
+        ],
+        "inheritsFrom": [
+          "Admin"
+        ],
+        "resourceScopes": {
+          "Products": [
+            "prod-crm",
+            "prod-analytics"
+          ]
+        }
+      },
+      {
+        "name": "Distributor",
+        "description": "Distributor partner with read, try-it, and subscription access to assigned APIs",
+        "permissions": [
+          "Read",
+          "TryIt",
+          "Subscribe"
+        ],
+        "inheritsFrom": [
+          "BasicUser"
+        ],
+        "resourceScopes": {
+          "APIs": [
+            "api-data",
+            "api-auth",
+            "api-machines"
+          ],
+          "Products": [
+            "prod-core"
+          ]
+        }
+      },
+      {
+        "name": "Vendor",
+        "description": "Third-party vendor with read and try-it access to public APIs",
+        "permissions": [
+          "Read",
+          "TryIt"
+        ],
+        "inheritsFrom": [
+          "BasicUser"
+        ],
+        "resourceScopes": {
+          "APIs": [
+            "api-public-catalog",
+            "api-public-docs"
+          ]
+        }
+      },
+      {
+        "name": "InternalTeam",
+        "description": "Internal Komatsu team with full API access for integration and testing",
+        "permissions": [
+          "Read",
+          "TryIt",
+          "Subscribe",
+          "Manage"
+        ],
+        "inheritsFrom": [
+          "Admin"
+        ],
+        "resourceScopes": {}
+      },
+      {
+        "name": "BasicUser",
+        "description": "Basic user with read and try-it access to assigned APIs",
+        "permissions": [
+          "Read",
+          "TryIt"
+        ],
+        "inheritsFrom": [],
+        "resourceScopes": {}
+      }
+    ],
+    "policies": {
+      "ApiRead": {
+        "name": "ApiRead",
+        "description": "Permission to browse and view API catalog",
+        "requiredPermission": "Read",
+        "applicableRoles": [
+          "Admin",
+          "SalesManager",
+          "Distributor",
+          "Vendor",
+          "InternalTeam",
+          "BasicUser"
+        ]
+      },
+      "ApiTryIt": {
+        "name": "ApiTryIt",
+        "description": "Permission to execute APIs in sandbox console",
+        "requiredPermission": "TryIt",
+        "applicableRoles": [
+          "Admin",
+          "SalesManager",
+          "Distributor",
+          "Vendor",
+          "InternalTeam",
+          "BasicUser"
+        ]
+      },
+      "ApiSubscribe": {
+        "name": "ApiSubscribe",
+        "description": "Permission to create API subscriptions and get credentials",
+        "requiredPermission": "Subscribe",
+        "applicableRoles": [
+          "Admin",
+          "SalesManager",
+          "Distributor",
+          "InternalTeam"
+        ]
+      },
+      "ApiManage": {
+        "name": "ApiManage",
+        "description": "Full administrative access to manage APIs, products, and users",
+        "requiredPermission": "Manage",
+        "applicableRoles": [
+          "Admin",
+          "SalesManager",
+          "InternalTeam"
+        ]
+      },
+      "SubscriptionOwner": {
+        "name": "SubscriptionOwner",
+        "description": "Permission to modify or view own subscription (resource ownership check)",
+        "requiredPermission": "Subscribe",
+        "applicableRoles": [
+          "Admin",
+          "SalesManager",
+          "Distributor",
+          "InternalTeam",
+          "BasicUser"
+        ]
+      }
+    },
+    "caching": {
+      "roleCacheDurationMinutes": 30,
+      "policyCacheDurationMinutes": 60,
+      "decisionCacheDurationMinutes": 5,
+      "enableSlidingExpiration": true,
+      "slidingExpirationMinutes": 5
+    },
+    "features": {
+      "enableRoleInheritance": true,
+      "enableResourceScoping": true,
+      "enableAuditLogging": true,
+      "enableClaimsEnrichment": true,
+      "failClosedOnRoleProviderError": true
+    }
+  }
+}

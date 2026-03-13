@@ -2,6 +2,8 @@
 
 > **Decision:** Yes — migrate the BFF to ASP.NET Core Minimal API.
 > The RBAC requirement tips the balance from "evolve Express" to "migrate now."
+> 
+> **Status:** ✅ Migration complete. The .NET BFF (`bff-dotnet/BffApi.csproj`) is the active implementation running on ASP.NET Core 10.
 
 ---
 
@@ -74,97 +76,98 @@ This mapping must be **configurable** (not hardcoded) so that when new APIs are 
 
 ## 3. Recommended Architecture: ASP.NET Core Minimal API
 
-### Project Structure
+### Project Structure (Actual Implementation)
 
 ```
 bff-dotnet/
-├── Program.cs                          ← Minimal API entry point
-├── appsettings.json                    ← Base configuration
-├── appsettings.Development.json        ← Local dev overrides
-├── api-registry.json                   ← API source registry (APIM vs external)
-├── rbac-policies.json                  ← Role → API → Permission mappings
-│
-├── Authentication/
-│   └── MsalJwtBearerSetup.cs          ← Configure JWT validation for Entra ID
+├── Program.cs                          ← Minimal API composition root (DI, auth, middleware, endpoints)
+├── BffApi.csproj                       ← .NET 10, packages: Azure.Identity, Microsoft.Identity.Web,
+│                                         Microsoft.Extensions.Http.Resilience, Scalar.AspNetCore
+├── appsettings.json                    ← Base configuration (APIM, Entra ID, features)
+├── appsettings.Development.json        ← Mock mode + debug logging + CORS origins
+├── api-registry.json                   ← API source registry (3 APIs: warranty, punchout, equipment)
+├── rbac-policies.json                  ← Role → API → Permission mappings (hot-reloadable)
 │
 ├── Authorization/
 │   ├── ApiAccessRequirement.cs         ← IAuthorizationRequirement
-│   ├── ApiAccessHandler.cs             ← IAuthorizationHandler (checks role-API map)
-│   ├── RbacPolicyProvider.cs           ← Loads rbac-policies.json, exposes lookups
+│   ├── ApiAccessHandler.cs             ← IAuthorizationHandler (checks role-API map from RBAC config)
+│   ├── RbacPolicyProvider.cs           ← Loads rbac-policies.json, evaluates role → API → permission
 │   └── Permissions.cs                  ← enum: Read, TryIt, Subscribe, Manage
 │
-├── Data/                               ← Phase 2: EF Core database layer
-│   ├── BffDbContext.cs                 ← EF Core DbContext (Azure SQL)
-│   ├── RbacPolicyEntity.cs             ← EF entity → RbacPolicies table
-│   └── AuditLogEntity.cs              ← EF entity → AuditLog table (append-only)
-│
 ├── Endpoints/
-│   ├── ApisEndpoints.cs                ← GET /apis, GET /apis/{id}
-│   ├── SubscriptionsEndpoints.cs       ← CRUD subscriptions
-│   ├── TagsEndpoints.cs                ← GET /tags
-│   ├── SchemasEndpoints.cs             ← GET /apis/{id}/schemas
-│   ├── NewsEndpoints.cs                ← GET /news
-│   ├── AdminEndpoints.cs               ← RBAC management (Admin only)
-│   └── HealthEndpoints.cs              ← GET /health
-│
-├── Services/
-│   ├── IApiCatalogService.cs           ← Interface: list/get APIs from any source
-│   ├── ApimDataApiService.cs           ← APIM Data API client (existing logic ported)
-│   ├── ExternalApiService.cs           ← Non-APIM API adapter
-│   ├── ApiRegistryService.cs           ← Loads api-registry.json, routes requests
-│   ├── ApimTokenService.cs             ← Managed Identity → ARM → SAS token chain
-│   ├── IRbacService.cs                 ← Interface for RBAC checks + admin CRUD
-│   ├── FileRbacService.cs              ← Phase 1: reads rbac-policies.json
-│   └── DbRbacService.cs               ← Phase 2: reads from BffDbContext (Azure SQL)
-│
-├── Models/
-│   ├── ApiSummary.cs                   ← Matches frontend ApiSummary type
-│   ├── ApiDetails.cs                   ← Matches frontend ApiDetails type
-│   ├── ApiOperation.cs
-│   ├── RbacPolicy.cs                   ← Role, ApiId, Permissions[]
-│   └── ExternalApiConfig.cs
+│   ├── ApisEndpoints.cs                ← /api/apis/* (list, highlights, detail, operations, openapi, schemas…)
+│   ├── ProductsEndpoints.cs            ← /api/products, /api/products/{id}, /api/products/{id}/apis
+│   ├── SubscriptionsEndpoints.cs       ← /api/subscriptions CRUD + secrets + key regeneration
+│   └── MiscEndpoints.cs                ← /api/tags, /api/users/me, /api/stats, /api/news, /api/health,
+│                                         /api/apisByTags, /api/apiVersionSets/*
 │
 ├── Middleware/
-│   ├── RequestLoggingMiddleware.cs      ← Structured logging
-│   └── RetryDelegatingHandler.cs       ← Polly retry for HttpClient
+│   ├── RequestLoggingMiddleware.cs      ← Structured logging (method/path/status/elapsed)
+│   └── PortalTelemetryHandler.cs        ← x-ms-apim-client DelegatingHandler
 │
-├── Tests/
-│   ├── Authorization/
-│   │   ├── ApiAccessHandlerTests.cs    ← Unit test RBAC logic
-│   │   └── RbacPolicyProviderTests.cs
-│   ├── Services/
-│   │   ├── ApimDataApiServiceTests.cs
-│   │   └── ApiRegistryServiceTests.cs
-│   └── Endpoints/
-│       ├── ApisEndpointsTests.cs       ← Integration tests with WebApplicationFactory
-│       └── SubscriptionsEndpointsTests.cs
+├── Models/
+│   └── ApimContracts.cs                ← All DTOs (PagedResult<T>, ApiSummary, ApiDetails, etc.)
 │
-└── bff-dotnet.csproj
+└── Services/
+    ├── ArmApiService.cs                ← ARM Management API client + DefaultAzureCredential
+    │                                     (unwraps ARM {id,name,properties} envelope)
+    ├── DataApiService.cs               ← APIM Data API client (flat responses, user-scoped prefixing)
+    └── MockApiService.cs               ← Static mock data for offline development
 ```
 
 ### Key Code Patterns
 
-#### Program.cs (Minimal API Setup)
+#### Program.cs (Actual Implementation — Minimal API Setup)
 
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
 
-// ── Authentication: validate MSAL tokens from the SPA ──
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+// ── Configuration ──
+builder.Services.Configure<ApimSettings>(builder.Configuration.GetSection("Apim"));
+builder.Configuration.AddJsonFile("rbac-policies.json", optional: true, reloadOnChange: true);
+builder.Services.Configure<RbacConfig>(builder.Configuration);
+
+var useMockMode = builder.Configuration.GetValue<bool>("Features:UseMockMode");
+
+// ── Authentication: JWT Bearer from Entra ID (multi-tenant) ──
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = builder.Configuration["EntraId:Authority"];
-        options.Audience = builder.Configuration["EntraId:ClientId"];
-        options.TokenValidationParameters = new TokenValidationParameters
+        var entra = builder.Configuration.GetSection("EntraId");
+        var tenantId = entra["TenantId"];
+        var clientId = entra["ClientId"];
+        var externalTenantId = entra["ExternalTenantId"];
+        var ciamHost = entra["CiamHost"];
+
+        if (useMockMode && builder.Environment.IsDevelopment())
         {
-            ValidateIssuer = true,
-            ValidIssuers = builder.Configuration.GetSection("EntraId:ValidIssuers").Get<string[]>(),
-            RoleClaimType = "roles"
-        };
+            // Mock mode: accept any token or auto-grant dev identity
+        }
+        else
+        {
+            // Multi-tenant: resolve signing keys from all configured OIDC endpoints
+            // (workforce + CIAM) via IssuerSigningKeyResolver
+            var metadataAddresses = new List<string>
+            {
+                $"{instance}{tenantId}/v2.0/.well-known/openid-configuration"
+            };
+            if (!string.IsNullOrWhiteSpace(externalTenantId) && !string.IsNullOrWhiteSpace(ciamHost))
+                metadataAddresses.Add($"https://{ciamHost}/{externalTenantId}/v2.0/.well-known/openid-configuration");
+
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuers = entra.GetSection("ValidIssuers").Get<string[]>(),
+                ValidateAudience = true,
+                ValidAudiences = entra.GetSection("ValidAudiences").Get<string[]>(),
+                RoleClaimType = "roles",
+                IssuerSigningKeyResolver = (token, securityToken, kid, validationParameters) =>
+                    configManagers.SelectMany(cm => cm.GetConfigurationAsync(...).SigningKeys)
+            };
+        }
     });
 
-// ── Authorization: custom RBAC policies ──
+// ── Authorization: RBAC policies (4 levels) ──
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("ApiRead", p => p.AddRequirements(new ApiAccessRequirement(Permission.Read)))
     .AddPolicy("ApiTryIt", p => p.AddRequirements(new ApiAccessRequirement(Permission.TryIt)))
@@ -172,36 +175,42 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy("ApiManage", p => p.AddRequirements(new ApiAccessRequirement(Permission.Manage)));
 
 builder.Services.AddSingleton<IAuthorizationHandler, ApiAccessHandler>();
-builder.Services.AddSingleton<RbacPolicyProvider>();
 
-// ── HttpClients with Polly retry ──
-builder.Services.AddHttpClient("ApimDataApi", client =>
-{
-    client.DefaultRequestHeaders.Add("Accept", "application/json");
-}).AddPolicyHandler(GetRetryPolicy());
+// ── HttpClients with Resilience pipeline ──
+builder.Services.AddHttpClient("ArmApi", ...)
+    .AddHttpMessageHandler<PortalTelemetryHandler>()
+    .AddStandardResilienceHandler(options => { /* retry 3x, circuit breaker, timeout */ });
 
-builder.Services.AddHttpClient("ExternalWarrantyApi", client =>
-{
-    client.BaseAddress = new Uri(builder.Configuration["ExternalApis:Warranty:BaseUrl"]!);
-}).AddPolicyHandler(GetRetryPolicy());
+builder.Services.AddHttpClient("DataApi", ...)
+    .AddHttpMessageHandler<PortalTelemetryHandler>()
+    .AddStandardResilienceHandler(...);
 
-// ── Services ──
-builder.Services.AddSingleton<ApimTokenService>();
-builder.Services.AddSingleton<ApiRegistryService>();
-builder.Services.AddScoped<IApiCatalogService, ApiCatalogService>();
-builder.Services.AddScoped<IRbacService, RbacService>();
+// ── Services: 3 modes (Mock / Data API / ARM) ──
+if (useMockMode)
+    builder.Services.AddSingleton<IArmApiService, MockApiService>();
+else if (useDataApi)
+    builder.Services.AddScoped<IArmApiService, DataApiService>();
+else
+    builder.Services.AddScoped<IArmApiService, ArmApiService>();
 
 var app = builder.Build();
 
+app.UseMiddleware<RequestLoggingMiddleware>();
+app.UseMiddleware<SecurityHeadersMiddleware>();
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// ── Map endpoints ──
+// ── Map endpoint groups ──
 app.MapApisEndpoints();
-app.MapSubscriptionsEndpoints();
+app.MapApisByTagsEndpoints();
+app.MapApiVersionSetEndpoints();
 app.MapTagsEndpoints();
+app.MapProductsEndpoints();
+app.MapSubscriptionsEndpoints();
+app.MapStatsEndpoints();
 app.MapNewsEndpoints();
-app.MapAdminEndpoints();
+app.MapUserEndpoints();
 app.MapHealthEndpoints();
 
 app.Run();
@@ -329,84 +338,23 @@ public static class ApisEndpoints
 }
 ```
 
-### Phase 1: File-based. Phase 2: Database-backed.
+### Phase 1: File-based. Future: Admin UI + Database.
 
-For MVP, `rbac-policies.json` is loaded at startup and can be hot-reloaded via `IOptionsMonitor<RbacConfig>`. The Admin page in the SPA manages these via `PUT /admin/rbac/policies` → persists to Azure SQL via EF Core in Phase 2.
-
-The backing store is swapped by changing one DI registration — the `ApiAccessHandler` never changes:
-
-```csharp
-// Phase 1 — file-backed (POC)
-builder.Services.AddSingleton<IRbacService, FileRbacService>();
-
-// Phase 2 — database-backed (swap one line)
-builder.Services.AddScoped<IRbacService, DbRbacService>();
-```
+For MVP, `rbac-policies.json` is loaded at startup and can be hot-reloaded via `IOptionsMonitor<RbacConfig>`. The Admin page in the SPA can later manage these via `PUT /admin/rbac/policies` → persist to Cosmos DB or Azure App Configuration.
 
 ---
 
-## 5. Database Support (Phase 2)
-
-### Why Azure SQL
-
-The RBAC data is inherently relational (role → API → permission rows) and requires an audit trail for write operations (subscription create/cancel, key regeneration). Azure SQL integrates cleanly with EF Core and connects from the Container App via Managed Identity — no secrets in config files, same pattern as the existing ARM token flow.
-
-### Schema
-
-```sql
--- RbacPolicies: one row per Role + ApiId + Permission
-CREATE TABLE RbacPolicies (
-    Id         UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    Role       NVARCHAR(50)  NOT NULL,   -- "Developer", "Tester", etc.
-    ApiId      NVARCHAR(100) NOT NULL,   -- "warranty-api" or "*" for wildcard
-    Permission NVARCHAR(20)  NOT NULL,   -- "read" | "tryit" | "subscribe" | "manage"
-    CreatedAt  DATETIME2     NOT NULL DEFAULT SYSUTCDATETIME(),
-    CreatedBy  NVARCHAR(255) NOT NULL    -- Entra ID OID of admin who set it
-);
-
--- AuditLog: append-only write log
-CREATE TABLE AuditLog (
-    Id         BIGINT IDENTITY PRIMARY KEY,
-    Timestamp  DATETIME2     NOT NULL DEFAULT SYSUTCDATETIME(),
-    ActorOid   NVARCHAR(36)  NOT NULL,  -- Entra ID OID
-    ActorRoles NVARCHAR(500) NOT NULL,  -- JSON array of roles at time of action
-    Action     NVARCHAR(100) NOT NULL,  -- "subscription.create", "key.regenerate", etc.
-    ResourceId NVARCHAR(200) NOT NULL,  -- subscriptionId, apiId, etc.
-    StatusCode INT           NOT NULL
-);
-```
-
-### EF Core Integration
-
-```csharp
-// Program.cs — add after Phase 1 RBAC is validated
-builder.Services.AddDbContext<BffDbContext>(opt =>
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("BffDb"));
-);
-
-// Connection string injected from Azure Key Vault via Managed Identity
-// appsettings.json:
-// "ConnectionStrings": { "BffDb": "Server=...;Authentication=Active Directory Managed Identity" }
-```
-
-### Repo Considerations
-
-**Same repo (`apim-dev-custom/bff-dotnet/`) for now.** The `Data/` folder and EF migrations travel with the project. The natural point to extract to a separate repo is after Phase 2 is stable and the AMS handover conversation is concrete — not before.
-
----
-
-## 6. Migration Plan
+## 5. Migration Plan
 
 ### What Changes
 
 | Component | Before (Express) | After (ASP.NET Core) |
 |---|---|---|
 | BFF runtime | Node.js `server.js` | `dotnet` Minimal API |
-| Dockerfile runtime stage | `nodejs npm` in alpine | `mcr.microsoft.com/dotnet/aspnet:8.0-alpine` |
-| supervisord | `command=node /app/bff/server.js` | `command=dotnet /app/bff/bff-dotnet.dll` |
+| Dockerfile runtime stage | `mcr.microsoft.com/dotnet/aspnet:10.0-preview-alpine` (copied into nginx:alpine) | `mcr.microsoft.com/dotnet/aspnet:10.0-preview-alpine` (copied into nginx:alpine) |
+| supervisord | `command=node /app/bff/server.js` | `command=dotnet /app/bff/BffApi.dll` |
 | Auth | None (BFF trusts Nginx proximity) | JWT Bearer validation on every request |
 | RBAC | None | Policy-based authorization pipeline |
-| RBAC backing store | N/A | Phase 1: `rbac-policies.json` → Phase 2: Azure SQL (EF Core) |
 | APIM Data API calls | `node-fetch` + manual token cache | `IHttpClientFactory` + named client + Polly |
 | External API support | Not present | `IApiCatalogService` dispatches to adapters |
 | Retry | None | Polly policies per HttpClient |
@@ -420,37 +368,35 @@ builder.Services.AddDbContext<BffDbContext>(opt =>
 | Frontend auth (MSAL) | Unchanged — still sends Bearer token |
 | Frontend types (`ApiSummary`, `ApiDetails`) | Unchanged — BFF returns same shape |
 | Nginx config | Unchanged — still proxies `/api/` → `localhost:3001` |
-| Bicep IaC | Minor — add dotnet runtime to container, remove Node.js; Phase 2 adds Azure SQL resource |
+| Bicep IaC | Minor — add dotnet runtime to container, remove Node.js |
 | Container App Managed Identity | Unchanged — `DefaultAzureCredential` works in .NET SDK too |
 | Mock mode | Port to ASP.NET Core `IsDevelopment()` check |
 
 ### Timeline Estimate
 
-| Step | Effort | Sprint |
+> **Status:** Core migration is ✅ complete. Dockerfile, supervisord, Bicep, and docker-compose all updated to use .NET BFF. Remaining: unit tests.
+
+| Step | Effort | Status |
 |---|---|---|
-| Scaffold `bff-dotnet/` project, Program.cs, DI setup | 1 day | Sprint 1 |
-| Port APIM token service (Managed Identity → ARM → SAS) | 1 day | Sprint 1 |
-| Port API list/detail routes + transformers | 2 days | Sprint 1 |
-| Add JWT Bearer authentication middleware | 0.5 day | Sprint 1 |
-| Add RBAC authorization pipeline + FileRbacService | 2 days | Sprint 1 |
-| Add external API adapter (for non-APIM API) | 1 day | Sprint 1 |
-| Add Polly retry + portal header | 0.5 day | Sprint 1 |
-| Port mock mode endpoints | 0.5 day | Sprint 1 |
-| Update Dockerfile (dotnet runtime) | 0.5 day | Sprint 2 |
-| Update supervisord.conf | 0.5 day | Sprint 2 |
-| Unit + integration tests (RBAC, endpoints) | 2 days | Sprint 2 |
-| Validation: run SPA against new BFF locally | 1 day | Sprint 2 |
-| Remove old `bff/` Node.js folder | 0.5 day | Sprint 2 |
-| **Phase 2: Add BffDbContext + EF migrations** | **2 days** | **Sprint 3** |
-| **Phase 2: DbRbacService + AuditLog writes** | **2 days** | **Sprint 3** |
-| **Phase 2: Admin endpoints (RBAC CRUD)** | **1 day** | **Sprint 3** |
-| **Phase 2: Azure SQL Bicep resource + Key Vault secret** | **0.5 day** | **Sprint 3** |
-| **Total Phase 1** | **~13 days** | **~2 sprints** |
-| **Total Phase 2 (DB)** | **~5.5 days** | **~1 sprint** |
+| Scaffold `bff-dotnet/` project, Program.cs, DI setup | 1 day | ✅ Complete |
+| Port APIM token service (Managed Identity → ARM) | 1 day | ✅ Complete |
+| Port API list/detail routes + transformers | 2 days | ✅ Complete |
+| Add JWT Bearer authentication middleware | 0.5 day | ✅ Complete |
+| Add RBAC authorization pipeline + policy provider | 2 days | ✅ Complete |
+| Add Data API mode (alternative to ARM) | 1 day | ✅ Complete |
+| Add Polly resilience + portal telemetry header | 0.5 day | ✅ Complete |
+| Port mock mode endpoints | 0.5 day | ✅ Complete |
+| Update Dockerfile (dotnet runtime) | 0.5 day | ✅ Complete |
+| Update supervisord.conf | 0.5 day | ✅ Complete |
+| Unit + integration tests (RBAC, endpoints) | 2 days | ⚠️ Pending |
+| Validation: run SPA against new BFF locally | 1 day | ✅ Complete |
+| Remove old `bff/` Node.js folder | 0.5 day | ⚠️ Pending (kept as reference) |
 
 ---
 
-## 7. Dockerfile Change
+## 6. Dockerfile Change
+
+> **Note:** The .NET BFF uses **ASP.NET Core 10** (not 8.0 as originally planned).
 
 ```dockerfile
 # ---------- build stage (SPA - unchanged) ----------
@@ -461,8 +407,8 @@ RUN npm ci --frozen-lockfile
 COPY . .
 RUN npx vite build --mode production
 
-# ---------- build stage (BFF - NEW) ----------
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS bff-builder
+# ---------- build stage (BFF - .NET 10) ----------
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS bff-builder
 WORKDIR /src
 COPY bff-dotnet/*.csproj ./
 RUN dotnet restore
@@ -471,7 +417,7 @@ RUN dotnet publish -c Release -o /app/bff --no-restore
 
 # ---------- runtime stage ----------
 FROM nginx:alpine AS runtime
-RUN apk add --no-cache dotnet8-runtime supervisor
+RUN apk add --no-cache dotnet10-runtime supervisor
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf.template
 COPY docker-entrypoint.sh /docker-entrypoint.sh
@@ -487,7 +433,7 @@ COPY --from=bff-builder /app/bff /app/bff
 
 ```ini
 [program:bff]
-command=dotnet /app/bff/bff-dotnet.dll --urls http://0.0.0.0:3001
+command=dotnet /app/bff/BffApi.dll --urls http://0.0.0.0:3001
 directory=/app/bff
 autostart=true
 autorestart=true
@@ -496,16 +442,15 @@ environment=ASPNETCORE_ENVIRONMENT="Production",ASPNETCORE_URLS="http://+:3001"
 
 ---
 
-## 8. Summary
+## 7. Summary
 
 | Question | Answer |
 |---|---|
 | **Should you migrate to ASP.NET Core?** | **Yes.** RBAC is a cross-cutting concern that benefits enormously from ASP.NET Core's authorization pipeline, DI, and typed middleware. Doing it properly in Express means reinventing what .NET provides natively. |
 | **Should you include RBAC in the BFF?** | **Yes.** The BFF is the enforcement point — it validates the MSAL token, checks role-to-API permissions, then proxies to the correct backend. The frontend `RoleGate` is for UX (hide/show), the BFF is for security (allow/deny). |
-| **Is database support feasible in the same repo?** | **Yes.** The `Data/` folder and EF migrations live in `bff-dotnet/`. Azure SQL connects via Managed Identity — no secrets in config. One DI line swap moves from file-based to DB-backed RBAC. |
 | **Should you use Azure Functions instead?** | **No.** The RBAC middleware needs to run on every request with consistent low latency. Functions cold start + per-invocation pricing doesn't fit a request/response proxy. |
-| **When?** | **Phase 1 now (Months 2–3), ~13 days.** Phase 2 DB support in Sprint 3, ~5.5 days. The SPA doesn't change across either phase. |
-| **Risk?** | **Low.** The SPA calls `/api/...` through Nginx — it never knows the backend changed. Same container, same Managed Identity, same Bicep (minor updates per phase). | 
+| **When?** | **Now, during build phase (Months 2–3).** ~13 days across 2 sprints. The SPA doesn't change, so frontend work continues in parallel. |
+| **Risk?** | **Low.** The SPA calls `/api/...` through Nginx — it never knows the backend changed. Same container, same Managed Identity, same Bicep (minor update). |
 
 ---
 

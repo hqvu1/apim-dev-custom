@@ -38,9 +38,6 @@
     "useMockAuth": {
       "value": "false"
     },
-    "publicHomePage": {
-      "value": "false"
-    },
     "portalApiBase": {
       "value": "https://staging-apim.developer.azure-api.net"
     },
@@ -70,6 +67,21 @@
     },
     "apimServiceName": {
       "value": "YOUR_STAGING_APIM_SERVICE_NAME"
+    },
+    "apimSpTenantId": {
+      "value": "YOUR_SP_TENANT_ID"
+    },
+    "apimSpClientId": {
+      "value": "YOUR_SP_CLIENT_ID"
+    },
+    "apimSpClientSecret": {
+      "value": "YOUR_SP_CLIENT_SECRET"
+    },
+    "apimArmScope": {
+      "value": "https://management.azure.com/.default"
+    },
+    "apimDataApiScope": {
+      "value": "https://management.azure.com/.default"
     }
   }
 }

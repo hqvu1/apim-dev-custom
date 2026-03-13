@@ -22,7 +22,7 @@ globalThis.fetch = mockFetch;
 
 // ---- Import after mocks ---------------------------------------------------
 
-import { usePortalApi, type ApiError, type ApiResult } from "./client";
+import { usePortalApi, type ApiError } from "./client";
 
 describe("API client", () => {
   beforeEach(() => {

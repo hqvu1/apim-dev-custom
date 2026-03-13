@@ -13,7 +13,7 @@ Backend-for-Frontend (BFF) proxy that sits between the React SPA and Azure API M
                                        │ ├─ ARM Proxy + Cache   │
                                        │ └─ Resilience Pipeline │
                                        └────────┬──────────────┘
-                                                 │ DefaultAzureCredential
+                                                 │ App Registration (Client Credentials)
                                        ┌────────▼──────────────┐
                                        │ ARM Management API    │
                                        │ management.azure.com  │
@@ -24,7 +24,7 @@ Backend-for-Frontend (BFF) proxy that sits between the React SPA and Azure API M
 
 | Feature | Details |
 |---------|---------|
-| **Authentication** | JWT Bearer from Entra ID MSAL (dual-tenant: CIAM + Workforce) |
+| **Authentication** | JWT Bearer from Entra ID MSAL (dual-tenant: CIAM + Workforce; IssuerSigningKeyResolver for multi-OIDC) |
 | **Authorization** | RBAC policies (ApiRead, ApiTryIt, ApiSubscribe, ApiManage) via `rbac-policies.json` |
 | **Resilience** | `Microsoft.Extensions.Http.Resilience` — retry 3x, circuit breaker, timeout |
 | **Caching** | `IMemoryCache` with 1-min TTL for GET ARM responses |
@@ -44,7 +44,21 @@ Backend-for-Frontend (BFF) proxy that sits between the React SPA and Azure API M
 | GET | `/api/apis/highlights` | ApiRead | Top 3 featured APIs |
 | GET | `/api/apis/{apiId}` | ApiRead | API detail |
 | GET | `/api/apis/{apiId}/operations` | ApiRead | Operations for an API |
+| GET | `/api/apis/{apiId}/products` | ApiRead | Products for an API |
 | GET | `/api/apis/{apiId}/openapi` | ApiTryIt | OpenAPI spec (YAML) |
+| GET | `/api/apis/{apiId}/operations/{operationId}` | ApiRead | Operation detail |
+| GET | `/api/apis/{apiId}/operations/{operationId}/tags` | ApiRead | Tags for an operation |
+| GET | `/api/apis/{apiId}/operationsByTags` | ApiRead | Operations grouped by tag |
+| GET | `/api/apis/{apiId}/schemas` | ApiRead | API schemas |
+| GET | `/api/apis/{apiId}/releases` | ApiRead | API releases |
+| GET | `/api/apis/{apiId}/hostnames` | ApiRead | API hostnames |
+
+### APIs by Tags / Version Sets
+| Method | Path | Auth Policy | Description |
+|--------|------|-------------|-------------|
+| GET | `/api/apisByTags` | ApiRead | APIs grouped by tag |
+| GET | `/api/apiVersionSets/{versionSetId}` | ApiRead | Version set detail |
+| GET | `/api/apiVersionSets/{versionSetId}/apis` | ApiRead | APIs in a version set |
 
 ### Tags (`/api/tags`)
 | Method | Path | Auth Policy | Description |
@@ -105,7 +119,13 @@ Access the Scalar API docs at [http://localhost:3001/scalar/v1](http://localhost
     "ResourceGroup": "...",
     "ServiceName": "...",
     "ApiVersion": "2022-08-01",
-    "ManagedIdentityClientId": ""
+    "ArmScope": "https://management.azure.com/.default",
+    "DataApiScope": "https://management.azure.com/.default",
+    "ServicePrincipal": {
+      "TenantId": "<your-tenant-id>",
+      "ClientId": "<your-sp-client-id>",
+      "ClientSecret": "<your-sp-client-secret>"
+    }
   },
   "EntraId": {
     "Instance": "https://login.microsoftonline.com/",
@@ -159,9 +179,23 @@ bff-dotnet/
 ├── Models/
 │   └── ApimContracts.cs            # DTO shapes matching SPA types.ts
 └── Services/
-    ├── ArmApiService.cs            # Real ARM Management API client + caching
-    └── MockApiService.cs           # Full offline mock implementation
+    ├── ArmApiService.cs            # Real ARM Management API client + caching (uses ITokenProvider)
+    ├── DataApiService.cs           # APIM Data API client (runtime mode, uses ITokenProvider)
+    ├── MockApiService.cs           # Full offline mock implementation
+    └── AppRegistrationTokenProvider.cs # ITokenProvider impl using ClientSecretCredential
 ```
+
+## Service Modes
+
+The BFF supports 3 backend modes via configuration:
+
+| Mode | Config | Service Class | Backend |
+|------|--------|---------------|---------|
+| **Mock** | `UseMockMode=true` + Dev env | `MockApiService` | Static in-memory data |
+| **Data API** | `UseDataApi=true` | `DataApiService` | `https://{apim}.azure-api.net/developer` (flat JSON, SP token) |
+| **ARM** | Default | `ArmApiService` | `https://management.azure.com/...` (unwraps properties envelope, SP token) |
+
+All modes return the same `PagedResult<T>` shape: `{ value: [...], count: N }`.
 
 ## Design Decisions
 

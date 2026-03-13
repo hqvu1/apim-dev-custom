@@ -6,8 +6,10 @@ React + Vite SPA scaffold for the Komatsu API Marketplace portal UI.
 
 1. Install dependencies:
    - `npm install`
-2. Copy `.env.example` to `.env` and fill in Entra ID + KPS values.
-3. Start the dev server:
+2. Clone the component library repo alongside this project:
+   - `git clone <component-library-repo> ../react-template`
+3. Copy `.env.example` to `.env` and fill in Entra ID + KPS values.
+4. Start the dev server:
    - `npm run dev`
 
 ## Notes
@@ -16,6 +18,8 @@ React + Vite SPA scaffold for the Komatsu API Marketplace portal UI.
 - Login uses the KPS tenant-selection flow before MSAL redirects.
 - `VITE_USE_MOCK_AUTH` allows local UI work without Entra ID/KPS.
 - `VITE_PUBLIC_HOME_PAGE` makes the home page publicly accessible without authentication (useful for demos).
+- The UI theme, Header, and AppShell use `@komatsu-nagm/component-library` (compiled from source via Vite alias).
+- The .NET BFF (`bff-dotnet/`) uses App Registration (service principal) for ARM/Data API authentication.
 
 ## Auth Flow
 
@@ -35,7 +39,6 @@ React + Vite SPA scaffold for the Komatsu API Marketplace portal UI.
 - `VITE_AEM_LOGOUT_URL` or `VITE_CDN_ICON`: SLO helper for AEM logout.
 - `VITE_BASE_URL`: Base for post-logout redirect (defaults to origin).
 - `VITE_USE_MOCK_AUTH`: Bypass all authentication (for local development).
-- `VITE_PUBLIC_HOME_PAGE`: Allow public access to home page without authentication (for demos).
 
 ## Troubleshooting Login
 
@@ -112,6 +115,8 @@ chmod +x deploy.sh
 
 Test the containerized application locally:
 
+> **Note:** Docker build requires the component library source. The `deploy-to-azure.ps1` script handles this automatically, or manually copy: `Copy-Item -Recurse ../react-template ./component-library`
+
 ```bash
 # Build and run with Docker Compose
 docker-compose up --build
@@ -141,6 +146,7 @@ npm run test:ui
 ## Documentation
 
 ### Project Documentation
+- [Komatsu custom APIM Integration Guide](docs/Komatsu custom_APIM_INTEGRATION_GUIDE.md) - Complete guide for APIM integration
 - [Public Landing Page Setup](docs/PUBLIC_LANDING_PAGE_SETUP.md) - Implementation details for public home page
 - [Komatsu NA APIM Integration Guide](docs/Komatsu NA_APIM_INTEGRATION_GUIDE.md) - Complete guide for APIM integration
 - [APIM Integration Checklist](docs/APIM_INTEGRATION_CHECKLIST.md) - Step-by-step integration tasks

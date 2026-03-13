@@ -41,3 +41,7 @@ docs
 
 # Misc
 .editorconfig
+
+# .NET build artifacts
+bff-dotnet/bin
+bff-dotnet/obj

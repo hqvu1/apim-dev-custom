@@ -4,42 +4,45 @@ This directory contains all project documentation for the Komatsu API Marketplac
 
 ## 📚 Documentation Index
 
-### Setup & Configuration
-- **[PUBLIC_LANDING_PAGE_SETUP.md](PUBLIC_LANDING_PAGE_SETUP.md)**  
-  Implementation details for the public landing page feature, including:
-  - Architecture changes for public vs. authenticated routes
-  - Modified components and files
-  - Authentication flow updates
+### Architecture & Design
+- **[ARCHITECTURE_DESIGN.md](ARCHITECTURE_DESIGN.md)** — System architecture, auth flows, BFF comparison, API client, folder structure
+- **[BFF_IMPLEMENTATION.md](BFF_IMPLEMENTATION.md)** — BFF implementation summary (ASP.NET Core 10, service modes, endpoints)
+- **[BFF_MIGRATION_DECISION.md](BFF_MIGRATION_DECISION.md)** — Decision: Express → .NET migration rationale + RBAC design (✅ complete)
+- **[BFF_EVOLUTION_ANALYSIS.md](BFF_EVOLUTION_ANALYSIS.md)** — BFF platform options analysis + backend router pattern
+- **[APIM_DATA_API_COMPARISON.md](APIM_DATA_API_COMPARISON.md)** — ARM Management API vs Data Plane API comparison
+- **[SPA_BEST_PRACTICES.md](SPA_BEST_PRACTICES.md)** — SPA development best practices
+
+### Setup & Development
+- **[START_DEBUG.md](START_DEBUG.md)** — Quick start debugging guide (.NET BFF + frontend)
+- **[DEBUG_SETUP_GUIDE.md](DEBUG_SETUP_GUIDE.md)** — Comprehensive debugging guide (VS Code configs, mock/real mode, env vars)
+- **[PUBLIC_LANDING_PAGE_SETUP.md](PUBLIC_LANDING_PAGE_SETUP.md)** — Public landing page feature implementation
+- **[PUBLIC_HOME_PAGE_GUIDE.md](PUBLIC_HOME_PAGE_GUIDE.md)** — Public home page configuration
 
 ### APIM Integration
-- **[Komatsu NA_APIM_INTEGRATION_GUIDE.md](Komatsu NA_APIM_INTEGRATION_GUIDE.md)**  
-  Comprehensive guide for integrating with Komatsu NA APIM Customization Framework:
-  - Backend service requirements and architecture
-  - Frontend code updates needed
-  - Environment variable configuration
-  - Azure infrastructure setup
-  - Security considerations
-  - Testing strategy
-  - Deployment checklist
+- **[KOMATSU_APIM_INTEGRATION_GUIDE.md](KOMATSU_APIM_INTEGRATION_GUIDE.md)** — Komatsu APIM integration guide
+- **[KOMATSU_NA_APIM_INTEGRATION_GUIDE.md](KOMATSU_NA_APIM_INTEGRATION_GUIDE.md)** — Komatsu NA APIM customization framework integration
+- **[APIM_INTEGRATION_CHECKLIST.md](APIM_INTEGRATION_CHECKLIST.md)** — Task-by-task APIM integration checklist
+- **[THIRDPARTY_APIM_INTEGRATION_GUIDE.md](THIRDPARTY_APIM_INTEGRATION_GUIDE.md)** — Third-party APIM integration guide
 
-- **[APIM_INTEGRATION_CHECKLIST.md](APIM_INTEGRATION_CHECKLIST.md)**  
-  Task-by-task checklist for APIM integration:
-  - Pre-integration requirements
-  - Code implementation tasks
-  - Testing requirements
-  - Deployment steps
-  - Documentation deliverables
+### Deployment & Operations
+- **[DEPLOYMENT_SUCCESS.md](DEPLOYMENT_SUCCESS.md)** — Azure deployment success summary (Feb 2026)
+- **[DEPLOYMENT_AUDIT_CHANGES.md](DEPLOYMENT_AUDIT_CHANGES.md)** — Deployment configuration audit & fixes
+- **[AZURE_DEPLOYMENT_GUIDE.md](AZURE_DEPLOYMENT_GUIDE.md)** — Comprehensive Azure deployment guide
+- **[DOCKER_ENV_MIGRATION.md](DOCKER_ENV_MIGRATION.md)** — Environment variable migration (Azure AD → Entra ID)
+
+### BFF-Specific
+- **[../bff-dotnet/README.md](../bff-dotnet/README.md)** — .NET BFF: endpoints, config, project structure, service modes
 
 ## 🔗 Related Documentation
 
 ### Component-Specific Documentation
-- [Home Page Documentation](../src/pages/home/README.md) - Best practices and architecture for the home page
-- [Home Page Test Coverage](../src/pages/home/TEST_COVERAGE_SUMMARY.md) - Testing details
+- [Home Page Documentation](../src/pages/home/README.md) — Best practices and architecture for the home page
+- [Home Page Test Coverage](../src/pages/home/TEST_COVERAGE_SUMMARY.md) — Testing details
 
-### Deployment & CI/CD
-- [GitHub Actions Setup](../.github/GITHUB_ACTIONS_SETUP.md) - CI/CD pipeline configuration
-- [Azure Deployment Guide](../azure/README.md) - Infrastructure and deployment
-- [CI/CD Comparison](../.github/CI_CD_COMPARISON.md) - Architecture decisions
+### Infrastructure
+- [Azure Deployment Guide](../azure/README.md) — Infrastructure and deployment (Bicep + parameters)
+- [Azure Managed Identity Setup](../azure/MANAGED_IDENTITY_SETUP.md) — Managed Identity configuration
+- [Azure Quick Setup](../azure/QUICK_SETUP.md) — Quick Azure setup guide
 
 ## 📖 Document Conventions
 
@@ -52,8 +55,16 @@ This directory contains all project documentation for the Komatsu API Marketplac
 
 | Document | Last Updated | Status |
 |----------|--------------|--------|
+| ARCHITECTURE_DESIGN.md | 2026-03-05 | ✅ Complete |
+| BFF_IMPLEMENTATION.md | 2026-03-05 | ✅ Updated for .NET BFF |
+| BFF_MIGRATION_DECISION.md | 2026-03-05 | ✅ Updated with actual implementation |
+| DEBUG_SETUP_GUIDE.md | 2026-03-05 | ✅ Updated for .NET BFF |
+| START_DEBUG.md | 2026-03-05 | ✅ Updated for .NET BFF |
+| DEPLOYMENT_AUDIT_CHANGES.md | 2026-03-05 | ✅ Updated with .NET BFF notes |
+| DEPLOYMENT_SUCCESS.md | 2026-03-05 | ✅ Updated Client ID |
+| DOCKER_ENV_MIGRATION.md | 2026-03-05 | ✅ Added .NET BFF config note |
+| BFF_EVOLUTION_ANALYSIS.md | 2026-02-17 | ✅ Historical (pre-migration) |
 | PUBLIC_LANDING_PAGE_SETUP.md | 2026-02-17 | ✅ Complete |
-| Komatsu NA_APIM_INTEGRATION_GUIDE.md | 2026-02-17 | ✅ Complete |
 | APIM_INTEGRATION_CHECKLIST.md | 2026-02-17 | ⚠️ In Progress |
 
 ## 📝 Contributing to Documentation
@@ -70,14 +81,15 @@ When adding new documentation:
 ## 🎯 Quick Links
 
 **For Developers:**
-- [Main README](../README.md) - Project overview and setup
-- [Home Page Docs](../src/pages/home/README.md) - Component architecture
+- [Main README](../README.md) — Project overview and setup
+- [Start Debugging](START_DEBUG.md) — Quick start guide
+- [.NET BFF README](../bff-dotnet/README.md) — BFF endpoints and config
 
 **For DevOps:**
-- [GitHub Actions Setup](../.github/GITHUB_ACTIONS_SETUP.md) - CI/CD setup
-- [Azure Deployment](../azure/README.md) - Infrastructure deployment
+- [Azure Deployment](../azure/README.md) — Infrastructure deployment
+- [Deployment Audit](DEPLOYMENT_AUDIT_CHANGES.md) — Config audit & fixes
 
 **For Integrators:**
-- [APIM Integration Guide](Komatsu NA_APIM_INTEGRATION_GUIDE.md) - Complete integration guide
-- [APIM Checklist](APIM_INTEGRATION_CHECKLIST.md) - Integration tasks
+- [APIM Integration Guide](KOMATSU_NA_APIM_INTEGRATION_GUIDE.md) — Complete integration guide
+- [APIM Checklist](APIM_INTEGRATION_CHECKLIST.md) — Integration tasks
 

@@ -14,6 +14,7 @@ import {
   LockOpenOutlined
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ApiSummary } from "../api/types";
 
 const statusColor: Record<string, "success" | "warning" | "default" | "error"> = {
@@ -25,6 +26,7 @@ const statusColor: Record<string, "success" | "warning" | "default" | "error"> =
 const ApiCard = ({ api }: { api: ApiSummary }) => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <Card
@@ -88,7 +90,7 @@ const ApiCard = ({ api }: { api: ApiSummary }) => {
               overflow: "hidden"
             }}
           >
-            {api.description || "No description available."}
+            {api.description || t("apis.noDescription")}
           </Typography>
 
           {/* Tags row */}
@@ -108,7 +110,7 @@ const ApiCard = ({ api }: { api: ApiSummary }) => {
             {api.subscriptionRequired ? (
               <Chip
                 icon={<LockOutlined sx={{ fontSize: 14 }} />}
-                label="Key required"
+                label={t("apis.keyRequired")}
                 size="small"
                 variant="outlined"
                 color="warning"
@@ -116,7 +118,7 @@ const ApiCard = ({ api }: { api: ApiSummary }) => {
             ) : (
               <Chip
                 icon={<LockOpenOutlined sx={{ fontSize: 14 }} />}
-                label="Open"
+                label={t("apis.open")}
                 size="small"
                 variant="outlined"
                 color="success"

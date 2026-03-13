@@ -1,130 +1,143 @@
-# Quick Setup: Create Managed Identity for APIM Access
+# Quick Setup: Create App Registration (Service Principal) for APIM Access
 
-This guide will help you create a managed identity and grant it access to your APIM instance.
+> **⚠️ Updated March 2026:** This guide replaces the previous Managed Identity setup. The BFF now authenticates to Azure ARM / Data API using an **App Registration (Service Principal)** with `ClientSecretCredential` via `ITokenProvider`.
+
+This guide will help you create an Azure Entra ID App Registration and grant it access to your APIM instance.
 
 ## 🚀 Quick Start
 
-### Option 1: Automated Script (Recommended)
-
-Run the PowerShell script that does everything for you:
+### Step 1: Create the App Registration
 
 ```powershell
-cd azure
-.\create-managed-identity.ps1
+# Login to Azure
+az login
+
+# Create the App Registration
+$app = az ad app create --display-name "komatsu-apim-portal-bff" --query "{appId:appId, id:id}" -o json | ConvertFrom-Json
+Write-Host "Client ID: $($app.appId)"
+
+# Create a Service Principal for the app
+az ad sp create --id $app.appId
+
+# Create a client secret (valid for 1 year)
+$secret = az ad app credential reset --id $app.appId --years 1 --query "{password:password}" -o json | ConvertFrom-Json
+Write-Host "Client Secret: $($secret.password)"
+Write-Host "⚠️  Save this secret — it cannot be retrieved later!"
 ```
 
-The script will:
-1. ✅ Create a resource group (if needed)
-2. ✅ Create a User-Assigned Managed Identity
-3. ✅ Find your APIM instance
-4. ✅ Grant the identity access to APIM
-5. ✅ Output configuration for your BFF
-
-### Option 2: Custom Parameters
-
-If your APIM is in a different resource group or has a different name:
+### Step 2: Grant APIM Access (RBAC)
 
 ```powershell
-.\create-managed-identity.ps1 `
-  -ApimName "demo-apim-feb" `
-  -ApimResourceGroup "rg-apim-production" `
-  -IdentityName "my-custom-identity" `
-  -ResourceGroup "rg-my-app-dev"
+# Get the Service Principal object ID
+$spId = az ad sp show --id $app.appId --query id -o tsv
+
+# Grant API Management Service Reader on the APIM instance
+az role assignment create `
+  --assignee-object-id $spId `
+  --assignee-principal-type ServicePrincipal `
+  --role "API Management Service Reader Role" `
+  --scope "/subscriptions/{sub-id}/resourceGroups/{apim-rg}/providers/Microsoft.ApiManagement/service/demo-apim-feb"
 ```
 
-**Parameters:**
-- `-ApimName`: Your APIM instance name (default: `demo-apim-feb`)
-- `-ApimResourceGroup`: Resource group where APIM is located
-- `-IdentityName`: Name for the managed identity
-- `-ResourceGroup`: Resource group for the identity
-- `-Location`: Azure region (default: `eastus`)
-- `-SubscriptionId`: Azure subscription ID (optional)
+> **Note:** Use **API Management Service Contributor** if the BFF needs write access (subscriptions, user management).
+
+### Step 3: Note Your Tenant ID
+
+```powershell
+az account show --query tenantId -o tsv
+```
 
 ## 📋 What Gets Created
 
-### 1. Resource Group
-- **Name**: `rg-komatsu-apim-portal-dev` (or your custom name)
-- **Location**: `eastus`
-
-### 2. Managed Identity
-- **Name**: `komatsu-apim-portal-identity`
-- **Type**: User-Assigned Managed Identity
-- **Visibility**: ✅ Shows up in Azure Portal
-
-### 3. RBAC Role Assignment
-- **Role**: API Management Service Contributor
-- **Scope**: Your APIM instance
-- **Access**: Full read/write access to APIM
-
-## 🔍 Verify in Azure Portal
-
-1. Go to [Azure Portal](https://portal.azure.com)
-2. Navigate to **Resource Groups** > `rg-komatsu-apim-portal-dev`
-3. Find the resource: **`komatsu-apim-portal-identity`**
-4. Click on it and go to **Azure role assignments**
-5. Verify it has access to your APIM instance
+| Resource | Name | Purpose |
+|----------|------|---------|
+| **App Registration** | `komatsu-apim-portal-bff` | Identity for the BFF to authenticate |
+| **Service Principal** | (auto-created) | Enables RBAC role assignments |
+| **Client Secret** | (generated) | Credential for `ClientSecretCredential` |
+| **RBAC Assignment** | Reader or Contributor | Access to APIM instance |
 
 ## 🔧 Configure Your BFF
 
-After running the script, update your `bff/.env` file:
+### For Local Development
 
-```env
-# Disable mock mode to use real Azure authentication
-USE_MOCK_MODE=false
-
-# Managed Identity Client ID (from script output)
-AZURE_CLIENT_ID=your-managed-identity-client-id
-
-# APIM Management URL
-APIM_MANAGEMENT_URL=https://demo-apim-feb.management.azure-api.net
-APIM_API_VERSION=2021-08-01
-```
-
-## 🧪 Test Locally
-
-### 1. Login to Azure CLI
-```powershell
-az login
-```
-
-This allows `DefaultAzureCredential` to use your Azure CLI credentials for local testing.
-
-### 2. Start the BFF
-```powershell
-cd bff
-npm run dev
-```
-
-You should see:
-```
-✅ Azure Managed Identity credential initialized (User-Assigned: xxx)
-🔑 Access token acquired, expires at ...
-```
-
-### 3. Test an API Call
-```powershell
-curl http://localhost:3001/apis?api-version=2021-08-01
-```
-
-## 🌩️ Deploy to Azure
-
-### Option A: Update Bicep Parameters
-
-Edit `azure/parameters.dev.json`:
+Update `bff-dotnet/appsettings.Development.json`:
 
 ```json
 {
-  "parameters": {
-    "apimResourceId": {
-      "value": "/subscriptions/{sub-id}/resourceGroups/{apim-rg}/providers/Microsoft.ApiManagement/service/demo-apim-feb"
-    }
+  "Apim": {
+    "ServicePrincipal": {
+      "TenantId": "your-tenant-id",
+      "ClientId": "your-app-registration-client-id",
+      "ClientSecret": "your-client-secret"
+    },
+    "ArmScope": "https://management.azure.com/.default",
+    "DataApiScope": "https://your-apim.management.azure-api.net/.default"
   }
 }
 ```
 
-### Option B: Use Existing Identity
+### For Docker / Container Apps
 
-If you ran the script, the identity is already created. Your Bicep deployment will use it automatically.
+Set these environment variables:
+
+```env
+Apim__ServicePrincipal__TenantId=your-tenant-id
+Apim__ServicePrincipal__ClientId=your-app-registration-client-id
+Apim__ServicePrincipal__ClientSecret=your-client-secret
+Apim__ArmScope=https://management.azure.com/.default
+Apim__DataApiScope=https://your-apim.management.azure-api.net/.default
+```
+
+## 🧪 Test Locally
+
+### 1. Set configuration in appsettings.Development.json (see above)
+
+### 2. Disable mock mode
+
+In `appsettings.Development.json`, set:
+```json
+{
+  "Features": {
+    "UseMockMode": false
+  }
+}
+```
+
+### 3. Start the BFF
+
+```powershell
+cd bff-dotnet
+dotnet run
+```
+
+You should see:
+```
+APIM Portal BFF (.NET 10) Started
+Port:          http://localhost:3001
+Auth:          App Registration (Service Principal) + JWT Bearer
+```
+
+### 4. Test an API Call
+
+```powershell
+curl http://localhost:3001/api/health
+```
+
+## 🌩️ Deploy to Azure
+
+### Update Bicep Parameters
+
+Edit `azure/parameters.dev.json` and add the Service Principal values:
+
+```json
+{
+  "parameters": {
+    "servicePrincipalTenantId": { "value": "your-tenant-id" },
+    "servicePrincipalClientId": { "value": "your-app-registration-client-id" },
+    "servicePrincipalClientSecret": { "value": "your-client-secret" }
+  }
+}
+```
 
 ### Deploy
 
@@ -135,105 +148,63 @@ cd azure
 
 ## 🐛 Troubleshooting
 
-### "APIM instance not found"
+### "Failed to acquire access token" / 401
 
-**Solution**: Specify the correct APIM name and resource group:
-```powershell
-.\create-managed-identity.ps1 `
-  -ApimName "your-actual-apim-name" `
-  -ApimResourceGroup "your-apim-resource-group"
-```
+**Checklist:**
+1. ✅ Verify `TenantId`, `ClientId`, and `ClientSecret` are correct
+2. ✅ Ensure the App Registration has a Service Principal (`az ad sp show --id <clientId>`)
+3. ✅ Check that the secret has not expired (`az ad app credential list --id <clientId>`)
+4. ✅ Verify the scope is correct (`https://management.azure.com/.default` for ARM)
+5. ✅ Restart the BFF after changing configuration
 
-List all APIM instances in your subscription:
-```powershell
-az apim list --query "[].{Name:name, ResourceGroup:resourceGroup}" --output table
-```
+### "Authorization failed" or 403
 
-### "Insufficient permissions"
+**Problem:** Service Principal has no RBAC access to APIM.
 
-**Problem**: You don't have permission to create role assignments.
-
-**Solution**: You need one of these roles:
-- **Owner** on the APIM resource
-- **User Access Administrator** on the APIM resource
-- **Contributor** + **User Access Administrator** on the subscription
-
-Ask your Azure admin to:
-1. Grant you the necessary permissions, OR
-2. Run the script for you, OR
-3. Manually assign the role in the Azure Portal
-
-### "Failed to acquire access token"
-
-**Problem**: BFF can't authenticate.
-
-**Checklist**:
-1. ✅ Run `az login` for local testing
-2. ✅ Set `USE_MOCK_MODE=false` in `bff/.env`
-3. ✅ Verify `AZURE_CLIENT_ID` matches the managed identity client ID
-4. ✅ Check RBAC assignment in Azure Portal (APIM > Access control)
-5. ✅ Restart the BFF server
-
-### "Authorization failed" or 403 errors
-
-**Problem**: Identity has no access to APIM.
-
-**Solution**: Manually assign the role in Azure Portal:
+**Solution:** Assign a role in Azure Portal:
 1. Go to your APIM instance
 2. Click **Access control (IAM)**
 3. Click **+ Add** > **Add role assignment**
-4. Select **API Management Service Contributor**
-5. Click **Next**
-6. Click **+ Select members**
-7. Search for your managed identity name
-8. Click **Select** > **Review + assign**
+4. Select **API Management Service Reader Role** (or Contributor)
+5. Click **Next** > **Select members**
+6. Search for `komatsu-apim-portal-bff`
+7. Click **Select** > **Review + assign**
 
-## 📊 View Role Assignments
+### "Client secret expired"
 
-Check what permissions the identity has:
-
+**Solution:** Rotate the secret:
 ```powershell
-# Get the managed identity principal ID
-$principalId = az identity show `
-  --name komatsu-apim-portal-identity `
-  --resource-group rg-komatsu-apim-portal-dev `
-  --query principalId -o tsv
-
-# List all role assignments
-az role assignment list `
-  --assignee $principalId `
-  --all `
-  --output table
+$newSecret = az ad app credential reset --id <appId> --years 1 --query password -o tsv
+Write-Host "New secret: $newSecret"
+# Update appsettings / Container App env vars / Key Vault
 ```
 
 ## 🔐 Security Best Practices
 
-1. **Use User-Assigned Identity**: Easier to manage and rotate
-2. **Least Privilege**: Only grant necessary roles (Reader vs. Contributor)
-3. **Separate Identities**: Use different identities for dev/staging/prod
-4. **Monitor Access**: Enable diagnostic logs on APIM
-5. **Audit Regularly**: Review role assignments monthly
+1. **Store secrets in Azure Key Vault** — never commit secrets to source control
+2. **Least privilege** — use Reader role unless write access is needed
+3. **Separate registrations per environment** — different App Registrations for dev/staging/prod
+4. **Rotate secrets regularly** — set a reminder before expiry (max 2 years)
+5. **Monitor sign-in logs** — review Entra ID sign-in logs for the Service Principal
+6. **Use `@secure()` in Bicep** — the `container-app.bicep` already marks client secret as secure
 
 ## 📖 Additional Resources
 
-- [Create User-Assigned Managed Identity](https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-manage-user-assigned-managed-identities)
+- [Register an application with Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app)
+- [ClientSecretCredential (Azure.Identity)](https://learn.microsoft.com/en-us/dotnet/api/azure.identity.clientsecretcredential)
 - [Azure RBAC Built-in Roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles)
-- [DefaultAzureCredential](https://learn.microsoft.com/en-us/javascript/api/@azure/identity/defaultazurecredential)
 - [APIM Access Policies](https://learn.microsoft.com/en-us/azure/api-management/api-management-access-restriction-policies)
 
 ## 💡 FAQ
 
-**Q: Can I use this identity for multiple apps?**  
-A: Yes! User-assigned identities can be shared across multiple Azure resources.
+**Q: Why App Registration instead of Managed Identity?**
+A: App Registration (Service Principal) provides consistent authentication across all environments (local dev, Docker, Azure) without requiring Azure infrastructure. The `ClientSecretCredential` works identically everywhere.
 
-**Q: What's the difference between System-Assigned and User-Assigned?**  
-A: System-Assigned identities are tied to a single resource and deleted with it. User-Assigned identities are standalone resources you can share and manage independently.
+**Q: Can I reuse one App Registration for all environments?**
+A: It's recommended to create separate registrations for dev, staging, and prod for security isolation and independent secret rotation.
 
-**Q: Do I need to create a new identity for each environment?**  
-A: Yes, it's recommended to have separate identities for dev, staging, and prod for better security isolation.
+**Q: How do I store the secret securely in production?**
+A: Use **Azure Key Vault** and reference it from Container Apps via Key Vault secrets. The `container-app.bicep` supports this pattern.
 
-**Q: Can I use this with Azure Functions or App Service?**  
-A: Absolutely! The same managed identity can be assigned to Functions, App Service, Container Apps, VMs, etc.
-
-**Q: How do I revoke access?**  
-A: Remove the role assignment from the APIM instance or delete the managed identity.
+**Q: What permissions does the App Registration need?**
+A: At minimum, **API Management Service Reader Role** on the APIM instance. For subscription management, use **API Management Service Contributor**.

@@ -67,16 +67,15 @@ describe("initiateLogin", () => {
 
   it("redirects to KPS when no tenantId available", () => {
     const mockAssign = vi.fn();
+    const { href: _href, ...locationWithoutHref } = originalLocation;
     Object.defineProperty(window, "location", {
       writable: true,
       value: {
-        ...originalLocation,
-        href: "http://localhost:3000/",
+        ...locationWithoutHref,
         origin: "http://localhost:3000",
         pathname: "/",
         hash: "",
         search: "",
-        // @ts-expect-error mock
         set href(val: string) { mockAssign(val); },
         get href() { return "http://localhost:3000/"; }
       }

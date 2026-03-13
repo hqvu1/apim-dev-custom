@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import React from "react";
-import { AuthProvider, AuthContext, type AuthContextValue } from "./AuthProvider";
+import { AuthProvider, AuthContext } from "./AuthProvider";
 
 // Mock MSAL
 const mockAcquireTokenSilent = vi.fn();
@@ -128,7 +128,7 @@ describe("AuthProvider", () => {
   });
 
   it("renders children correctly", () => {
-    const { getByText } = renderHook(() => useAuthContext(), {
+    renderHook(() => useAuthContext(), {
       wrapper: ({ children }: { children: React.ReactNode }) => (
         <AuthProvider>
           <span>Child content</span>

@@ -37,9 +37,6 @@ param logoutMode string = 'msal-plus-bff'
 @description('Use mock authentication')
 param useMockAuth string = 'false'
 
-@description('Allow public home page')
-param publicHomePage string = 'false'
-
 @description('Portal API Base URL (APIM Gateway URL)')
 param portalApiBase string
 
@@ -79,6 +76,22 @@ param existingManagedIdentityId string = ''
 @description('Existing User-Assigned Managed Identity Client ID')
 param existingManagedIdentityClientId string = ''
 
+@description('Service Principal Tenant ID for APIM API access')
+param apimSpTenantId string = ''
+
+@description('Service Principal Client ID for APIM API access')
+param apimSpClientId string = ''
+
+@secure()
+@description('Service Principal Client Secret for APIM API access')
+param apimSpClientSecret string = ''
+
+@description('ARM API scope for service principal token acquisition')
+param apimArmScope string = '${az.environment().resourceManager}.default'
+
+@description('Data API scope for service principal token acquisition')
+param apimDataApiScope string = '${az.environment().resourceManager}.default'
+
 // Variables
 var resourcePrefix = '${appName}-${environment}'
 var containerAppName = '${resourcePrefix}-ca'
@@ -89,6 +102,9 @@ var acrName = !empty(acrNameOverride) ? acrNameOverride : replace('${resourcePre
 
 // Determine if using existing identity
 var useExistingIdentity = !empty(existingManagedIdentityId) && !empty(existingManagedIdentityClientId)
+
+// Entra ID login endpoint (cloud-agnostic)
+var loginEndpoint = az.environment().authentication.loginEndpoint
 
 var commonTags = {
   Environment: environment
@@ -234,6 +250,10 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
           name: 'app-insights-key'
           value: appInsights.properties.InstrumentationKey
         }
+        {
+          name: 'apim-sp-client-secret'
+          value: apimSpClientSecret
+        }
       ]
       maxInactiveRevisions: 5
     }
@@ -243,8 +263,8 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
           name: 'apim-portal'
           image: '${acr.properties.loginServer}/${containerImage}'
           resources: {
-            cpu: json('0.5')
-            memory: '1Gi'
+            cpu: json('1.0')
+            memory: '2Gi'
           }
           env: [
             {
@@ -280,14 +300,6 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
               value: useMockAuth
             }
             {
-              name: 'VITE_PUBLIC_HOME_PAGE'
-              value: publicHomePage
-            }
-            {
-              name: 'PUBLIC_HOME_PAGE'
-              value: publicHomePage
-            }
-            {
               name: 'VITE_PORTAL_API_BASE'
               value: portalApiBase
             }
@@ -315,18 +327,126 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
               name: 'PORTAL_API_BACKEND_URL'
               value: portalApiBackendUrl
             }
+            // .NET BFF also reads this as Data API URL (when UseDataApi=true)
+            {
+              name: 'Apim__DataApiUrl'
+              value: portalApiBackendUrl
+            }
             {
               name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
               value: appInsights.properties.ConnectionString
             }
+            // .NET BFF configuration (ASP.NET Core environment variables)
             {
-              name: 'NODE_ENV'
-              value: 'production'
+              name: 'ASPNETCORE_ENVIRONMENT'
+              value: 'Production'
             }
             {
-              name: 'BFF_PORT'
-              value: '3001'
+              name: 'ASPNETCORE_URLS'
+              value: 'http://+:3001'
             }
+            {
+              name: 'Apim__SubscriptionId'
+              value: azureSubscriptionId
+            }
+            {
+              name: 'Apim__ResourceGroup'
+              value: azureResourceGroup
+            }
+            {
+              name: 'Apim__ServiceName'
+              value: apimServiceName
+            }
+            {
+              name: 'Apim__ApiVersion'
+              value: '2022-08-01'
+            }
+            {
+              name: 'Apim__ManagedIdentityClientId'
+              value: useExistingIdentity ? existingManagedIdentityClientId : ''
+            }
+            // Service Principal credentials for ARM / Data API access
+            {
+              name: 'Apim__ServicePrincipal__TenantId'
+              value: apimSpTenantId
+            }
+            {
+              name: 'Apim__ServicePrincipal__ClientId'
+              value: apimSpClientId
+            }
+            {
+              name: 'Apim__ServicePrincipal__ClientSecret'
+              secretRef: 'apim-sp-client-secret'
+            }
+            {
+              name: 'Apim__ArmScope'
+              value: apimArmScope
+            }
+            {
+              name: 'Apim__DataApiScope'
+              value: apimDataApiScope
+            }
+            {
+              name: 'EntraId__TenantId'
+              value: workforceTenantId
+            }
+            {
+              name: 'EntraId__ClientId'
+              value: entraClientId
+            }
+            {
+              name: 'EntraId__ExternalTenantId'
+              value: externalTenantId
+            }
+            {
+              name: 'EntraId__CiamHost'
+              value: ciamHost
+            }
+            {
+              name: 'EntraId__Instance'
+              value: loginEndpoint
+            }
+            {
+              name: 'EntraId__ValidAudiences__0'
+              value: entraClientId
+            }
+            {
+              name: 'EntraId__ValidAudiences__1'
+              value: 'api://${entraClientId}'
+            }
+            {
+              name: 'EntraId__ValidAudiences__2'
+              value: portalApiScope
+            }
+            {
+              name: 'EntraId__ValidIssuers__0'
+              value: '${loginEndpoint}${workforceTenantId}/v2.0'
+            }
+            {
+              name: 'EntraId__ValidIssuers__1'
+              value: 'https://sts.windows.net/${workforceTenantId}/'
+            }
+            {
+              name: 'EntraId__ValidIssuers__2'
+              value: '${loginEndpoint}${externalTenantId}/v2.0'
+            }
+            {
+              name: 'EntraId__ValidIssuers__3'
+              value: 'https://sts.windows.net/${externalTenantId}/'
+            }
+            {
+              name: 'EntraId__ValidIssuers__4'
+              value: 'https://${ciamHost}/${externalTenantId}/v2.0'
+            }
+            {
+              name: 'Features__UseMockMode'
+              value: 'false'
+            }
+            {
+              name: 'AZURE_CLIENT_ID'
+              value: useExistingIdentity ? existingManagedIdentityClientId : ''
+            }
+            // Env vars passed through to supervisord / docker-entrypoint.sh
             {
               name: 'USE_MOCK_MODE'
               value: 'false'
@@ -351,8 +471,57 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
               name: 'APIM_API_VERSION'
               value: '2022-08-01'
             }
+            {
+              name: 'ENTRA_TENANT_ID'
+              value: workforceTenantId
+            }
+            {
+              name: 'ENTRA_CLIENT_ID'
+              value: entraClientId
+            }
+            {
+              name: 'ENTRA_EXTERNAL_TENANT_ID'
+              value: externalTenantId
+            }
+            {
+              name: 'ENTRA_CIAM_HOST'
+              value: ciamHost
+            }
+            // Service Principal env vars for supervisord / docker-entrypoint.sh
+            {
+              name: 'APIM_SP_TENANT_ID'
+              value: apimSpTenantId
+            }
+            {
+              name: 'APIM_SP_CLIENT_ID'
+              value: apimSpClientId
+            }
+            {
+              name: 'APIM_SP_CLIENT_SECRET'
+              secretRef: 'apim-sp-client-secret'
+            }
+            {
+              name: 'APIM_ARM_SCOPE'
+              value: apimArmScope
+            }
+            {
+              name: 'APIM_DATA_API_SCOPE'
+              value: apimDataApiScope
+            }
           ]
           probes: [
+            {
+              type: 'Startup'
+              httpGet: {
+                path: '/health'
+                port: 8080
+                scheme: 'HTTP'
+              }
+              initialDelaySeconds: 10
+              periodSeconds: 5
+              timeoutSeconds: 3
+              failureThreshold: 10
+            }
             {
               type: 'Liveness'
               httpGet: {
@@ -360,7 +529,7 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
                 port: 8080
                 scheme: 'HTTP'
               }
-              initialDelaySeconds: 10
+              initialDelaySeconds: 15
               periodSeconds: 30
               timeoutSeconds: 3
               failureThreshold: 3
@@ -372,7 +541,7 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
                 port: 8080
                 scheme: 'HTTP'
               }
-              initialDelaySeconds: 5
+              initialDelaySeconds: 10
               periodSeconds: 10
               timeoutSeconds: 3
               failureThreshold: 3

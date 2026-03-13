@@ -1,7 +1,8 @@
 import { Box, Button, Card, CardContent, Grid, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { usePortalApi } from "../api/client";
+import { usePortalApi, unwrapArray } from "../api/client";
 import PageHeader from "../components/PageHeader";
+import { useTranslation } from "react-i18next";
 
 type RegistrationRequest = {
   id: string;
@@ -16,6 +17,7 @@ type Metric = {
 
 const Admin = () => {
   const { get, post } = usePortalApi();
+  const { t } = useTranslation();
   const [requests, setRequests] = useState<RegistrationRequest[]>([]);
   const [metrics, setMetrics] = useState<Metric[]>([]);
 
@@ -26,12 +28,14 @@ const Admin = () => {
         get<Metric[]>("/admin/metrics")
       ]);
 
-      if (requestsResult.data) {
-        setRequests(requestsResult.data);
+      const items = unwrapArray<RegistrationRequest>(requestsResult.data);
+      if (items) {
+        setRequests(items);
       }
 
-      if (metricsResult.data) {
-        setMetrics(metricsResult.data);
+      const metricsItems = unwrapArray<Metric>(metricsResult.data);
+      if (metricsItems) {
+        setMetrics(metricsItems);
       }
     };
 
@@ -41,8 +45,8 @@ const Admin = () => {
   return (
     <Box>
       <PageHeader
-        title="Admin Console"
-        subtitle="Approve registrations, review catalog metadata, and monitor portal health."
+        title={t("admin.title")}
+        subtitle={t("admin.subtitle")}
       />
       <Grid container spacing={3} mb={3}>
         {metrics.map((metric) => (
@@ -61,7 +65,7 @@ const Admin = () => {
         ))}
       </Grid>
       <Typography variant="h6" gutterBottom>
-        Pending registrations
+        {t("admin.pendingRegistrations")}
       </Typography>
       <Stack spacing={2}>
         {requests.map((request) => (
@@ -72,19 +76,19 @@ const Admin = () => {
                   <Typography variant="subtitle1" fontWeight={600}>
                     {request.company}
                   </Typography>
-                  <Typography color="text.secondary">Region: {request.region}</Typography>
+                  <Typography color="text.secondary">{t("admin.regionLabel")} {request.region}</Typography>
                 </Box>
                 <Button
                   variant="contained"
                   onClick={() => post(`/admin/registrations/${request.id}/approve`, {})}
                 >
-                  Approve
+                  {t("admin.approve")}
                 </Button>
                 <Button
                   variant="outlined"
                   onClick={() => post(`/admin/registrations/${request.id}/reject`, {})}
                 >
-                  Reject
+                  {t("admin.reject")}
                 </Button>
               </Stack>
             </CardContent>

@@ -47,10 +47,10 @@ describe("getAccessToken", () => {
   it("handles undefined scopes", async () => {
     mockAcquireTokenSilent.mockResolvedValue({ accessToken: "token" });
 
-    await getAccessToken(mockInstance, mockAccount);
+    await getAccessToken(mockInstance, mockAccount, undefined);
     expect(mockAcquireTokenSilent).toHaveBeenCalledWith({
       account: mockAccount,
-      scopes: undefined
+      scopes: []
     });
   });
 });

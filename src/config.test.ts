@@ -1,7 +1,7 @@
 /**
  * Unit tests for centralized configuration (config.ts)
  */
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect } from "vitest";
 
 // We need to dynamically import config.ts after setting up env/runtime mocks
 describe("config", () => {

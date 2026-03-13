@@ -11,16 +11,18 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useMemo, useState } from "react";
-import { usePortalApi } from "../api/client";
+import { usePortalApi, unwrapArray } from "../api/client";
 import { apiCatalog } from "../api/mockData";
 import { ApiSummary } from "../api/types";
 import ApiCard from "../components/ApiCard";
 import PageHeader from "../components/PageHeader";
 import { useToast } from "../components/useToast";
+import { useTranslation } from "react-i18next";
 
 const ApiCatalog = () => {
   const { get } = usePortalApi();
   const toast = useToast();
+  const { t } = useTranslation();
   const [apis, setApis] = useState<ApiSummary[]>([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
@@ -32,15 +34,16 @@ const ApiCatalog = () => {
 
     const load = async () => {
       setLoading(true);
-      const result = await get<ApiSummary[]>("/apis");
+      const result = await get<ApiSummary[] | { value: ApiSummary[] }>("/apis");
 
       if (cancelled) return;
 
-      if (result.data && Array.isArray(result.data)) {
-        setApis(result.data);
+      const items = unwrapArray<ApiSummary>(result.data);
+      if (items) {
+        setApis(items);
       } else if (result.error) {
         setApis(apiCatalog);
-        toast.notify("Using local catalog data until the portal API is ready.", "info");
+        toast.notify(t("apis.toast.localData"), "info");
       }
       setLoading(false);
     };
@@ -77,14 +80,14 @@ const ApiCatalog = () => {
   return (
     <Box>
       <PageHeader
-        title="API Catalog"
-        subtitle="Discover and explore APIs available on the Komatsu API Management platform."
+        title={t("apis.title")}
+        subtitle={t("apis.subtitle")}
       />
 
       {/* Search and filter bar */}
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} mb={3}>
         <TextField
-          placeholder="Search by name, description, or path..."
+          placeholder={t("apis.searchPlaceholder")}
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           fullWidth
@@ -98,27 +101,27 @@ const ApiCatalog = () => {
           }}
         />
         <TextField
-          label="Category"
+          label={t("apis.categoryLabel")}
           select
           value={category}
           onChange={(event) => setCategory(event.target.value)}
           sx={{ minWidth: 180 }}
           size="small"
         >
-          <MenuItem value="">All Categories</MenuItem>
+          <MenuItem value="">{t("apis.allCategories")}</MenuItem>
           {categories.map((c) => (
             <MenuItem key={c} value={c}>{c}</MenuItem>
           ))}
         </TextField>
         <TextField
-          label="Plan"
+          label={t("apis.planLabel")}
           select
           value={plan}
           onChange={(event) => setPlan(event.target.value)}
           sx={{ minWidth: 160 }}
           size="small"
         >
-          <MenuItem value="">All Plans</MenuItem>
+          <MenuItem value="">{t("apis.allPlans")}</MenuItem>
           {plans.map((p) => (
             <MenuItem key={p} value={p}>{p}</MenuItem>
           ))}
@@ -130,14 +133,14 @@ const ApiCatalog = () => {
         <Stack direction="row" spacing={1} mb={2}>
           {category && (
             <Chip
-              label={`Category: ${category}`}
+              label={t("apis.filterCategory", { value: category })}
               size="small"
               onDelete={() => setCategory("")}
             />
           )}
           {plan && (
             <Chip
-              label={`Plan: ${plan}`}
+              label={t("apis.filterPlan", { value: plan })}
               size="small"
               onDelete={() => setPlan("")}
             />
@@ -148,7 +151,7 @@ const ApiCatalog = () => {
       {/* Results count */}
       {!loading && (
         <Typography variant="subtitle2" color="text.secondary" mb={2}>
-          {filtered.length} {filtered.length === 1 ? "API" : "APIs"} available
+          {filtered.length === 1 ? t("apis.resultCountSingular", { count: filtered.length }) : t("apis.resultCount", { count: filtered.length })}
         </Typography>
       )}
 
@@ -163,12 +166,12 @@ const ApiCatalog = () => {
       {!loading && filtered.length === 0 && (
         <Box textAlign="center" py={6}>
           <Typography variant="h6" color="text.secondary" gutterBottom>
-            No APIs found
+            {t("apis.emptyTitle")}
           </Typography>
           <Typography color="text.secondary">
             {search || category || plan
-              ? "Try adjusting your search or filter criteria."
-              : "No APIs are currently published."}
+              ? t("apis.emptyFilterHint")
+              : t("apis.emptyNoData")}
           </Typography>
         </Box>
       )}

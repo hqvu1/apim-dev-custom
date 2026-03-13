@@ -2,20 +2,19 @@ import { List, ListItem, ListItemButton, ListItemText, Stack, Typography } from 
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth/useAuth";
-import { ROUTES } from "../config";
+
+const navItems = [
+  { key: "nav.home", to: "/", roles: [] },
+  { key: "nav.apis", to: "/apis", roles: [] },
+  { key: "nav.integrations", to: "/my/integrations", roles: [] },
+  { key: "nav.support", to: "/support", roles: [] },
+  { key: "nav.news", to: "/news", roles: [] },
+  { key: "nav.admin", to: "/admin", roles: ["Admin", "GlobalAdmin"] }
+];
 
 const SideNav = () => {
   const { roles } = useAuth();
   const { t } = useTranslation();
-
-  const navItems = [
-    { label: t("nav.home"), to: ROUTES.HOME, roles: [] as string[] },
-    { label: t("nav.apis"), to: ROUTES.API_CATALOG, roles: [] as string[] },
-    { label: t("nav.integrations"), to: ROUTES.MY_INTEGRATIONS, roles: [] as string[] },
-    { label: t("nav.support"), to: ROUTES.SUPPORT, roles: [] as string[] },
-    { label: t("nav.news"), to: ROUTES.NEWS, roles: [] as string[] },
-    { label: t("nav.admin"), to: ROUTES.ADMIN, roles: ["Admin", "GlobalAdmin"] },
-  ];
 
   const allowed = (itemRoles: string[]) =>
     itemRoles.length === 0 || itemRoles.some((role) => roles.includes(role));
@@ -23,7 +22,7 @@ const SideNav = () => {
   return (
     <Stack spacing={3} px={2} py={3}>
       <Typography variant="subtitle2" color="text.secondary" sx={{ letterSpacing: "0.12em" }}>
-        NAVIGATION
+        {t("sideNav.heading")}
       </Typography>
       <List disablePadding>
         {navItems.filter((item) => allowed(item.roles)).map((item) => (
@@ -40,7 +39,7 @@ const SideNav = () => {
                 }
               }}
             >
-              <ListItemText primary={item.label} />
+              <ListItemText primary={t(item.key)} />
             </ListItemButton>
           </ListItem>
         ))}

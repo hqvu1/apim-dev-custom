@@ -14,8 +14,22 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - NODE_ENV=production
-      - PORTAL_API_BACKEND_URL=${PORTAL_API_BACKEND_URL}
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:3001
+      - Apim__SubscriptionId=${AZURE_SUBSCRIPTION_ID}
+      - Apim__ResourceGroup=${AZURE_RESOURCE_GROUP}
+      - Apim__ServiceName=${APIM_SERVICE_NAME}
+      - Apim__ApiVersion=${APIM_API_VERSION:-2022-08-01}
+      - Apim__ManagedIdentityClientId=${MANAGED_IDENTITY_CLIENT_ID}
+      - Apim__ServicePrincipal__TenantId=${APIM_SP_TENANT_ID}
+      - Apim__ServicePrincipal__ClientId=${APIM_SP_CLIENT_ID}
+      - Apim__ServicePrincipal__ClientSecret=${APIM_SP_CLIENT_SECRET}
+      - Apim__ArmScope=${APIM_ARM_SCOPE:-https://management.azure.com/.default}
+      - Apim__DataApiScope=${APIM_DATA_API_SCOPE:-https://management.azure.com/.default}
+      - EntraId__TenantId=${ENTRA_TENANT_ID}
+      - EntraId__ClientId=${ENTRA_CLIENT_ID}
+      - Features__UseMockMode=${USE_MOCK_MODE:-false}
+      - PUBLIC_HOME_PAGE=${PUBLIC_HOME_PAGE:-false}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--spider", "http://localhost:8080/health"]

@@ -1,0 +1,24 @@
+{
+  "policies": [
+    {
+      "role": "Admin",
+      "apis": ["*"],
+      "permissions": ["read", "tryit", "subscribe", "manage"]
+    },
+    {
+      "role": "Distributor",
+      "apis": ["*"],
+      "permissions": ["read", "tryit", "subscribe", "manage"]
+    },
+    {
+      "role": "Vendor",
+      "apis": ["*"],
+      "permissions": ["read", "tryit", "subscribe"]
+    },
+    {
+      "role": "Customer",
+      "apis": ["*"],
+      "permissions": ["read"]
+    }
+  ]
+}

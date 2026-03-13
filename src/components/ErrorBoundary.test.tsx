@@ -1,10 +1,8 @@
 /**
  * Unit tests for ErrorBoundary component
  */
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import React from "react";
 import ErrorBoundary from "./ErrorBoundary";
 
 // Silence console.error in tests — ErrorBoundary logs errors intentionally
@@ -17,16 +15,6 @@ afterEach(() => {
 // Component that always throws
 const BrokenChild = () => {
   throw new Error("Test render error");
-};
-
-// Component that throws on demand
-const ConditionallyBrokenChild = ({
-  shouldThrow,
-}: {
-  shouldThrow: boolean;
-}) => {
-  if (shouldThrow) throw new Error("Conditional error");
-  return <div>Child is fine</div>;
 };
 
 describe("ErrorBoundary", () => {

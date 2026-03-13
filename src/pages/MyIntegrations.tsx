@@ -7,8 +7,9 @@ import {
   Typography
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { usePortalApi } from "../api/client";
+import { usePortalApi, unwrapArray } from "../api/client";
 import PageHeader from "../components/PageHeader";
+import { useTranslation } from "react-i18next";
 
 type Subscription = {
   apiName: string;
@@ -19,13 +20,15 @@ type Subscription = {
 
 const MyIntegrations = () => {
   const { get } = usePortalApi();
+  const { t } = useTranslation();
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
 
   useEffect(() => {
     const load = async () => {
       const result = await get<Subscription[]>("/users/me/subscriptions");
-      if (result.data) {
-        setSubscriptions(result.data);
+      const items = unwrapArray<Subscription>(result.data);
+      if (items) {
+        setSubscriptions(items);
       }
     };
 
@@ -35,12 +38,12 @@ const MyIntegrations = () => {
   return (
     <Box>
       <PageHeader
-        title="My Integrations"
-        subtitle="Subscriptions, credentials, and quota usage across your APIs."
+        title={t("integrations.title")}
+        subtitle={t("integrations.subtitle")}
       />
       <Stack spacing={2}>
         {subscriptions.length === 0 && (
-          <Typography color="text.secondary">No subscriptions yet.</Typography>
+          <Typography color="text.secondary">{t("integrations.empty")}</Typography>
         )}
         {subscriptions.map((item) => (
           <Card key={item.apiName}>
@@ -52,8 +55,8 @@ const MyIntegrations = () => {
                     {item.environment} | {item.status}
                   </Typography>
                 </Box>
-                <Typography color="text.secondary">Quota: {item.quota}</Typography>
-                <Button variant="outlined">Manage</Button>
+                <Typography color="text.secondary">{t("integrations.quotaLabel")} {item.quota}</Typography>
+                <Button variant="outlined">{t("integrations.manage")}</Button>
               </Stack>
             </CardContent>
           </Card>

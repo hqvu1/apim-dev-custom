@@ -1,129 +1,99 @@
-import {
-  AppBar,
-  Avatar,
-  Box,
-  IconButton,
-  Menu,
-  MenuItem,
-  Stack,
-  Toolbar,
-  Tooltip,
-  Typography
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import TranslateIcon from "@mui/icons-material/Translate";
 import { useState } from "react";
+import { Header as KomatsuHeader, type NavigationItem } from "@komatsu-nagm/component-library";
+import TranslateIcon from "@mui/icons-material/Translate";
+import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import useLogout from "../utils/loginUtils/useLogout";
+import { appConfig, ROUTES } from "../config";
 
 type HeaderProps = {
-  /** Width of the side drawer (irrelevant in public mode). */
-  drawerWidth?: number;
-  /** Callback when the hamburger menu is clicked. */
-  onMenuClick?: () => void;
-  /** Whether to show the hamburger menu button. */
-  showMenuButton?: boolean;
-  /** When true, renders a simplified header without user menu/auth controls. */
+  /** When true, renders a simplified header without auth navigation items. */
   isPublic?: boolean;
 };
 
-const Header = ({
-  drawerWidth = 0,
-  onMenuClick,
-  showMenuButton = false,
-  isPublic = false,
-}: HeaderProps) => {
+/**
+ * Application header — wraps the `Header` component from
+ * `@komatsu-nagm/component-library` and wires it up to the
+ * portal's auth context, i18n, and routing.
+ */
+const Header = ({ isPublic = false }: HeaderProps) => {
   const { t, i18n } = useTranslation();
-  const { account } = useAuth();
+  const { account, roles } = useAuth();
   const { logout } = useLogout();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [userAnchor, setUserAnchor] = useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
+  const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
 
   const displayName = account?.name || "Komatsu User";
+  const displayEmail = account?.username || "";
+  const initials = displayName
+    .split(" ")
+    .map((n) => n.charAt(0))
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  // Build navigation items from ROUTES when authenticated
+  const navigation: NavigationItem[] = isPublic
+    ? []
+    : [
+        { label: t("nav.home"), onClick: () => navigate(ROUTES.HOME) },
+        { label: t("nav.apis"), onClick: () => navigate(ROUTES.API_CATALOG) },
+        { label: t("nav.integrations"), onClick: () => navigate(ROUTES.MY_INTEGRATIONS) },
+        { label: t("nav.support"), onClick: () => navigate(ROUTES.SUPPORT) },
+        { label: t("nav.news"), onClick: () => navigate(ROUTES.NEWS) },
+        ...(roles.includes("Admin") || roles.includes("GlobalAdmin")
+          ? [{ label: t("nav.admin"), onClick: () => navigate(ROUTES.ADMIN) }]
+          : []),
+      ];
+
+  // Standalone language-switcher dropdown
+  const languageSwitcher = (
+    <>
+      <Tooltip title={t("header.language")}>
+        <IconButton
+          onClick={(e) => setLangAnchor(e.currentTarget)}
+          aria-label="Change language"
+          size="small"
+          sx={{ color: "white" }}
+        >
+          <TranslateIcon />
+        </IconButton>
+      </Tooltip>
+      <Menu
+        anchorEl={langAnchor}
+        open={Boolean(langAnchor)}
+        onClose={() => setLangAnchor(null)}
+      >
+        <MenuItem
+          selected={i18n.language === "en"}
+          onClick={() => { i18n.changeLanguage("en"); setLangAnchor(null); }}
+        >
+          {t("header.langEnglish")}
+        </MenuItem>
+        <MenuItem
+          selected={i18n.language === "es"}
+          onClick={() => { i18n.changeLanguage("es"); setLangAnchor(null); }}
+        >
+          {t("header.langSpanish")}
+        </MenuItem>
+      </Menu>
+    </>
+  );
 
   return (
-    <AppBar
-      position="fixed"
-      color="transparent"
-      elevation={0}
-      sx={{
-        backdropFilter: "blur(16px)",
-        borderBottom: "1px solid rgba(15, 26, 34, 0.08)",
-        ml: { lg: `${drawerWidth}px` }
+    <KomatsuHeader
+      appTitle={appConfig.appName}
+      navigation={navigation}
+      actions={languageSwitcher}
+      userProfile={{
+        userEmail: displayEmail,
+        userRoles: roles.join(", "),
+        userInitials: initials || "K",
+        onSignOut: logout,
       }}
-    >
-      <Toolbar sx={{ justifyContent: "space-between" }}>
-        <Stack direction="row" spacing={2} alignItems="center">
-          {showMenuButton && (
-            <IconButton onClick={onMenuClick} aria-label="Open navigation">
-              <MenuIcon />
-            </IconButton>
-          )}
-          <Stack spacing={1}>
-            <Typography variant="caption" sx={{ textTransform: "uppercase", letterSpacing: "0.2em" }}>
-              Portal
-            </Typography>
-            <Typography variant="h6">{t("appName")}</Typography>
-          </Stack>
-        </Stack>
-        <Stack direction="row" spacing={2} alignItems="center">
-          <Tooltip title="Language">
-            <IconButton
-              onClick={(event) => setAnchorEl(event.currentTarget)}
-              aria-label="Change language"
-              size="small"
-            >
-              <TranslateIcon />
-            </IconButton>
-          </Tooltip>
-          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
-            <MenuItem
-              onClick={() => {
-                i18n.changeLanguage("en");
-                setAnchorEl(null);
-              }}
-            >
-              English
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                i18n.changeLanguage("ja");
-                setAnchorEl(null);
-              }}
-            >
-              Japanese
-            </MenuItem>
-          </Menu>
-          {!isPublic && (
-            <>
-              <Box display="flex" alignItems="center" gap={1}>
-                <IconButton
-                  onClick={(event) => setUserAnchor(event.currentTarget)}
-                  aria-label="Open user menu"
-                  size="small"
-                >
-                  <Avatar sx={{ bgcolor: "primary.main" }}>{displayName.charAt(0)}</Avatar>
-                </IconButton>
-                <Typography variant="body2" fontWeight={600}>
-                  {displayName}
-                </Typography>
-              </Box>
-              <Menu anchorEl={userAnchor} open={Boolean(userAnchor)} onClose={() => setUserAnchor(null)}>
-                <MenuItem
-                  onClick={() => {
-                    setUserAnchor(null);
-                    logout();
-                  }}
-                >
-                  Sign out
-                </MenuItem>
-              </Menu>
-            </>
-          )}
-        </Stack>
-      </Toolbar>
-    </AppBar>
+    />
   );
 };
 

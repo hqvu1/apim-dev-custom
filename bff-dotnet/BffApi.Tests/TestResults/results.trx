@@ -1,0 +1,1868 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="0657cdf1-5362-486b-a49f-bdf411a1a92a" name="hvu@CHQ-HVU-LT 2026-03-11 11:27:18" runUser="KAC\hvu" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-03-11T11:27:18.2138824-05:00" queuing="2026-03-11T11:27:18.2138828-05:00" start="2026-03-11T11:27:14.7641373-05:00" finish="2026-03-11T11:27:19.4547462-05:00" />
+  <TestSettings name="default" id="b578d7b2-0c4e-4113-877e-c193107c7d34">
+    <Deployment runDeploymentRoot="hvu_CHQ-HVU-LT_2026-03-11_11_27_18" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="b781b011-97c6-41b0-ba84-8554e165f81a" testId="b04c3535-f044-4763-08cd-501a7bfde744" testName="BffApi.Tests.Endpoints.MiscEndpointsTests.GetProduct_ReturnsNotFound_ForMissing" computerName="CHQ-HVU-LT" duration="00:00:00.0037022" startTime="2026-03-11T11:27:19.2633662-05:00" endTime="2026-03-11T11:27:19.2637924-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b781b011-97c6-41b0-ba84-8554e165f81a" />
+    <UnitTestResult executionId="ad39da19-3181-4592-923d-45027800256e" testId="23252464-c12f-3e88-eeb8-4479c8550f5d" testName="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasGeneralPermission_IsCaseInsensitive" computerName="CHQ-HVU-LT" duration="00:00:00.0007059" startTime="2026-03-11T11:27:18.1798192-05:00" endTime="2026-03-11T11:27:18.1804312-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ad39da19-3181-4592-923d-45027800256e" />
+    <UnitTestResult executionId="3ace722f-6e7d-4ef7-81a9-0edd92d9aa51" testId="943ec0af-4233-e439-c45f-34206317703b" testName="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasApiPermission_ReturnsFalse_WhenPermissionNotGranted" computerName="CHQ-HVU-LT" duration="00:00:00.0008379" startTime="2026-03-11T11:27:18.1943447-05:00" endTime="2026-03-11T11:27:18.1944307-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3ace722f-6e7d-4ef7-81a9-0edd92d9aa51" />
+    <UnitTestResult executionId="277c5c8f-183f-415e-bd4d-9fe9aeaa198e" testId="2411ea92-c1e0-95bf-581c-1878df0c4aab" testName="BffApi.Tests.Endpoints.AdminEndpointsTests.ListRegistrations_ReturnsOk" computerName="CHQ-HVU-LT" duration="00:00:00.0116600" startTime="2026-03-11T11:27:19.1731857-05:00" endTime="2026-03-11T11:27:19.1853034-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="277c5c8f-183f-415e-bd4d-9fe9aeaa198e" />
+    <UnitTestResult executionId="f01587db-1d37-4b03-b412-1e7217929df7" testId="1984e16a-ca4a-6370-57d9-6d221ec6ae70" testName="BffApi.Tests.Authorization.ApiAccessHandlerTests.Succeeds_WhenNoRolesReturned_InDevelopment" computerName="CHQ-HVU-LT" duration="00:00:00.0109073" startTime="2026-03-11T11:27:18.1763582-05:00" endTime="2026-03-11T11:27:18.1959302-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f01587db-1d37-4b03-b412-1e7217929df7" />
+    <UnitTestResult executionId="a3f21039-5bd3-45f4-9326-64e65ec461de" testId="a00fe570-5da6-3e74-d111-8487554c651a" testName="BffApi.Tests.Endpoints.MiscEndpointsTests.GetNews_ReturnsOk_WithItems" computerName="CHQ-HVU-LT" duration="00:00:00.0159864" startTime="2026-03-11T11:27:19.1917481-05:00" endTime="2026-03-11T11:27:19.2156914-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a3f21039-5bd3-45f4-9326-64e65ec461de" />
+    <UnitTestResult executionId="86abddc0-eebd-4c1a-86e6-bfc9894e7682" testId="f9f35c4c-2012-a487-7f3a-4dfaaecd4584" testName="BffApi.Tests.Endpoints.ApisEndpointsTests.ListApis_ReturnsOk_WithPagedResult" computerName="CHQ-HVU-LT" duration="00:00:00.0147748" startTime="2026-03-11T11:27:19.2739235-05:00" endTime="2026-03-11T11:27:19.2853665-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="86abddc0-eebd-4c1a-86e6-bfc9894e7682">
+      <Output>
+        <ErrorInfo>
+          <Message>System.Text.Json.JsonException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.&#xD;
+---- System.Text.Json.JsonReaderException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. LineNumber: 0 | BytePositionInLine: 0.</Message>
+          <StackTrace>   at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, JsonReaderException ex)&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Deserialize(Utf8JsonReader&amp; reader, ReadStack&amp; state)&#xD;
+   at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 utf8Json, JsonTypeInfo`1 jsonTypeInfo, Nullable`1 actualByteCount)&#xD;
+   at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 json, JsonTypeInfo`1 jsonTypeInfo)&#xD;
+   at System.Text.Json.JsonSerializer.Deserialize[TValue](String json, JsonSerializerOptions options)&#xD;
+   at BffApi.Tests.TestHelpers.ReadJsonAsync[T](HttpResponseMessage response) in C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\BffWebApplicationFactory.cs:line 106&#xD;
+   at BffApi.Tests.Endpoints.ApisEndpointsTests.ListApis_ReturnsOk_WithPagedResult() in C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\Endpoints\ApisEndpointsTests.cs:line 23&#xD;
+--- End of stack trace from previous location ---&#xD;
+----- Inner Stack Trace -----&#xD;
+   at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader&amp; json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)&#xD;
+   at System.Text.Json.Utf8JsonReader.Read()&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="7049fecd-5e0b-41a1-a236-4f2624ef64a3" testId="7132e454-9dd1-38a0-53ea-f91266a090ac" testName="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasApiPermission_ReturnsFalse_WhenApiNotListed" computerName="CHQ-HVU-LT" duration="00:00:00.0004951" startTime="2026-03-11T11:27:18.1949497-05:00" endTime="2026-03-11T11:27:18.1950181-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7049fecd-5e0b-41a1-a236-4f2624ef64a3" />
+    <UnitTestResult executionId="e012b16c-4c13-4cce-9768-ae6ac7d13055" testId="3caf2102-241e-904a-872b-95a123dcc61c" testName="BffApi.Tests.Endpoints.AdminEndpointsTests.GetAdminMetrics_ReturnsOk_WithMetrics" computerName="CHQ-HVU-LT" duration="00:00:00.0122399" startTime="2026-03-11T11:27:19.2145543-05:00" endTime="2026-03-11T11:27:19.2635130-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e012b16c-4c13-4cce-9768-ae6ac7d13055" />
+    <UnitTestResult executionId="9b24782b-77ae-45aa-9850-ef48b0cb34ec" testId="31c0cd6c-72cd-138e-d5eb-a31e625bd025" testName="BffApi.Tests.Authorization.RbacPolicyProviderTests.GetAccessibleApis_ReturnsNull_WhenWildcard" computerName="CHQ-HVU-LT" duration="00:00:00.0006466" startTime="2026-03-11T11:27:18.1946931-05:00" endTime="2026-03-11T11:27:18.1947580-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9b24782b-77ae-45aa-9850-ef48b0cb34ec" />
+    <UnitTestResult executionId="4ff2f1e9-c956-4b25-8c54-8f349d0a1777" testId="2b8f86c4-1f4e-64ee-b235-bca3a2e65da1" testName="BffApi.Tests.Endpoints.RegistrationEndpointsTests.SubmitRegistration_ReturnsCreated" computerName="CHQ-HVU-LT" duration="00:00:01.8433779" startTime="2026-03-11T11:27:17.3509139-05:00" endTime="2026-03-11T11:27:19.1585177-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4ff2f1e9-c956-4b25-8c54-8f349d0a1777" />
+    <UnitTestResult executionId="1839a43b-dc17-4fef-ad88-5a644f607abc" testId="0872ef13-5e59-700e-531a-d6b30eed8f85" testName="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasApiPermission_ReturnsTrue_WithWildcardApis" computerName="CHQ-HVU-LT" duration="00:00:00.0004810" startTime="2026-03-11T11:27:18.1940520-05:00" endTime="2026-03-11T11:27:18.1941286-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1839a43b-dc17-4fef-ad88-5a644f607abc" />
+    <UnitTestResult executionId="202cdb44-d960-4f7c-b51a-82e5d827c282" testId="a222111f-004d-a099-2e61-72b0ae57080e" testName="BffApi.Tests.Endpoints.AdminEndpointsTests.ApproveRegistration_ReturnsOk" computerName="CHQ-HVU-LT" duration="00:00:00.0093168" startTime="2026-03-11T11:27:19.1644574-05:00" endTime="2026-03-11T11:27:19.1724399-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="202cdb44-d960-4f7c-b51a-82e5d827c282" />
+    <UnitTestResult executionId="d7d80279-c7f5-4795-ba5f-6633bd2978f6" testId="b31514dd-c46b-a1d6-5a97-bbaf753ff703" testName="BffApi.Tests.Middleware.SecurityHeadersMiddlewareTests.InvokeAsync_AddsSecurityHeaders" computerName="CHQ-HVU-LT" duration="00:00:00.5158175" startTime="2026-03-11T11:27:17.3509588-05:00" endTime="2026-03-11T11:27:17.8394722-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d7d80279-c7f5-4795-ba5f-6633bd2978f6" />
+    <UnitTestResult executionId="71dd224c-4a5a-47b7-b9fe-186dd7ee9258" testId="d8a0937a-1f8f-d468-f2bf-264abdce87f0" testName="BffApi.Tests.Authorization.ApiAccessHandlerTests.Succeeds_WhenNoUserId_InDevelopment_AndAuthenticated" computerName="CHQ-HVU-LT" duration="00:00:00.0012719" startTime="2026-03-11T11:27:18.2025547-05:00" endTime="2026-03-11T11:27:18.2027410-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="71dd224c-4a5a-47b7-b9fe-186dd7ee9258" />
+    <UnitTestResult executionId="a78b489c-bc69-4fb9-9657-d8adc407354e" testId="280458b8-69b0-80da-9ab9-bf8b9a1d0efb" testName="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.ListSubscriptions_ReturnsOk_WithPagedResult" computerName="CHQ-HVU-LT" duration="00:00:00.0606116" startTime="2026-03-11T11:27:19.2155068-05:00" endTime="2026-03-11T11:27:19.2690426-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a78b489c-bc69-4fb9-9657-d8adc407354e" />
+    <UnitTestResult executionId="d4d802c2-879a-4f2c-be9f-e067ab3dfa27" testId="9fcb2109-464e-09bc-57c9-5af178693a29" testName="BffApi.Tests.Endpoints.ApisEndpointsTests.ListHostnames_ReturnsOk" computerName="CHQ-HVU-LT" duration="00:00:00.0078952" startTime="2026-03-11T11:27:19.3067686-05:00" endTime="2026-03-11T11:27:19.3121174-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d4d802c2-879a-4f2c-be9f-e067ab3dfa27" />
+    <UnitTestResult executionId="3b9ee8e6-e4e5-44b1-818c-b1c0d0cb9e5f" testId="8db0fc13-634f-4faa-24b3-0f05e606d37d" testName="BffApi.Tests.Authorization.ApiAccessHandlerTests.Fails_WhenDeveloperRole_LacksManagePermission" computerName="CHQ-HVU-LT" duration="00:00:00.0026590" startTime="2026-03-11T11:27:18.1996663-05:00" endTime="2026-03-11T11:27:18.1998347-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3b9ee8e6-e4e5-44b1-818c-b1c0d0cb9e5f" />
+    <UnitTestResult executionId="8ee290e4-50ad-4005-b033-362122be7365" testId="835dc063-9511-df23-f3a1-19ccca3e29d3" testName="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.CreateSubscription_ReturnsCreated" computerName="CHQ-HVU-LT" duration="00:00:00.0144128" startTime="2026-03-11T11:27:19.1945301-05:00" endTime="2026-03-11T11:27:19.2149531-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8ee290e4-50ad-4005-b033-362122be7365" />
+    <UnitTestResult executionId="3c682e06-6042-435b-a711-012ca849727f" testId="60543c18-cb0e-6c8b-bc50-8a48a97e5c15" testName="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasApiPermission_ChecksMultipleRoles" computerName="CHQ-HVU-LT" duration="00:00:00.0007563" startTime="2026-03-11T11:27:18.1954463-05:00" endTime="2026-03-11T11:27:18.1955275-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3c682e06-6042-435b-a711-012ca849727f" />
+    <UnitTestResult executionId="ea1bd39a-0088-43e3-99c3-5750cd0285e4" testId="9a07316b-1d63-a9ba-b2bf-fab3aa3ed4ac" testName="BffApi.Tests.Authorization.RbacPolicyProviderTests.GetAccessibleApis_ReturnsSpecificApis" computerName="CHQ-HVU-LT" duration="00:00:00.0012335" startTime="2026-03-11T11:27:18.1956822-05:00" endTime="2026-03-11T11:27:18.1957376-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ea1bd39a-0088-43e3-99c3-5750cd0285e4" />
+    <UnitTestResult executionId="ea68f99d-5fb0-40c3-be99-5fdd87c19d99" testId="508287ee-6949-2e36-a2db-0b9f5fa93243" testName="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasGeneralPermission_ReturnsTrue_WhenRoleHasPermission" computerName="CHQ-HVU-LT" duration="00:00:00.0005417" startTime="2026-03-11T11:27:18.1919325-05:00" endTime="2026-03-11T11:27:18.1935593-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ea68f99d-5fb0-40c3-be99-5fdd87c19d99" />
+    <UnitTestResult executionId="c4cc54cc-4cdc-4ac4-85ec-5a327b72c386" testId="d548bb63-3698-5783-2a85-f1c90a418c4d" testName="BffApi.Tests.Endpoints.ApisEndpointsTests.GetApiSubscriptionStatus_ReturnsOk" computerName="CHQ-HVU-LT" duration="00:00:00.0087528" startTime="2026-03-11T11:27:19.3125445-05:00" endTime="2026-03-11T11:27:19.3227741-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c4cc54cc-4cdc-4ac4-85ec-5a327b72c386">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Contains() Failure: Sub-string not found&#xD;
+String:    ""&#xD;
+Not found: "status"</Message>
+          <StackTrace>   at BffApi.Tests.Endpoints.ApisEndpointsTests.GetApiSubscriptionStatus_ReturnsOk() in C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\Endpoints\ApisEndpointsTests.cs:line 108&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="7a7e7508-10f2-4121-bf8f-eede803a06cb" testId="34e78a9e-dee9-de26-664f-48aee1c5895c" testName="BffApi.Tests.Endpoints.ApisEndpointsTests.ListOperations_ReturnsOk_WithOperations" computerName="CHQ-HVU-LT" duration="00:00:00.0735534" startTime="2026-03-11T11:27:19.2133106-05:00" endTime="2026-03-11T11:27:19.2696914-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7a7e7508-10f2-4121-bf8f-eede803a06cb">
+      <Output>
+        <ErrorInfo>
+          <Message>System.Text.Json.JsonException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.&#xD;
+---- System.Text.Json.JsonReaderException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. LineNumber: 0 | BytePositionInLine: 0.</Message>
+          <StackTrace>   at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, JsonReaderException ex)&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Deserialize(Utf8JsonReader&amp; reader, ReadStack&amp; state)&#xD;
+   at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 utf8Json, JsonTypeInfo`1 jsonTypeInfo, Nullable`1 actualByteCount)&#xD;
+   at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 json, JsonTypeInfo`1 jsonTypeInfo)&#xD;
+   at System.Text.Json.JsonSerializer.Deserialize[TValue](String json, JsonSerializerOptions options)&#xD;
+   at BffApi.Tests.TestHelpers.ReadJsonAsync[T](HttpResponseMessage response) in C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\BffWebApplicationFactory.cs:line 106&#xD;
+   at BffApi.Tests.Endpoints.ApisEndpointsTests.ListOperations_ReturnsOk_WithOperations() in C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\Endpoints\ApisEndpointsTests.cs:line 82&#xD;
+--- End of stack trace from previous location ---&#xD;
+----- Inner Stack Trace -----&#xD;
+   at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader&amp; json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)&#xD;
+   at System.Text.Json.Utf8JsonReader.Read()&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="1f029d1a-ffaf-4ea2-abbe-2e07999b90a8" testId="02df3ed4-d265-f716-7751-a3e7e21fb9d5" testName="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.GetSubscription_ReturnsNotFound_ForMissing" computerName="CHQ-HVU-LT" duration="00:00:00.0111860" startTime="2026-03-11T11:27:19.1818836-05:00" endTime="2026-03-11T11:27:19.1919756-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1f029d1a-ffaf-4ea2-abbe-2e07999b90a8" />
+    <UnitTestResult executionId="4e019ba3-ecb7-4752-9e9f-c9e6999dcc9f" testId="43d9e07b-21d2-55f0-ebf7-fd02cca22d97" testName="BffApi.Tests.Endpoints.MiscEndpointsTests.GetCurrentUser_ReturnsOk_WithProfile" computerName="CHQ-HVU-LT" duration="00:00:00.0566349" startTime="2026-03-11T11:27:19.2641088-05:00" endTime="2026-03-11T11:27:19.2741125-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4e019ba3-ecb7-4752-9e9f-c9e6999dcc9f" />
+    <UnitTestResult executionId="02ecd6a7-f125-423e-8ed6-8c3ace9b2457" testId="b28a934d-42f0-dea2-ae0b-a61b762fe1a9" testName="BffApi.Tests.Endpoints.SupportEndpointsTests.GetMyTickets_ReturnsOk" computerName="CHQ-HVU-LT" duration="00:00:00.0047595" startTime="2026-03-11T11:27:19.1898135-05:00" endTime="2026-03-11T11:27:19.2135608-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="02ecd6a7-f125-423e-8ed6-8c3ace9b2457" />
+    <UnitTestResult executionId="36950285-a76d-410b-9f3b-d700a58717d2" testId="ef3ee457-c597-4d3b-cc29-de097ace5a11" testName="BffApi.Tests.Authorization.ApiAccessHandlerTests.Succeeds_WhenAdminRole" computerName="CHQ-HVU-LT" duration="00:00:00.0012833" startTime="2026-03-11T11:27:18.2019050-05:00" endTime="2026-03-11T11:27:18.2020779-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="36950285-a76d-410b-9f3b-d700a58717d2" />
+    <UnitTestResult executionId="5247fdc1-debd-4fca-9ad0-d8ebaafd448d" testId="c53d6bb7-cb4a-694e-f77b-aa3122165f76" testName="BffApi.Tests.Authorization.RbacPolicyProviderTests.GetAccessibleApis_ReturnsEmpty_WhenNoMatchingPermission" computerName="CHQ-HVU-LT" duration="00:00:00.0036851" startTime="2026-03-11T11:27:18.1958645-05:00" endTime="2026-03-11T11:27:18.2005493-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5247fdc1-debd-4fca-9ad0-d8ebaafd448d" />
+    <UnitTestResult executionId="ca163aa2-608c-48b0-b7b2-bece0b96d65d" testId="9f7ee713-d85b-120b-7f10-3932b962f04f" testName="BffApi.Tests.Endpoints.MiscEndpointsTests.ListTags_ReturnsOk_WithTags" computerName="CHQ-HVU-LT" duration="00:00:00.0136273" startTime="2026-03-11T11:27:19.2844258-05:00" endTime="2026-03-11T11:27:19.2992709-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ca163aa2-608c-48b0-b7b2-bece0b96d65d" />
+    <UnitTestResult executionId="1d447098-a64f-4fe4-bc19-35bb41941637" testId="e641bf72-c733-0547-d484-26e4bd6afa54" testName="BffApi.Tests.Endpoints.ApisEndpointsTests.GetApi_ReturnsOk_ForExistingApi" computerName="CHQ-HVU-LT" duration="00:00:01.8606193" startTime="2026-03-11T11:27:17.3481839-05:00" endTime="2026-03-11T11:27:19.1975176-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1d447098-a64f-4fe4-bc19-35bb41941637">
+      <Output>
+        <ErrorInfo>
+          <Message>System.Text.Json.JsonException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.&#xD;
+---- System.Text.Json.JsonReaderException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. LineNumber: 0 | BytePositionInLine: 0.</Message>
+          <StackTrace>   at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, JsonReaderException ex)&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Deserialize(Utf8JsonReader&amp; reader, ReadStack&amp; state)&#xD;
+   at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 utf8Json, JsonTypeInfo`1 jsonTypeInfo, Nullable`1 actualByteCount)&#xD;
+   at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 json, JsonTypeInfo`1 jsonTypeInfo)&#xD;
+   at System.Text.Json.JsonSerializer.Deserialize[TValue](String json, JsonSerializerOptions options)&#xD;
+   at BffApi.Tests.TestHelpers.ReadJsonAsync[T](HttpResponseMessage response) in C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\BffWebApplicationFactory.cs:line 106&#xD;
+   at BffApi.Tests.Endpoints.ApisEndpointsTests.GetApi_ReturnsOk_ForExistingApi() in C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\Endpoints\ApisEndpointsTests.cs:line 61&#xD;
+--- End of stack trace from previous location ---&#xD;
+----- Inner Stack Trace -----&#xD;
+   at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader&amp; json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)&#xD;
+   at System.Text.Json.Utf8JsonReader.Read()&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="101d30df-269c-4e54-a94f-624a2798da21" testId="a81bf2b1-f344-3baf-e230-0a2436a507b5" testName="BffApi.Tests.Endpoints.RegistrationEndpointsTests.GetRegistrationConfig_ReturnsFields" computerName="CHQ-HVU-LT" duration="00:00:00.0172386" startTime="2026-03-11T11:27:19.1645390-05:00" endTime="2026-03-11T11:27:19.1821273-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="101d30df-269c-4e54-a94f-624a2798da21" />
+    <UnitTestResult executionId="5b5ced25-a4f7-4ace-8a5e-4cf76ebe3acd" testId="9ed66743-802e-199f-8b68-d945c4d051a0" testName="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.GetSubscription_ReturnsOk_ForExisting" computerName="CHQ-HVU-LT" duration="00:00:00.0035794" startTime="2026-03-11T11:27:19.2851715-05:00" endTime="2026-03-11T11:27:19.2878409-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5b5ced25-a4f7-4ace-8a5e-4cf76ebe3acd" />
+    <UnitTestResult executionId="1223c4c3-5a6a-446c-9888-2421e56a96a8" testId="b6b0e44e-cc7d-0b60-2330-71e61d71a8d2" testName="BffApi.Tests.Middleware.RequestLoggingMiddlewareTests.InvokeAsync_LogsRequestAndResponse" computerName="CHQ-HVU-LT" duration="00:00:00.8509665" startTime="2026-03-11T11:27:17.3506293-05:00" endTime="2026-03-11T11:27:18.1702042-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1223c4c3-5a6a-446c-9888-2421e56a96a8" />
+    <UnitTestResult executionId="5c480f23-fdbb-4630-a7b1-fc0911b11036" testId="c8bebe38-216c-69ad-fb00-246998ec994a" testName="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasGeneralPermission_ReturnsFalse_WhenRoleNotConfigured" computerName="CHQ-HVU-LT" duration="00:00:00.0004556" startTime="2026-03-11T11:27:18.1952427-05:00" endTime="2026-03-11T11:27:18.1952949-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5c480f23-fdbb-4630-a7b1-fc0911b11036" />
+    <UnitTestResult executionId="fb4097fb-ec38-4564-aac9-ad1e553f2cbf" testId="10ad726f-4cff-31ce-8e23-be5540b17551" testName="BffApi.Tests.Endpoints.ApisEndpointsTests.ListChangeLog_ReturnsOk" computerName="CHQ-HVU-LT" duration="00:00:00.0073359" startTime="2026-03-11T11:27:19.3258895-05:00" endTime="2026-03-11T11:27:19.3307974-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fb4097fb-ec38-4564-aac9-ad1e553f2cbf" />
+    <UnitTestResult executionId="53b0ad3b-9419-40e5-b85e-5270f3da3bcc" testId="406c5848-8ef9-51df-ef63-88a5e92f1175" testName="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.RegenerateSecondaryKey_ReturnsOk" computerName="CHQ-HVU-LT" duration="00:00:00.0168027" startTime="2026-03-11T11:27:19.1643551-05:00" endTime="2026-03-11T11:27:19.1795190-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="53b0ad3b-9419-40e5-b85e-5270f3da3bcc" />
+    <UnitTestResult executionId="d2fb2fd0-5405-499e-9fca-eecb4f4341ef" testId="0169dd8d-5c72-e3d2-edde-5b68c55457b8" testName="BffApi.Tests.Endpoints.RegistrationEndpointsTests.GetRegistrationStatus_ReturnsStatus" computerName="CHQ-HVU-LT" duration="00:00:00.0108891" startTime="2026-03-11T11:27:19.1827026-05:00" endTime="2026-03-11T11:27:19.1947471-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d2fb2fd0-5405-499e-9fca-eecb4f4341ef" />
+    <UnitTestResult executionId="e9e9e62d-793f-44a5-b94b-3f853cdd244f" testId="50830dd3-5720-586f-07ec-cf9de92646d3" testName="BffApi.Tests.Endpoints.MiscEndpointsTests.GetStats_ReturnsOk_WithCounts" computerName="CHQ-HVU-LT" duration="00:00:00.0132051" startTime="2026-03-11T11:27:19.1655811-05:00" endTime="2026-03-11T11:27:19.1783661-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e9e9e62d-793f-44a5-b94b-3f853cdd244f" />
+    <UnitTestResult executionId="8600d388-bf06-411f-a6b3-2ccda6e49649" testId="01b074c5-9e6c-004c-1d56-e797f711e70d" testName="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasGeneralPermission_ReturnsFalse_WhenRoleLacksPermission" computerName="CHQ-HVU-LT" duration="00:00:00.8516488" startTime="2026-03-11T11:27:17.3510419-05:00" endTime="2026-03-11T11:27:18.1719389-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8600d388-bf06-411f-a6b3-2ccda6e49649" />
+    <UnitTestResult executionId="a31a0373-b15c-46db-8aae-a21e685497b5" testId="94f91b85-25f2-28ae-aa10-079fa2f098b9" testName="BffApi.Tests.Authorization.ApiAccessHandlerTests.Fails_WhenNoUserIdInToken_InProduction" computerName="CHQ-HVU-LT" duration="00:00:00.8622836" startTime="2026-03-11T11:27:17.3507603-05:00" endTime="2026-03-11T11:27:18.1760322-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a31a0373-b15c-46db-8aae-a21e685497b5" />
+    <UnitTestResult executionId="3e19c972-e1a0-4621-b563-368cc8c42b9b" testId="d403a7a7-679c-4328-75ba-66f1f67f98b4" testName="BffApi.Tests.Endpoints.AdminEndpointsTests.ListRegistrations_FiltersByPending" computerName="CHQ-HVU-LT" duration="00:00:01.8433198" startTime="2026-03-11T11:27:17.3510834-05:00" endTime="2026-03-11T11:27:19.1585744-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3e19c972-e1a0-4621-b563-368cc8c42b9b" />
+    <UnitTestResult executionId="c118ee8d-7238-4939-b1fa-bd8bac14039f" testId="6cdf5ae5-c24e-3083-c0da-a24b7834ef1d" testName="BffApi.Tests.Endpoints.MiscEndpointsTests.ListProducts_ReturnsOk" computerName="CHQ-HVU-LT" duration="00:00:01.8486081" startTime="2026-03-11T11:27:17.3508221-05:00" endTime="2026-03-11T11:27:19.1650058-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c118ee8d-7238-4939-b1fa-bd8bac14039f" />
+    <UnitTestResult executionId="91228166-ca89-4d4e-97c3-5d072b3aa82a" testId="db16872e-87c7-4b19-7899-8ce86853a605" testName="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.ListSecrets_ReturnsOk_WithKeys" computerName="CHQ-HVU-LT" duration="00:00:00.0067708" startTime="2026-03-11T11:27:19.2757445-05:00" endTime="2026-03-11T11:27:19.2847105-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="91228166-ca89-4d4e-97c3-5d072b3aa82a" />
+    <UnitTestResult executionId="4e3e42b9-7a23-44ec-b4ed-dcc9e21bb350" testId="a332ef5c-e00d-1020-6b14-5f0e96bdd35a" testName="BffApi.Tests.Endpoints.ApisEndpointsTests.GetTryItConfig_ReturnsOperationLabels" computerName="CHQ-HVU-LT" duration="00:00:00.0091261" startTime="2026-03-11T11:27:19.2877019-05:00" endTime="2026-03-11T11:27:19.2957501-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4e3e42b9-7a23-44ec-b4ed-dcc9e21bb350">
+      <Output>
+        <ErrorInfo>
+          <Message>System.Text.Json.JsonException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.&#xD;
+---- System.Text.Json.JsonReaderException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. LineNumber: 0 | BytePositionInLine: 0.</Message>
+          <StackTrace>   at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, JsonReaderException ex)&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Deserialize(Utf8JsonReader&amp; reader, ReadStack&amp; state)&#xD;
+   at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 utf8Json, JsonTypeInfo`1 jsonTypeInfo, Nullable`1 actualByteCount)&#xD;
+   at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 json, JsonTypeInfo`1 jsonTypeInfo)&#xD;
+   at System.Text.Json.JsonSerializer.Deserialize[TValue](String json, JsonSerializerOptions options)&#xD;
+   at BffApi.Tests.TestHelpers.ReadJsonAsync[T](HttpResponseMessage response) in C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\BffWebApplicationFactory.cs:line 106&#xD;
+   at BffApi.Tests.Endpoints.ApisEndpointsTests.GetTryItConfig_ReturnsOperationLabels() in C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\Endpoints\ApisEndpointsTests.cs:line 119&#xD;
+--- End of stack trace from previous location ---&#xD;
+----- Inner Stack Trace -----&#xD;
+   at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader&amp; json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)&#xD;
+   at System.Text.Json.Utf8JsonReader.Read()&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="3f3c8e05-62df-4117-87b4-d56c4b5dc8c0" testId="e44b71a6-d53d-f9c9-6ec2-75f5e2b66ea0" testName="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasApiPermission_ReturnsTrue_WhenApiExplicitlyListed" computerName="CHQ-HVU-LT" duration="00:00:00.0015215" startTime="2026-03-11T11:27:18.1729168-05:00" endTime="2026-03-11T11:27:18.1730480-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3f3c8e05-62df-4117-87b4-d56c4b5dc8c0" />
+    <UnitTestResult executionId="28dc4015-1070-494f-93fe-7822b2951eda" testId="6d4f4c3d-1838-4081-2778-18d9560ecbdb" testName="BffApi.Tests.Endpoints.MiscEndpointsTests.GetProduct_ReturnsOk_ForExisting" computerName="CHQ-HVU-LT" duration="00:00:00.0115003" startTime="2026-03-11T11:27:19.1790387-05:00" endTime="2026-03-11T11:27:19.1910179-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="28dc4015-1070-494f-93fe-7822b2951eda" />
+    <UnitTestResult executionId="ef521956-9591-445d-9294-17f3c4d8d887" testId="8f2f9581-4d34-0743-e95d-95385df8dc53" testName="BffApi.Tests.Endpoints.AdminEndpointsTests.ApproveRegistration_ReturnsNotFound_ForMissing" computerName="CHQ-HVU-LT" duration="00:00:00.0060483" startTime="2026-03-11T11:27:19.1857771-05:00" endTime="2026-03-11T11:27:19.1951271-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ef521956-9591-445d-9294-17f3c4d8d887" />
+    <UnitTestResult executionId="2bc9f3a7-fc44-412b-aa40-78d881b30728" testId="6bf2bd52-0535-4a83-beeb-174f31a175b2" testName="BffApi.Tests.Endpoints.SupportEndpointsTests.GetFaqs_ReturnsOk_WithFaqList" computerName="CHQ-HVU-LT" duration="00:00:00.0060788" startTime="2026-03-11T11:27:19.1834149-05:00" endTime="2026-03-11T11:27:19.1890670-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2bc9f3a7-fc44-412b-aa40-78d881b30728" />
+    <UnitTestResult executionId="88be3c80-f03a-49d9-abd5-518405283eb2" testId="c6cf1bd6-08f6-4b1f-9654-126f72993ee3" testName="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.GetMySubscriptions_ReturnsOk_ViaUserAlias" computerName="CHQ-HVU-LT" duration="00:00:00.0054206" startTime="2026-03-11T11:27:19.2736500-05:00" endTime="2026-03-11T11:27:19.2752678-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="88be3c80-f03a-49d9-abd5-518405283eb2" />
+    <UnitTestResult executionId="304808e3-37e2-4d57-8756-90e4eed8c76d" testId="942a0b9d-1223-258f-b57f-52dc77a4cda3" testName="BffApi.Tests.Endpoints.ApisEndpointsTests.ListHighlights_ReturnsOk_WithArray" computerName="CHQ-HVU-LT" duration="00:00:00.0071324" startTime="2026-03-11T11:27:19.3394729-05:00" endTime="2026-03-11T11:27:19.3448167-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="304808e3-37e2-4d57-8756-90e4eed8c76d">
+      <Output>
+        <ErrorInfo>
+          <Message>System.Text.Json.JsonException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.&#xD;
+---- System.Text.Json.JsonReaderException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. LineNumber: 0 | BytePositionInLine: 0.</Message>
+          <StackTrace>   at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, JsonReaderException ex)&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Deserialize(Utf8JsonReader&amp; reader, ReadStack&amp; state)&#xD;
+   at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 utf8Json, JsonTypeInfo`1 jsonTypeInfo, Nullable`1 actualByteCount)&#xD;
+   at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 json, JsonTypeInfo`1 jsonTypeInfo)&#xD;
+   at System.Text.Json.JsonSerializer.Deserialize[TValue](String json, JsonSerializerOptions options)&#xD;
+   at BffApi.Tests.TestHelpers.ReadJsonAsync[T](HttpResponseMessage response) in C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\BffWebApplicationFactory.cs:line 106&#xD;
+   at BffApi.Tests.Endpoints.ApisEndpointsTests.ListHighlights_ReturnsOk_WithArray() in C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\Endpoints\ApisEndpointsTests.cs:line 48&#xD;
+--- End of stack trace from previous location ---&#xD;
+----- Inner Stack Trace -----&#xD;
+   at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader&amp; json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)&#xD;
+   at System.Text.Json.Utf8JsonReader.Read()&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="89129776-26b9-469a-b837-75f29936dd88" testId="107fa769-9995-9bc2-3f07-4e8eb0fdae97" testName="BffApi.Tests.Endpoints.MiscEndpointsTests.Health_ReturnsOk_Anonymous" computerName="CHQ-HVU-LT" duration="00:00:00.0107186" startTime="2026-03-11T11:27:19.2745129-05:00" endTime="2026-03-11T11:27:19.2821378-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="89129776-26b9-469a-b837-75f29936dd88" />
+    <UnitTestResult executionId="a4e6b08f-012e-4cdd-a172-b7a682bc3651" testId="e16553ae-b9a5-daee-1d3f-002d351fc36b" testName="BffApi.Tests.Endpoints.ApisEndpointsTests.GetApi_ReturnsNotFound_ForMissingApi" computerName="CHQ-HVU-LT" duration="00:00:00.0035505" startTime="2026-03-11T11:27:19.3477601-05:00" endTime="2026-03-11T11:27:19.3491003-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a4e6b08f-012e-4cdd-a172-b7a682bc3651" />
+    <UnitTestResult executionId="9e518466-c434-49bf-b5b9-49e2bf8a625c" testId="7e129a07-0578-1739-123d-7fc5a8487640" testName="BffApi.Tests.Endpoints.ApisEndpointsTests.ListApiProducts_ReturnsOk" computerName="CHQ-HVU-LT" duration="00:00:00.0065231" startTime="2026-03-11T11:27:19.2991247-05:00" endTime="2026-03-11T11:27:19.3035676-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9e518466-c434-49bf-b5b9-49e2bf8a625c">
+      <Output>
+        <ErrorInfo>
+          <Message>System.Text.Json.JsonException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.&#xD;
+---- System.Text.Json.JsonReaderException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. LineNumber: 0 | BytePositionInLine: 0.</Message>
+          <StackTrace>   at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, JsonReaderException ex)&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Deserialize(Utf8JsonReader&amp; reader, ReadStack&amp; state)&#xD;
+   at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 utf8Json, JsonTypeInfo`1 jsonTypeInfo, Nullable`1 actualByteCount)&#xD;
+   at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 json, JsonTypeInfo`1 jsonTypeInfo)&#xD;
+   at System.Text.Json.JsonSerializer.Deserialize[TValue](String json, JsonSerializerOptions options)&#xD;
+   at BffApi.Tests.TestHelpers.ReadJsonAsync[T](HttpResponseMessage response) in C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\BffWebApplicationFactory.cs:line 106&#xD;
+   at BffApi.Tests.Endpoints.ApisEndpointsTests.ListApiProducts_ReturnsOk() in C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\Endpoints\ApisEndpointsTests.cs:line 95&#xD;
+--- End of stack trace from previous location ---&#xD;
+----- Inner Stack Trace -----&#xD;
+   at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader&amp; json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)&#xD;
+   at System.Text.Json.Utf8JsonReader.Read()&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ae971599-dfc8-4d9e-9c57-c670ae2969e2" testId="c684d2a2-b433-e9fc-d491-bbf0f5196e18" testName="BffApi.Tests.Endpoints.AdminEndpointsTests.RejectRegistration_ReturnsOk" computerName="CHQ-HVU-LT" duration="00:00:00.0050719" startTime="2026-03-11T11:27:19.1956921-05:00" endTime="2026-03-11T11:27:19.2138979-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ae971599-dfc8-4d9e-9c57-c670ae2969e2" />
+    <UnitTestResult executionId="2f213572-f101-4431-b7f8-fdf0a413841c" testId="76db8fd0-a32e-8489-db27-a46e037469d4" testName="BffApi.Tests.Endpoints.SupportEndpointsTests.CreateTicket_ThenGetMyTickets_ContainsNewTicket" computerName="CHQ-HVU-LT" duration="00:00:01.8546976" startTime="2026-03-11T11:27:17.3510009-05:00" endTime="2026-03-11T11:27:19.1691334-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2f213572-f101-4431-b7f8-fdf0a413841c" />
+    <UnitTestResult executionId="638183f4-900a-40e9-a599-0fdac0a66f60" testId="902465ea-aa88-65b3-995d-c1fce36ce944" testName="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.DeleteSubscription_ReturnsNoContent" computerName="CHQ-HVU-LT" duration="00:00:01.8386757" startTime="2026-03-11T11:27:17.3508697-05:00" endTime="2026-03-11T11:27:19.1583904-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="638183f4-900a-40e9-a599-0fdac0a66f60" />
+    <UnitTestResult executionId="937545a5-ff6a-472f-8e8b-f518831b158f" testId="a65fbb92-b81e-98f7-9a1d-e1861b6fce4c" testName="BffApi.Tests.Authorization.ApiAccessHandlerTests.Succeeds_WhenDeveloperRole_HasReadPermission" computerName="CHQ-HVU-LT" duration="00:00:00.0013320" startTime="2026-03-11T11:27:18.2013648-05:00" endTime="2026-03-11T11:27:18.2015233-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="937545a5-ff6a-472f-8e8b-f518831b158f" />
+    <UnitTestResult executionId="a88c28f4-6942-4189-bac9-68c881cc1a6e" testId="6771c015-a419-76cd-8321-d16cab029f45" testName="BffApi.Tests.Endpoints.ApisEndpointsTests.ListApis_SupportsPagination" computerName="CHQ-HVU-LT" duration="00:00:00.0044821" startTime="2026-03-11T11:27:19.3312423-05:00" endTime="2026-03-11T11:27:19.3366265-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a88c28f4-6942-4189-bac9-68c881cc1a6e">
+      <Output>
+        <ErrorInfo>
+          <Message>System.Text.Json.JsonException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.&#xD;
+---- System.Text.Json.JsonReaderException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. LineNumber: 0 | BytePositionInLine: 0.</Message>
+          <StackTrace>   at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, JsonReaderException ex)&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Deserialize(Utf8JsonReader&amp; reader, ReadStack&amp; state)&#xD;
+   at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 utf8Json, JsonTypeInfo`1 jsonTypeInfo, Nullable`1 actualByteCount)&#xD;
+   at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 json, JsonTypeInfo`1 jsonTypeInfo)&#xD;
+   at System.Text.Json.JsonSerializer.Deserialize[TValue](String json, JsonSerializerOptions options)&#xD;
+   at BffApi.Tests.TestHelpers.ReadJsonAsync[T](HttpResponseMessage response) in C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\BffWebApplicationFactory.cs:line 106&#xD;
+   at BffApi.Tests.Endpoints.ApisEndpointsTests.ListApis_SupportsPagination() in C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\Endpoints\ApisEndpointsTests.cs:line 35&#xD;
+--- End of stack trace from previous location ---&#xD;
+----- Inner Stack Trace -----&#xD;
+   at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader&amp; json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)&#xD;
+   at System.Text.Json.Utf8JsonReader.Read()&#xD;
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="8a341c93-ccce-41e3-b93d-0a849c6112b6" testId="6cf1bdaa-fd3c-6778-f683-bd26f0d70b2f" testName="BffApi.Tests.Authorization.ApiAccessHandlerTests.Succeeds_WhenDevUser_InDevelopment" computerName="CHQ-HVU-LT" duration="00:00:00.0014187" startTime="2026-03-11T11:27:18.2003886-05:00" endTime="2026-03-11T11:27:18.2009261-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8a341c93-ccce-41e3-b93d-0a849c6112b6" />
+    <UnitTestResult executionId="2057a0ee-074c-465a-b064-7b097beaf440" testId="f96680c7-d7ef-76a9-cdd7-2429dd062ed6" testName="BffApi.Tests.Middleware.RequestLoggingMiddlewareTests.InvokeAsync_LogsError_WhenExceptionThrown" computerName="CHQ-HVU-LT" duration="00:00:00.0084024" startTime="2026-03-11T11:27:18.1718585-05:00" endTime="2026-03-11T11:27:18.1787135-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2057a0ee-074c-465a-b064-7b097beaf440" />
+    <UnitTestResult executionId="c5129f5e-f771-49ce-82b6-a9bce504a5a6" testId="48669e52-65b6-c365-dd88-efcbd39361c0" testName="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.RegeneratePrimaryKey_ReturnsOk" computerName="CHQ-HVU-LT" duration="00:00:00.0053890" startTime="2026-03-11T11:27:19.2882020-05:00" endTime="2026-03-11T11:27:19.2933171-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c5129f5e-f771-49ce-82b6-a9bce504a5a6" />
+    <UnitTestResult executionId="71512c0c-b130-4bfb-a188-306b234a2686" testId="5df5fc42-b65d-5323-0475-5ee28c173f43" testName="BffApi.Tests.Endpoints.SupportEndpointsTests.CreateTicket_ReturnsCreated" computerName="CHQ-HVU-LT" duration="00:00:00.0094763" startTime="2026-03-11T11:27:19.1699561-05:00" endTime="2026-03-11T11:27:19.1828805-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="71512c0c-b130-4bfb-a188-306b234a2686" />
+    <UnitTestResult executionId="827982d1-f641-4fcd-ac24-4c3b20ae2a31" testId="41423222-d85a-5537-5f76-3a3d3b0c30b7" testName="BffApi.Tests.Authorization.RbacPolicyProviderTests.GetAccessibleApis_AggregatesAcrossMultipleRoles" computerName="CHQ-HVU-LT" duration="00:00:00.0071797" startTime="2026-03-11T11:27:18.1734644-05:00" endTime="2026-03-11T11:27:18.1795476-05:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="827982d1-f641-4fcd-ac24-4c3b20ae2a31" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="BffApi.Tests.Authorization.ApiAccessHandlerTests.Succeeds_WhenDevUser_InDevelopment" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="6cf1bdaa-fd3c-6778-f683-bd26f0d70b2f">
+      <Execution id="8a341c93-ccce-41e3-b93d-0a849c6112b6" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.ApiAccessHandlerTests" name="Succeeds_WhenDevUser_InDevelopment" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasGeneralPermission_ReturnsTrue_WhenRoleHasPermission" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="508287ee-6949-2e36-a2db-0b9f5fa93243">
+      <Execution id="ea68f99d-5fb0-40c3-be99-5fdd87c19d99" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.RbacPolicyProviderTests" name="HasGeneralPermission_ReturnsTrue_WhenRoleHasPermission" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.AdminEndpointsTests.ListRegistrations_ReturnsOk" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="2411ea92-c1e0-95bf-581c-1878df0c4aab">
+      <Execution id="277c5c8f-183f-415e-bd4d-9fe9aeaa198e" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.AdminEndpointsTests" name="ListRegistrations_ReturnsOk" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasApiPermission_ReturnsFalse_WhenApiNotListed" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="7132e454-9dd1-38a0-53ea-f91266a090ac">
+      <Execution id="7049fecd-5e0b-41a1-a236-4f2624ef64a3" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.RbacPolicyProviderTests" name="HasApiPermission_ReturnsFalse_WhenApiNotListed" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.RegenerateSecondaryKey_ReturnsOk" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="406c5848-8ef9-51df-ef63-88a5e92f1175">
+      <Execution id="53b0ad3b-9419-40e5-b85e-5270f3da3bcc" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests" name="RegenerateSecondaryKey_ReturnsOk" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.ApiAccessHandlerTests.Succeeds_WhenNoUserId_InDevelopment_AndAuthenticated" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="d8a0937a-1f8f-d468-f2bf-264abdce87f0">
+      <Execution id="71dd224c-4a5a-47b7-b9fe-186dd7ee9258" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.ApiAccessHandlerTests" name="Succeeds_WhenNoUserId_InDevelopment_AndAuthenticated" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.AdminEndpointsTests.ListRegistrations_FiltersByPending" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="d403a7a7-679c-4328-75ba-66f1f67f98b4">
+      <Execution id="3e19c972-e1a0-4621-b563-368cc8c42b9b" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.AdminEndpointsTests" name="ListRegistrations_FiltersByPending" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.ApisEndpointsTests.ListApis_ReturnsOk_WithPagedResult" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="f9f35c4c-2012-a487-7f3a-4dfaaecd4584">
+      <Execution id="86abddc0-eebd-4c1a-86e6-bfc9894e7682" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.ApisEndpointsTests" name="ListApis_ReturnsOk_WithPagedResult" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.ApisEndpointsTests.ListHostnames_ReturnsOk" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="9fcb2109-464e-09bc-57c9-5af178693a29">
+      <Execution id="d4d802c2-879a-4f2c-be9f-e067ab3dfa27" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.ApisEndpointsTests" name="ListHostnames_ReturnsOk" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Middleware.RequestLoggingMiddlewareTests.InvokeAsync_LogsError_WhenExceptionThrown" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="f96680c7-d7ef-76a9-cdd7-2429dd062ed6">
+      <Execution id="2057a0ee-074c-465a-b064-7b097beaf440" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Middleware.RequestLoggingMiddlewareTests" name="InvokeAsync_LogsError_WhenExceptionThrown" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.ApisEndpointsTests.GetApiSubscriptionStatus_ReturnsOk" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="d548bb63-3698-5783-2a85-f1c90a418c4d">
+      <Execution id="c4cc54cc-4cdc-4ac4-85ec-5a327b72c386" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.ApisEndpointsTests" name="GetApiSubscriptionStatus_ReturnsOk" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.SupportEndpointsTests.CreateTicket_ThenGetMyTickets_ContainsNewTicket" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="76db8fd0-a32e-8489-db27-a46e037469d4">
+      <Execution id="2f213572-f101-4431-b7f8-fdf0a413841c" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.SupportEndpointsTests" name="CreateTicket_ThenGetMyTickets_ContainsNewTicket" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.GetSubscription_ReturnsNotFound_ForMissing" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="02df3ed4-d265-f716-7751-a3e7e21fb9d5">
+      <Execution id="1f029d1a-ffaf-4ea2-abbe-2e07999b90a8" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests" name="GetSubscription_ReturnsNotFound_ForMissing" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.AdminEndpointsTests.RejectRegistration_ReturnsOk" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="c684d2a2-b433-e9fc-d491-bbf0f5196e18">
+      <Execution id="ae971599-dfc8-4d9e-9c57-c670ae2969e2" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.AdminEndpointsTests" name="RejectRegistration_ReturnsOk" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.MiscEndpointsTests.ListProducts_ReturnsOk" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="6cdf5ae5-c24e-3083-c0da-a24b7834ef1d">
+      <Execution id="c118ee8d-7238-4939-b1fa-bd8bac14039f" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.MiscEndpointsTests" name="ListProducts_ReturnsOk" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.ListSubscriptions_ReturnsOk_WithPagedResult" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="280458b8-69b0-80da-9ab9-bf8b9a1d0efb">
+      <Execution id="a78b489c-bc69-4fb9-9657-d8adc407354e" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests" name="ListSubscriptions_ReturnsOk_WithPagedResult" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.GetSubscription_ReturnsOk_ForExisting" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="9ed66743-802e-199f-8b68-d945c4d051a0">
+      <Execution id="5b5ced25-a4f7-4ace-8a5e-4cf76ebe3acd" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests" name="GetSubscription_ReturnsOk_ForExisting" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.ListSecrets_ReturnsOk_WithKeys" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="db16872e-87c7-4b19-7899-8ce86853a605">
+      <Execution id="91228166-ca89-4d4e-97c3-5d072b3aa82a" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests" name="ListSecrets_ReturnsOk_WithKeys" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.ApiAccessHandlerTests.Fails_WhenDeveloperRole_LacksManagePermission" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="8db0fc13-634f-4faa-24b3-0f05e606d37d">
+      <Execution id="3b9ee8e6-e4e5-44b1-818c-b1c0d0cb9e5f" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.ApiAccessHandlerTests" name="Fails_WhenDeveloperRole_LacksManagePermission" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasApiPermission_ChecksMultipleRoles" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="60543c18-cb0e-6c8b-bc50-8a48a97e5c15">
+      <Execution id="3c682e06-6042-435b-a711-012ca849727f" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.RbacPolicyProviderTests" name="HasApiPermission_ChecksMultipleRoles" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.DeleteSubscription_ReturnsNoContent" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="902465ea-aa88-65b3-995d-c1fce36ce944">
+      <Execution id="638183f4-900a-40e9-a599-0fdac0a66f60" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests" name="DeleteSubscription_ReturnsNoContent" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.AdminEndpointsTests.ApproveRegistration_ReturnsNotFound_ForMissing" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="8f2f9581-4d34-0743-e95d-95385df8dc53">
+      <Execution id="ef521956-9591-445d-9294-17f3c4d8d887" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.AdminEndpointsTests" name="ApproveRegistration_ReturnsNotFound_ForMissing" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.ApiAccessHandlerTests.Fails_WhenNoUserIdInToken_InProduction" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="94f91b85-25f2-28ae-aa10-079fa2f098b9">
+      <Execution id="a31a0373-b15c-46db-8aae-a21e685497b5" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.ApiAccessHandlerTests" name="Fails_WhenNoUserIdInToken_InProduction" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.MiscEndpointsTests.GetProduct_ReturnsOk_ForExisting" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="6d4f4c3d-1838-4081-2778-18d9560ecbdb">
+      <Execution id="28dc4015-1070-494f-93fe-7822b2951eda" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.MiscEndpointsTests" name="GetProduct_ReturnsOk_ForExisting" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.MiscEndpointsTests.GetStats_ReturnsOk_WithCounts" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="50830dd3-5720-586f-07ec-cf9de92646d3">
+      <Execution id="e9e9e62d-793f-44a5-b94b-3f853cdd244f" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.MiscEndpointsTests" name="GetStats_ReturnsOk_WithCounts" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.AdminEndpointsTests.ApproveRegistration_ReturnsOk" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="a222111f-004d-a099-2e61-72b0ae57080e">
+      <Execution id="202cdb44-d960-4f7c-b51a-82e5d827c282" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.AdminEndpointsTests" name="ApproveRegistration_ReturnsOk" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.ApisEndpointsTests.ListChangeLog_ReturnsOk" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="10ad726f-4cff-31ce-8e23-be5540b17551">
+      <Execution id="fb4097fb-ec38-4564-aac9-ad1e553f2cbf" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.ApisEndpointsTests" name="ListChangeLog_ReturnsOk" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.ApiAccessHandlerTests.Succeeds_WhenNoRolesReturned_InDevelopment" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="1984e16a-ca4a-6370-57d9-6d221ec6ae70">
+      <Execution id="f01587db-1d37-4b03-b412-1e7217929df7" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.ApiAccessHandlerTests" name="Succeeds_WhenNoRolesReturned_InDevelopment" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasApiPermission_ReturnsTrue_WhenApiExplicitlyListed" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="e44b71a6-d53d-f9c9-6ec2-75f5e2b66ea0">
+      <Execution id="3f3c8e05-62df-4117-87b4-d56c4b5dc8c0" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.RbacPolicyProviderTests" name="HasApiPermission_ReturnsTrue_WhenApiExplicitlyListed" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.MiscEndpointsTests.GetProduct_ReturnsNotFound_ForMissing" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="b04c3535-f044-4763-08cd-501a7bfde744">
+      <Execution id="b781b011-97c6-41b0-ba84-8554e165f81a" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.MiscEndpointsTests" name="GetProduct_ReturnsNotFound_ForMissing" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.ApisEndpointsTests.ListHighlights_ReturnsOk_WithArray" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="942a0b9d-1223-258f-b57f-52dc77a4cda3">
+      <Execution id="304808e3-37e2-4d57-8756-90e4eed8c76d" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.ApisEndpointsTests" name="ListHighlights_ReturnsOk_WithArray" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.MiscEndpointsTests.Health_ReturnsOk_Anonymous" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="107fa769-9995-9bc2-3f07-4e8eb0fdae97">
+      <Execution id="89129776-26b9-469a-b837-75f29936dd88" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.MiscEndpointsTests" name="Health_ReturnsOk_Anonymous" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.ApiAccessHandlerTests.Succeeds_WhenDeveloperRole_HasReadPermission" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="a65fbb92-b81e-98f7-9a1d-e1861b6fce4c">
+      <Execution id="937545a5-ff6a-472f-8e8b-f518831b158f" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.ApiAccessHandlerTests" name="Succeeds_WhenDeveloperRole_HasReadPermission" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.AdminEndpointsTests.GetAdminMetrics_ReturnsOk_WithMetrics" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="3caf2102-241e-904a-872b-95a123dcc61c">
+      <Execution id="e012b16c-4c13-4cce-9768-ae6ac7d13055" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.AdminEndpointsTests" name="GetAdminMetrics_ReturnsOk_WithMetrics" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.ApisEndpointsTests.GetApi_ReturnsOk_ForExistingApi" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="e641bf72-c733-0547-d484-26e4bd6afa54">
+      <Execution id="1d447098-a64f-4fe4-bc19-35bb41941637" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.ApisEndpointsTests" name="GetApi_ReturnsOk_ForExistingApi" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasGeneralPermission_IsCaseInsensitive" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="23252464-c12f-3e88-eeb8-4479c8550f5d">
+      <Execution id="ad39da19-3181-4592-923d-45027800256e" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.RbacPolicyProviderTests" name="HasGeneralPermission_IsCaseInsensitive" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.ApisEndpointsTests.ListApis_SupportsPagination" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="6771c015-a419-76cd-8321-d16cab029f45">
+      <Execution id="a88c28f4-6942-4189-bac9-68c881cc1a6e" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.ApisEndpointsTests" name="ListApis_SupportsPagination" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasApiPermission_ReturnsTrue_WithWildcardApis" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="0872ef13-5e59-700e-531a-d6b30eed8f85">
+      <Execution id="1839a43b-dc17-4fef-ad88-5a644f607abc" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.RbacPolicyProviderTests" name="HasApiPermission_ReturnsTrue_WithWildcardApis" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.ApiAccessHandlerTests.Succeeds_WhenAdminRole" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="ef3ee457-c597-4d3b-cc29-de097ace5a11">
+      <Execution id="36950285-a76d-410b-9f3b-d700a58717d2" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.ApiAccessHandlerTests" name="Succeeds_WhenAdminRole" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.ApisEndpointsTests.ListOperations_ReturnsOk_WithOperations" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="34e78a9e-dee9-de26-664f-48aee1c5895c">
+      <Execution id="7a7e7508-10f2-4121-bf8f-eede803a06cb" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.ApisEndpointsTests" name="ListOperations_ReturnsOk_WithOperations" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.RegistrationEndpointsTests.GetRegistrationConfig_ReturnsFields" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="a81bf2b1-f344-3baf-e230-0a2436a507b5">
+      <Execution id="101d30df-269c-4e54-a94f-624a2798da21" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.RegistrationEndpointsTests" name="GetRegistrationConfig_ReturnsFields" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.ApisEndpointsTests.GetApi_ReturnsNotFound_ForMissingApi" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="e16553ae-b9a5-daee-1d3f-002d351fc36b">
+      <Execution id="a4e6b08f-012e-4cdd-a172-b7a682bc3651" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.ApisEndpointsTests" name="GetApi_ReturnsNotFound_ForMissingApi" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Middleware.RequestLoggingMiddlewareTests.InvokeAsync_LogsRequestAndResponse" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="b6b0e44e-cc7d-0b60-2330-71e61d71a8d2">
+      <Execution id="1223c4c3-5a6a-446c-9888-2421e56a96a8" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Middleware.RequestLoggingMiddlewareTests" name="InvokeAsync_LogsRequestAndResponse" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.ApisEndpointsTests.GetTryItConfig_ReturnsOperationLabels" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="a332ef5c-e00d-1020-6b14-5f0e96bdd35a">
+      <Execution id="4e3e42b9-7a23-44ec-b4ed-dcc9e21bb350" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.ApisEndpointsTests" name="GetTryItConfig_ReturnsOperationLabels" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.RbacPolicyProviderTests.GetAccessibleApis_AggregatesAcrossMultipleRoles" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="41423222-d85a-5537-5f76-3a3d3b0c30b7">
+      <Execution id="827982d1-f641-4fcd-ac24-4c3b20ae2a31" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.RbacPolicyProviderTests" name="GetAccessibleApis_AggregatesAcrossMultipleRoles" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.SupportEndpointsTests.GetMyTickets_ReturnsOk" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="b28a934d-42f0-dea2-ae0b-a61b762fe1a9">
+      <Execution id="02ecd6a7-f125-423e-8ed6-8c3ace9b2457" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.SupportEndpointsTests" name="GetMyTickets_ReturnsOk" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasGeneralPermission_ReturnsFalse_WhenRoleNotConfigured" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="c8bebe38-216c-69ad-fb00-246998ec994a">
+      <Execution id="5c480f23-fdbb-4630-a7b1-fc0911b11036" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.RbacPolicyProviderTests" name="HasGeneralPermission_ReturnsFalse_WhenRoleNotConfigured" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasGeneralPermission_ReturnsFalse_WhenRoleLacksPermission" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="01b074c5-9e6c-004c-1d56-e797f711e70d">
+      <Execution id="8600d388-bf06-411f-a6b3-2ccda6e49649" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.RbacPolicyProviderTests" name="HasGeneralPermission_ReturnsFalse_WhenRoleLacksPermission" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.RbacPolicyProviderTests.GetAccessibleApis_ReturnsEmpty_WhenNoMatchingPermission" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="c53d6bb7-cb4a-694e-f77b-aa3122165f76">
+      <Execution id="5247fdc1-debd-4fca-9ad0-d8ebaafd448d" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.RbacPolicyProviderTests" name="GetAccessibleApis_ReturnsEmpty_WhenNoMatchingPermission" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.SupportEndpointsTests.CreateTicket_ReturnsCreated" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="5df5fc42-b65d-5323-0475-5ee28c173f43">
+      <Execution id="71512c0c-b130-4bfb-a188-306b234a2686" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.SupportEndpointsTests" name="CreateTicket_ReturnsCreated" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.SupportEndpointsTests.GetFaqs_ReturnsOk_WithFaqList" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="6bf2bd52-0535-4a83-beeb-174f31a175b2">
+      <Execution id="2bc9f3a7-fc44-412b-aa40-78d881b30728" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.SupportEndpointsTests" name="GetFaqs_ReturnsOk_WithFaqList" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.ApisEndpointsTests.ListApiProducts_ReturnsOk" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="7e129a07-0578-1739-123d-7fc5a8487640">
+      <Execution id="9e518466-c434-49bf-b5b9-49e2bf8a625c" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.ApisEndpointsTests" name="ListApiProducts_ReturnsOk" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.RegistrationEndpointsTests.GetRegistrationStatus_ReturnsStatus" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="0169dd8d-5c72-e3d2-edde-5b68c55457b8">
+      <Execution id="d2fb2fd0-5405-499e-9fca-eecb4f4341ef" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.RegistrationEndpointsTests" name="GetRegistrationStatus_ReturnsStatus" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.MiscEndpointsTests.ListTags_ReturnsOk_WithTags" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="9f7ee713-d85b-120b-7f10-3932b962f04f">
+      <Execution id="ca163aa2-608c-48b0-b7b2-bece0b96d65d" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.MiscEndpointsTests" name="ListTags_ReturnsOk_WithTags" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.MiscEndpointsTests.GetCurrentUser_ReturnsOk_WithProfile" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="43d9e07b-21d2-55f0-ebf7-fd02cca22d97">
+      <Execution id="4e019ba3-ecb7-4752-9e9f-c9e6999dcc9f" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.MiscEndpointsTests" name="GetCurrentUser_ReturnsOk_WithProfile" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.RbacPolicyProviderTests.HasApiPermission_ReturnsFalse_WhenPermissionNotGranted" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="943ec0af-4233-e439-c45f-34206317703b">
+      <Execution id="3ace722f-6e7d-4ef7-81a9-0edd92d9aa51" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.RbacPolicyProviderTests" name="HasApiPermission_ReturnsFalse_WhenPermissionNotGranted" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.RegistrationEndpointsTests.SubmitRegistration_ReturnsCreated" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="2b8f86c4-1f4e-64ee-b235-bca3a2e65da1">
+      <Execution id="4ff2f1e9-c956-4b25-8c54-8f349d0a1777" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.RegistrationEndpointsTests" name="SubmitRegistration_ReturnsCreated" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.MiscEndpointsTests.GetNews_ReturnsOk_WithItems" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="a00fe570-5da6-3e74-d111-8487554c651a">
+      <Execution id="a3f21039-5bd3-45f4-9326-64e65ec461de" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.MiscEndpointsTests" name="GetNews_ReturnsOk_WithItems" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Middleware.SecurityHeadersMiddlewareTests.InvokeAsync_AddsSecurityHeaders" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="b31514dd-c46b-a1d6-5a97-bbaf753ff703">
+      <Execution id="d7d80279-c7f5-4795-ba5f-6633bd2978f6" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Middleware.SecurityHeadersMiddlewareTests" name="InvokeAsync_AddsSecurityHeaders" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.RbacPolicyProviderTests.GetAccessibleApis_ReturnsNull_WhenWildcard" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="31c0cd6c-72cd-138e-d5eb-a31e625bd025">
+      <Execution id="9b24782b-77ae-45aa-9850-ef48b0cb34ec" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.RbacPolicyProviderTests" name="GetAccessibleApis_ReturnsNull_WhenWildcard" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Authorization.RbacPolicyProviderTests.GetAccessibleApis_ReturnsSpecificApis" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="9a07316b-1d63-a9ba-b2bf-fab3aa3ed4ac">
+      <Execution id="ea1bd39a-0088-43e3-99c3-5750cd0285e4" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Authorization.RbacPolicyProviderTests" name="GetAccessibleApis_ReturnsSpecificApis" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.CreateSubscription_ReturnsCreated" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="835dc063-9511-df23-f3a1-19ccca3e29d3">
+      <Execution id="8ee290e4-50ad-4005-b033-362122be7365" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests" name="CreateSubscription_ReturnsCreated" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.GetMySubscriptions_ReturnsOk_ViaUserAlias" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="c6cf1bd6-08f6-4b1f-9654-126f72993ee3">
+      <Execution id="88be3c80-f03a-49d9-abd5-518405283eb2" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests" name="GetMySubscriptions_ReturnsOk_ViaUserAlias" />
+    </UnitTest>
+    <UnitTest name="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests.RegeneratePrimaryKey_ReturnsOk" storage="c:\users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\bffapi.tests\bin\debug\net10.0\bffapi.tests.dll" id="48669e52-65b6-c365-dd88-efcbd39361c0">
+      <Execution id="c5129f5e-f771-49ce-82b6-a9bce504a5a6" />
+      <TestMethod codeBase="C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\bin\Debug\net10.0\BffApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="BffApi.Tests.Endpoints.SubscriptionsEndpointsTests" name="RegeneratePrimaryKey_ReturnsOk" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="b04c3535-f044-4763-08cd-501a7bfde744" executionId="b781b011-97c6-41b0-ba84-8554e165f81a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="23252464-c12f-3e88-eeb8-4479c8550f5d" executionId="ad39da19-3181-4592-923d-45027800256e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="943ec0af-4233-e439-c45f-34206317703b" executionId="3ace722f-6e7d-4ef7-81a9-0edd92d9aa51" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2411ea92-c1e0-95bf-581c-1878df0c4aab" executionId="277c5c8f-183f-415e-bd4d-9fe9aeaa198e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1984e16a-ca4a-6370-57d9-6d221ec6ae70" executionId="f01587db-1d37-4b03-b412-1e7217929df7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a00fe570-5da6-3e74-d111-8487554c651a" executionId="a3f21039-5bd3-45f4-9326-64e65ec461de" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f9f35c4c-2012-a487-7f3a-4dfaaecd4584" executionId="86abddc0-eebd-4c1a-86e6-bfc9894e7682" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7132e454-9dd1-38a0-53ea-f91266a090ac" executionId="7049fecd-5e0b-41a1-a236-4f2624ef64a3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3caf2102-241e-904a-872b-95a123dcc61c" executionId="e012b16c-4c13-4cce-9768-ae6ac7d13055" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="31c0cd6c-72cd-138e-d5eb-a31e625bd025" executionId="9b24782b-77ae-45aa-9850-ef48b0cb34ec" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2b8f86c4-1f4e-64ee-b235-bca3a2e65da1" executionId="4ff2f1e9-c956-4b25-8c54-8f349d0a1777" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0872ef13-5e59-700e-531a-d6b30eed8f85" executionId="1839a43b-dc17-4fef-ad88-5a644f607abc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a222111f-004d-a099-2e61-72b0ae57080e" executionId="202cdb44-d960-4f7c-b51a-82e5d827c282" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b31514dd-c46b-a1d6-5a97-bbaf753ff703" executionId="d7d80279-c7f5-4795-ba5f-6633bd2978f6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d8a0937a-1f8f-d468-f2bf-264abdce87f0" executionId="71dd224c-4a5a-47b7-b9fe-186dd7ee9258" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="280458b8-69b0-80da-9ab9-bf8b9a1d0efb" executionId="a78b489c-bc69-4fb9-9657-d8adc407354e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9fcb2109-464e-09bc-57c9-5af178693a29" executionId="d4d802c2-879a-4f2c-be9f-e067ab3dfa27" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8db0fc13-634f-4faa-24b3-0f05e606d37d" executionId="3b9ee8e6-e4e5-44b1-818c-b1c0d0cb9e5f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="835dc063-9511-df23-f3a1-19ccca3e29d3" executionId="8ee290e4-50ad-4005-b033-362122be7365" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="60543c18-cb0e-6c8b-bc50-8a48a97e5c15" executionId="3c682e06-6042-435b-a711-012ca849727f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9a07316b-1d63-a9ba-b2bf-fab3aa3ed4ac" executionId="ea1bd39a-0088-43e3-99c3-5750cd0285e4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="508287ee-6949-2e36-a2db-0b9f5fa93243" executionId="ea68f99d-5fb0-40c3-be99-5fdd87c19d99" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d548bb63-3698-5783-2a85-f1c90a418c4d" executionId="c4cc54cc-4cdc-4ac4-85ec-5a327b72c386" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="34e78a9e-dee9-de26-664f-48aee1c5895c" executionId="7a7e7508-10f2-4121-bf8f-eede803a06cb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="02df3ed4-d265-f716-7751-a3e7e21fb9d5" executionId="1f029d1a-ffaf-4ea2-abbe-2e07999b90a8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="43d9e07b-21d2-55f0-ebf7-fd02cca22d97" executionId="4e019ba3-ecb7-4752-9e9f-c9e6999dcc9f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b28a934d-42f0-dea2-ae0b-a61b762fe1a9" executionId="02ecd6a7-f125-423e-8ed6-8c3ace9b2457" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ef3ee457-c597-4d3b-cc29-de097ace5a11" executionId="36950285-a76d-410b-9f3b-d700a58717d2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c53d6bb7-cb4a-694e-f77b-aa3122165f76" executionId="5247fdc1-debd-4fca-9ad0-d8ebaafd448d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9f7ee713-d85b-120b-7f10-3932b962f04f" executionId="ca163aa2-608c-48b0-b7b2-bece0b96d65d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e641bf72-c733-0547-d484-26e4bd6afa54" executionId="1d447098-a64f-4fe4-bc19-35bb41941637" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a81bf2b1-f344-3baf-e230-0a2436a507b5" executionId="101d30df-269c-4e54-a94f-624a2798da21" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9ed66743-802e-199f-8b68-d945c4d051a0" executionId="5b5ced25-a4f7-4ace-8a5e-4cf76ebe3acd" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b6b0e44e-cc7d-0b60-2330-71e61d71a8d2" executionId="1223c4c3-5a6a-446c-9888-2421e56a96a8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c8bebe38-216c-69ad-fb00-246998ec994a" executionId="5c480f23-fdbb-4630-a7b1-fc0911b11036" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="10ad726f-4cff-31ce-8e23-be5540b17551" executionId="fb4097fb-ec38-4564-aac9-ad1e553f2cbf" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="406c5848-8ef9-51df-ef63-88a5e92f1175" executionId="53b0ad3b-9419-40e5-b85e-5270f3da3bcc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0169dd8d-5c72-e3d2-edde-5b68c55457b8" executionId="d2fb2fd0-5405-499e-9fca-eecb4f4341ef" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="50830dd3-5720-586f-07ec-cf9de92646d3" executionId="e9e9e62d-793f-44a5-b94b-3f853cdd244f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="01b074c5-9e6c-004c-1d56-e797f711e70d" executionId="8600d388-bf06-411f-a6b3-2ccda6e49649" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="94f91b85-25f2-28ae-aa10-079fa2f098b9" executionId="a31a0373-b15c-46db-8aae-a21e685497b5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d403a7a7-679c-4328-75ba-66f1f67f98b4" executionId="3e19c972-e1a0-4621-b563-368cc8c42b9b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6cdf5ae5-c24e-3083-c0da-a24b7834ef1d" executionId="c118ee8d-7238-4939-b1fa-bd8bac14039f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="db16872e-87c7-4b19-7899-8ce86853a605" executionId="91228166-ca89-4d4e-97c3-5d072b3aa82a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a332ef5c-e00d-1020-6b14-5f0e96bdd35a" executionId="4e3e42b9-7a23-44ec-b4ed-dcc9e21bb350" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e44b71a6-d53d-f9c9-6ec2-75f5e2b66ea0" executionId="3f3c8e05-62df-4117-87b4-d56c4b5dc8c0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6d4f4c3d-1838-4081-2778-18d9560ecbdb" executionId="28dc4015-1070-494f-93fe-7822b2951eda" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8f2f9581-4d34-0743-e95d-95385df8dc53" executionId="ef521956-9591-445d-9294-17f3c4d8d887" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6bf2bd52-0535-4a83-beeb-174f31a175b2" executionId="2bc9f3a7-fc44-412b-aa40-78d881b30728" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c6cf1bd6-08f6-4b1f-9654-126f72993ee3" executionId="88be3c80-f03a-49d9-abd5-518405283eb2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="942a0b9d-1223-258f-b57f-52dc77a4cda3" executionId="304808e3-37e2-4d57-8756-90e4eed8c76d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="107fa769-9995-9bc2-3f07-4e8eb0fdae97" executionId="89129776-26b9-469a-b837-75f29936dd88" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e16553ae-b9a5-daee-1d3f-002d351fc36b" executionId="a4e6b08f-012e-4cdd-a172-b7a682bc3651" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7e129a07-0578-1739-123d-7fc5a8487640" executionId="9e518466-c434-49bf-b5b9-49e2bf8a625c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c684d2a2-b433-e9fc-d491-bbf0f5196e18" executionId="ae971599-dfc8-4d9e-9c57-c670ae2969e2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="76db8fd0-a32e-8489-db27-a46e037469d4" executionId="2f213572-f101-4431-b7f8-fdf0a413841c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="902465ea-aa88-65b3-995d-c1fce36ce944" executionId="638183f4-900a-40e9-a599-0fdac0a66f60" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a65fbb92-b81e-98f7-9a1d-e1861b6fce4c" executionId="937545a5-ff6a-472f-8e8b-f518831b158f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6771c015-a419-76cd-8321-d16cab029f45" executionId="a88c28f4-6942-4189-bac9-68c881cc1a6e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6cf1bdaa-fd3c-6778-f683-bd26f0d70b2f" executionId="8a341c93-ccce-41e3-b93d-0a849c6112b6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f96680c7-d7ef-76a9-cdd7-2429dd062ed6" executionId="2057a0ee-074c-465a-b064-7b097beaf440" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="48669e52-65b6-c365-dd88-efcbd39361c0" executionId="c5129f5e-f771-49ce-82b6-a9bce504a5a6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5df5fc42-b65d-5323-0475-5ee28c173f43" executionId="71512c0c-b130-4bfb-a188-306b234a2686" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="41423222-d85a-5537-5f76-3a3d3b0c30b7" executionId="827982d1-f641-4fcd-ac24-4c3b20ae2a31" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="64" executed="64" passed="56" failed="8" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.4)&#xD;
+[xUnit.net 00:00:00.77]   Discovering: BffApi.Tests&#xD;
+[xUnit.net 00:00:00.86]   Discovered:  BffApi.Tests&#xD;
+[xUnit.net 00:00:00.92]   Starting:    BffApi.Tests&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[1]&#xD;
+      Hosting starting&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[1]&#xD;
+      Hosting starting&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[1]&#xD;
+      Hosting starting&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[1]&#xD;
+      Hosting starting&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[1]&#xD;
+      Hosting starting&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[1]&#xD;
+      Hosting starting&#xD;
+info: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[63]&#xD;
+      User profile is available. Using 'C:\Users\hvu\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.&#xD;
+info: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[63]&#xD;
+      User profile is available. Using 'C:\Users\hvu\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.&#xD;
+info: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[63]&#xD;
+      User profile is available. Using 'C:\Users\hvu\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.&#xD;
+info: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[63]&#xD;
+      User profile is available. Using 'C:\Users\hvu\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.&#xD;
+info: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[63]&#xD;
+      User profile is available. Using 'C:\Users\hvu\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.&#xD;
+info: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[63]&#xD;
+      User profile is available. Using 'C:\Users\hvu\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Application started. Press Ctrl+C to shut down.&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Hosting environment: Development&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Content root path: C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+info: BffApi[0]&#xD;
+      APIM Portal BFF (.NET 10) Started&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+info: BffApi[0]&#xD;
+      Port:          http://localhost:3001&#xD;
+info: BffApi[0]&#xD;
+      APIM:          demo-apim-feb (kac_apimarketplace_eus_dev_rg)&#xD;
+info: BffApi[0]&#xD;
+      API Mode:      Mock&#xD;
+info: BffApi[0]&#xD;
+      Auth:          Mock Mode (Development)&#xD;
+info: BffApi[0]&#xD;
+      RBAC:          Policy-based (rbac-policies.json, hot-reload)&#xD;
+info: BffApi[0]&#xD;
+      Resilience:    Standard (retry 3x, circuit breaker, timeout)&#xD;
+info: BffApi[0]&#xD;
+      Caching:       IMemoryCache (1-min TTL for GET responses)&#xD;
+info: BffApi[0]&#xD;
+      Environment:   Development&#xD;
+warn: BffApi[0]&#xD;
+      Running in MOCK MODE - all API calls return static data&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[2]&#xD;
+      Hosting started&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Application started. Press Ctrl+C to shut down.&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Hosting environment: Development&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Content root path: C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Application started. Press Ctrl+C to shut down.&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Hosting environment: Development&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Content root path: C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Application started. Press Ctrl+C to shut down.&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Hosting environment: Development&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Content root path: C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Application started. Press Ctrl+C to shut down.&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Hosting environment: Development&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Content root path: C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Application started. Press Ctrl+C to shut down.&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Hosting environment: Development&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Content root path: C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+info: BffApi[0]&#xD;
+      APIM Portal BFF (.NET 10) Started&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+info: BffApi[0]&#xD;
+      Port:          http://localhost:3001&#xD;
+info: BffApi[0]&#xD;
+      APIM:          demo-apim-feb (kac_apimarketplace_eus_dev_rg)&#xD;
+info: BffApi[0]&#xD;
+      API Mode:      Mock&#xD;
+info: BffApi[0]&#xD;
+      Auth:          Mock Mode (Development)&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+info: BffApi[0]&#xD;
+      RBAC:          Policy-based (rbac-policies.json, hot-reload)&#xD;
+info: BffApi[0]&#xD;
+      APIM Portal BFF (.NET 10) Started&#xD;
+info: BffApi[0]&#xD;
+      Resilience:    Standard (retry 3x, circuit breaker, timeout)&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+info: BffApi[0]&#xD;
+      Caching:       IMemoryCache (1-min TTL for GET responses)&#xD;
+info: BffApi[0]&#xD;
+      Port:          http://localhost:3001&#xD;
+info: BffApi[0]&#xD;
+      Environment:   Development&#xD;
+info: BffApi[0]&#xD;
+      APIM:          demo-apim-feb (kac_apimarketplace_eus_dev_rg)&#xD;
+warn: BffApi[0]&#xD;
+      Running in MOCK MODE - all API calls return static data&#xD;
+info: BffApi[0]&#xD;
+      API Mode:      Mock&#xD;
+info: BffApi[0]&#xD;
+      Auth:          Mock Mode (Development)&#xD;
+info: BffApi[0]&#xD;
+      RBAC:          Policy-based (rbac-policies.json, hot-reload)&#xD;
+info: BffApi[0]&#xD;
+      Resilience:    Standard (retry 3x, circuit breaker, timeout)&#xD;
+info: BffApi[0]&#xD;
+      Caching:       IMemoryCache (1-min TTL for GET responses)&#xD;
+info: BffApi[0]&#xD;
+      Environment:   Development&#xD;
+warn: BffApi[0]&#xD;
+      Running in MOCK MODE - all API calls return static data&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+info: BffApi[0]&#xD;
+      APIM Portal BFF (.NET 10) Started&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+info: BffApi[0]&#xD;
+      Port:          http://localhost:3001&#xD;
+info: BffApi[0]&#xD;
+      APIM:          demo-apim-feb (kac_apimarketplace_eus_dev_rg)&#xD;
+info: BffApi[0]&#xD;
+      API Mode:      Mock&#xD;
+info: BffApi[0]&#xD;
+      Auth:          Mock Mode (Development)&#xD;
+info: BffApi[0]&#xD;
+      RBAC:          Policy-based (rbac-policies.json, hot-reload)&#xD;
+info: BffApi[0]&#xD;
+      Resilience:    Standard (retry 3x, circuit breaker, timeout)&#xD;
+info: BffApi[0]&#xD;
+      Caching:       IMemoryCache (1-min TTL for GET responses)&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+info: BffApi[0]&#xD;
+      APIM Portal BFF (.NET 10) Started&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+info: BffApi[0]&#xD;
+      Port:          http://localhost:3001&#xD;
+info: BffApi[0]&#xD;
+      APIM:          demo-apim-feb (kac_apimarketplace_eus_dev_rg)&#xD;
+info: BffApi[0]&#xD;
+      API Mode:      Mock&#xD;
+info: BffApi[0]&#xD;
+      Auth:          Mock Mode (Development)&#xD;
+info: BffApi[0]&#xD;
+      RBAC:          Policy-based (rbac-policies.json, hot-reload)&#xD;
+info: BffApi[0]&#xD;
+      Resilience:    Standard (retry 3x, circuit breaker, timeout)&#xD;
+info: BffApi[0]&#xD;
+      Caching:       IMemoryCache (1-min TTL for GET responses)&#xD;
+info: BffApi[0]&#xD;
+      Environment:   Development&#xD;
+warn: BffApi[0]&#xD;
+      Running in MOCK MODE - all API calls return static data&#xD;
+info: BffApi[0]&#xD;
+      Environment:   Development&#xD;
+warn: BffApi[0]&#xD;
+      Running in MOCK MODE - all API calls return static data&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+info: BffApi[0]&#xD;
+      APIM Portal BFF (.NET 10) Started&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+info: BffApi[0]&#xD;
+      Port:          http://localhost:3001&#xD;
+info: BffApi[0]&#xD;
+      APIM:          demo-apim-feb (kac_apimarketplace_eus_dev_rg)&#xD;
+info: BffApi[0]&#xD;
+      API Mode:      Mock&#xD;
+info: BffApi[0]&#xD;
+      Auth:          Mock Mode (Development)&#xD;
+info: BffApi[0]&#xD;
+      RBAC:          Policy-based (rbac-policies.json, hot-reload)&#xD;
+info: BffApi[0]&#xD;
+      Resilience:    Standard (retry 3x, circuit breaker, timeout)&#xD;
+info: BffApi[0]&#xD;
+      Caching:       IMemoryCache (1-min TTL for GET responses)&#xD;
+info: BffApi[0]&#xD;
+      Environment:   Development&#xD;
+warn: BffApi[0]&#xD;
+      Running in MOCK MODE - all API calls return static data&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[2]&#xD;
+      Hosting started&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[2]&#xD;
+      Hosting started&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[2]&#xD;
+      Hosting started&#xD;
+info: BffApi[0]&#xD;
+      ??????????????????????????????????????????????????????&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[2]&#xD;
+      Hosting started&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[2]&#xD;
+      Hosting started&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 DELETE http://localhost/api/subscriptions/sub-warranty-1 - - -&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 POST http://localhost/api/support/tickets - application/json;+charset=utf-8 -&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 POST http://localhost/api/registration - application/json;+charset=utf-8 -&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/products - - -&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/apis/warranty-api - - -&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/admin/registrations?status=pending - - -&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: POST /api/support/tickets'&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: POST /api/registration/'&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Manage&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/apis/{apiId}'&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/products/'&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Subscribe&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/admin/registrations'&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: DELETE /api/subscriptions/{subId}'&#xD;
+dbug: BffApi.Services.MockApiService[0]&#xD;
+      Mock: Deleted subscription sub-warranty-1&#xD;
+dbug: BffApi.Services.MockApiService[0]&#xD;
+      Mock: GetApi(warranty-api) \u001a True&#xD;
+info: Microsoft.AspNetCore.Http.Result.NoContentResult[1]&#xD;
+      Setting HTTP status code 204.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.CreatedResult[1]&#xD;
+      Setting HTTP status code 201.&#xD;
+info: Microsoft.AspNetCore.Http.Result.CreatedResult[1]&#xD;
+      Setting HTTP status code 201.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: DELETE /api/subscriptions/{subId}'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      DELETE /api/subscriptions/sub-warranty-1 \u001a 204 (43ms)&#xD;
+info: Microsoft.AspNetCore.Http.Result.CreatedResult[3]&#xD;
+      Writing value of type 'SupportTicket' as Json.&#xD;
+info: Microsoft.AspNetCore.Http.Result.CreatedResult[3]&#xD;
+      Writing value of type 'RegistrationRequest' as Json.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'List`1' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: POST /api/support/tickets'&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: POST /api/registration/'&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/admin/registrations'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/admin/registrations \u001a 200 (51ms)&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      POST /api/registration \u001a 201 (51ms)&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      POST /api/support/tickets \u001a 201 (51ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/admin/registrations?status=pending - 200 - application/json;+charset=utf-8 179.2837ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 DELETE http://localhost/api/subscriptions/sub-warranty-1 - 204 - - 179.2768ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 POST http://localhost/api/support/tickets - 201 - application/json;+charset=utf-8 179.2936ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 POST http://localhost/api/registration - 201 - application/json;+charset=utf-8 179.2897ms&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'PagedResult`1' as Json.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'ApiContract' as Json.&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/support/my-tickets - - -&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/products/'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/products \u001a 200 (66ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/products - 200 - application/json;+charset=utf-8 194.1100ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/apis/{apiId}'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/apis/warranty-api \u001a 200 (72ms)&#xD;
+info: BffApi.Middleware.LegacyApiMonitoringMiddleware[0]&#xD;
+      Legacy API call: Path=/api/apis/warranty-api | User=anonymous | Status=200 | Duration=72ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/apis/warranty-api - 200 - application/json;+charset=utf-8 200.4355ms&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/support/my-tickets'&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'ReadOnlyCollection`1' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/support/my-tickets'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/support/my-tickets \u001a 200 (5ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/support/my-tickets - 200 - application/json;+charset=utf-8 10.7829ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 POST http://localhost/api/subscriptions/sub-warranty-1/regenerateSecondaryKey - - -&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 POST http://localhost/api/admin/registrations/REG-0001/approve - - -&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/registration/config - - -&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/stats - - -&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Subscribe&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: POST /api/subscriptions/{subId}/regenerateSecondaryKey'&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Manage&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: POST /api/admin/registrations/{id}/approve'&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'RegistrationRequest' as Json.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+dbug: BffApi.Services.MockApiService[0]&#xD;
+      Mock: Regenerated secondary key for sub-warranty-1&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/stats/'&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: POST /api/admin/registrations/{id}/approve'&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      POST /api/admin/registrations/REG-0001/approve \u001a 200 (2ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 POST http://localhost/api/admin/registrations/REG-0001/approve - 200 - application/json;+charset=utf-8 5.1028ms&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/registration/config'&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'RegistrationConfig' as Json.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'PlatformStats' as Json.&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 POST http://localhost/api/support/tickets - application/json;+charset=utf-8 -&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'SubscriptionContract' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/registration/config'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/registration/config \u001a 200 (6ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/registration/config - 200 - application/json;+charset=utf-8 9.0731ms&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/stats/'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/stats \u001a 200 (6ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/stats - 200 - application/json;+charset=utf-8 8.0032ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/admin/registrations - - -&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: POST /api/support/tickets'&#xD;
+info: Microsoft.AspNetCore.Http.Result.CreatedResult[1]&#xD;
+      Setting HTTP status code 201.&#xD;
+info: Microsoft.AspNetCore.Http.Result.CreatedResult[3]&#xD;
+      Writing value of type 'SupportTicket' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: POST /api/support/tickets'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      POST /api/support/tickets \u001a 201 (4ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 POST http://localhost/api/support/tickets - 201 - application/json;+charset=utf-8 4.5749ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: POST /api/subscriptions/{subId}/regenerateSecondaryKey'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      POST /api/subscriptions/sub-warranty-1/regenerateSecondaryKey \u001a 200 (10ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 POST http://localhost/api/subscriptions/sub-warranty-1/regenerateSecondaryKey - 200 - application/json;+charset=utf-8 13.0990ms&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Manage&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/admin/registrations'&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'List`1' as Json.&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/products/starter - - -&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/admin/registrations'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/admin/registrations \u001a 200 (7ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/admin/registrations - 200 - application/json;+charset=utf-8 7.0826ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/subscriptions/nonexistent - - -&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/registration/status - - -&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/support/faqs - - -&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/support/faqs'&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'String[]' as Json.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/support/faqs'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/support/faqs \u001a 200 (2ms)&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/products/{productId}'&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/registration/status'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/support/faqs - 200 - application/json;+charset=utf-8 2.0757ms&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/subscriptions/{subId}'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 POST http://localhost/api/admin/registrations/NONEXISTENT/approve - - -&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'RegistrationStatus' as Json.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'ProductContract' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/products/{productId}'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/products/starter \u001a 200 (7ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/products/starter - 200 - application/json;+charset=utf-8 7.1292ms&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Manage&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/registration/status'&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: POST /api/admin/registrations/{id}/approve'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/registration/status \u001a 200 (5ms)&#xD;
+info: Microsoft.AspNetCore.Http.Result.NotFoundObjectResult[1]&#xD;
+      Setting HTTP status code 404.&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/registration/status - 200 - application/json;+charset=utf-8 6.1404ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/subscriptions/{subId}'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/subscriptions/nonexistent \u001a 404 (7ms)&#xD;
+info: Microsoft.AspNetCore.Http.Result.NotFoundObjectResult[1]&#xD;
+      Setting HTTP status code 404.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: POST /api/admin/registrations/{id}/approve'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      POST /api/admin/registrations/NONEXISTENT/approve \u001a 404 (1ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/subscriptions/nonexistent - 404 - - 7.8924ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 POST http://localhost/api/admin/registrations/NONEXISTENT/approve - 404 - - 2.3962ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/support/my-tickets - - -&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/support/my-tickets'&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'ReadOnlyCollection`1' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/support/my-tickets'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/support/my-tickets \u001a 200 (1ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/support/my-tickets - 200 - application/json;+charset=utf-8 1.6062ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/news - - -&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/news/'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 POST http://localhost/api/admin/registrations/REG-0002/reject - - -&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Manage&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: POST /api/admin/registrations/{id}/reject'&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 POST http://localhost/api/subscriptions - application/json;+charset=utf-8 -&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'RegistrationRequest' as Json.&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/apis/warranty-api/operations - - -&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: POST /api/admin/registrations/{id}/reject'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      POST /api/admin/registrations/REG-0002/reject \u001a 200 (2ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 POST http://localhost/api/admin/registrations/REG-0002/reject - 200 - application/json;+charset=utf-8 2.0649ms&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Subscribe&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: POST /api/subscriptions/'&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'NewsItem[]' as Json.&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[3]&#xD;
+      Hosting stopping&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[3]&#xD;
+      Hosting stopping&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Application is shutting down...&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Application is shutting down...&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[3]&#xD;
+      Hosting stopping&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[3]&#xD;
+      Hosting stopping&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[4]&#xD;
+      Hosting stopped&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[4]&#xD;
+      Hosting stopped&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[4]&#xD;
+      Hosting stopped&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[4]&#xD;
+      Hosting stopped&#xD;
+dbug: BffApi.Services.MockApiService[0]&#xD;
+      Mock: Created subscription sub-mock-34a20d4ffdc&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+info: Microsoft.AspNetCore.Http.Result.CreatedResult[1]&#xD;
+      Setting HTTP status code 201.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+info: Microsoft.AspNetCore.Http.Result.CreatedResult[3]&#xD;
+      Writing value of type 'SubscriptionContract' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/apis/{apiId}/operations'&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: POST /api/subscriptions/'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      POST /api/subscriptions \u001a 201 (4ms)&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/news/'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/news \u001a 200 (8ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/news - 200 - application/json;+charset=utf-8 7.9275ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/admin/metrics - - -&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 POST http://localhost/api/subscriptions - 201 - application/json;+charset=utf-8 5.8105ms&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Manage&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/admin/metrics'&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'AdminMetric[]' as Json.&#xD;
+[xUnit.net 00:00:02.86]       System.Text.Json.JsonException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.&#xD;
+[xUnit.net 00:00:02.86]       ---- System.Text.Json.JsonReaderException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. LineNumber: 0 | BytePositionInLine: 0.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/admin/metrics'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/admin/metrics \u001a 200 (5ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/admin/metrics - 200 - application/json;+charset=utf-8 5.7263ms&#xD;
+[xUnit.net 00:00:02.86]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.86]            at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, JsonReaderException ex)&#xD;
+[xUnit.net 00:00:02.86]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:02.86]            at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Deserialize(Utf8JsonReader&amp; reader, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:02.86]            at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 utf8Json, JsonTypeInfo`1 jsonTypeInfo, Nullable`1 actualByteCount)&#xD;
+[xUnit.net 00:00:02.86]            at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 json, JsonTypeInfo`1 jsonTypeInfo)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/subscriptions - - -&#xD;
+[xUnit.net 00:00:02.86]            at System.Text.Json.JsonSerializer.Deserialize[TValue](String json, JsonSerializerOptions options)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/products/nonexistent - - -&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+[xUnit.net 00:00:02.86]         C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\BffWebApplicationFactory.cs(106,0): at BffApi.Tests.TestHelpers.ReadJsonAsync[T](HttpResponseMessage response)&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/products/{productId}'&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/subscriptions/'&#xD;
+[xUnit.net 00:00:02.86]         C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\Endpoints\ApisEndpointsTests.cs(61,0): at BffApi.Tests.Endpoints.ApisEndpointsTests.GetApi_ReturnsOk_ForExistingApi()&#xD;
+info: Microsoft.AspNetCore.Http.Result.NotFoundObjectResult[1]&#xD;
+      Setting HTTP status code 404.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/products/{productId}'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/products/nonexistent \u001a 404 (1ms)&#xD;
+[xUnit.net 00:00:02.86]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:02.86]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:02.86]            at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader&amp; json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/products/nonexistent - 404 - - 1.0619ms&#xD;
+[xUnit.net 00:00:02.86]            at System.Text.Json.Utf8JsonReader.Read()&#xD;
+[xUnit.net 00:00:02.86]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'PagedResult`1' as Json.&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[3]&#xD;
+      Hosting stopping&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Application is shutting down...&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[3]&#xD;
+      Hosting stopping&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[4]&#xD;
+      Hosting stopped&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[4]&#xD;
+      Hosting stopped&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'PagedResult`1' as Json.&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/users/me - - -&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/apis/{apiId}/operations'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/apis/warranty-api/operations \u001a 200 (17ms)&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+info: BffApi.Middleware.LegacyApiMonitoringMiddleware[0]&#xD;
+      Legacy API call: Path=/api/apis/warranty-api/operations | User=anonymous | Status=200 | Duration=16ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/subscriptions/'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/subscriptions \u001a 200 (6ms)&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/subscriptions - 200 - application/json;+charset=utf-8 6.5368ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/users/me'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/apis/warranty-api/operations - 200 - application/json;+charset=utf-8 20.3771ms&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'UserProfile' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/users/me'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/users/me \u001a 200 (51ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/users/me - 200 - application/json;+charset=utf-8 51.6049ms&#xD;
+[xUnit.net 00:00:02.92]       System.Text.Json.JsonException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/apis - - -&#xD;
+[xUnit.net 00:00:02.92]       ---- System.Text.Json.JsonReaderException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. LineNumber: 0 | BytePositionInLine: 0.&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/users/me/subscriptions - - -&#xD;
+[xUnit.net 00:00:02.92]       Stack Trace:&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+[xUnit.net 00:00:02.92]            at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, JsonReaderException ex)&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/users/me/subscriptions'&#xD;
+[xUnit.net 00:00:02.92]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:02.92]            at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Deserialize(Utf8JsonReader&amp; reader, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:02.92]            at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 utf8Json, JsonTypeInfo`1 jsonTypeInfo, Nullable`1 actualByteCount)&#xD;
+[xUnit.net 00:00:02.92]            at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 json, JsonTypeInfo`1 jsonTypeInfo)&#xD;
+[xUnit.net 00:00:02.92]            at System.Text.Json.JsonSerializer.Deserialize[TValue](String json, JsonSerializerOptions options)&#xD;
+[xUnit.net 00:00:02.92]         C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\BffWebApplicationFactory.cs(106,0): at BffApi.Tests.TestHelpers.ReadJsonAsync[T](HttpResponseMessage response)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/health - - -&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+[xUnit.net 00:00:02.92]         C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\Endpoints\ApisEndpointsTests.cs(82,0): at BffApi.Tests.Endpoints.ApisEndpointsTests.ListOperations_ReturnsOk_WithOperations()&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'PagedResult`1' as Json.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+[xUnit.net 00:00:02.92]         --- End of stack trace from previous location ---&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/health'&#xD;
+[xUnit.net 00:00:02.92]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:02.92]            at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader&amp; json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)&#xD;
+[xUnit.net 00:00:02.92]            at System.Text.Json.Utf8JsonReader.Read()&#xD;
+[xUnit.net 00:00:02.92]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/users/me/subscriptions'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/users/me/subscriptions \u001a 200 (2ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/users/me/subscriptions - 200 - application/json;+charset=utf-8 2.5911ms&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/apis/'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 POST http://localhost/api/subscriptions/sub-warranty-1/secrets - - -&#xD;
+dbug: BffApi.Services.MockApiService[0]&#xD;
+      Mock: returning 3 APIs (top=(null), skip=(null))&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type '&lt;&gt;f__AnonymousType1`4' as Json.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Subscribe&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: POST /api/subscriptions/{subId}/secrets'&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/health'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/health \u001a 200 (7ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/health - 200 - application/json;+charset=utf-8 7.5766ms&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'PagedResult`1' as Json.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'SubscriptionContract' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: POST /api/subscriptions/{subId}/secrets'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      POST /api/subscriptions/sub-warranty-1/secrets \u001a 200 (2ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 POST http://localhost/api/subscriptions/sub-warranty-1/secrets - 200 - application/json;+charset=utf-8 3.6385ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/apis/'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/apis \u001a 200 (10ms)&#xD;
+info: BffApi.Middleware.LegacyApiMonitoringMiddleware[0]&#xD;
+      Legacy API call: Path=/api/apis | User=anonymous | Status=200 | Duration=10ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/apis - 200 - application/json;+charset=utf-8 10.7994ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/tags - - -&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/tags/'&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/subscriptions/sub-warranty-1 - - -&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/subscriptions/{subId}'&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'SubscriptionContract' as Json.&#xD;
+dbug: BffApi.Services.MockApiService[0]&#xD;
+      Mock: returning 9 tags&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/subscriptions/{subId}'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/subscriptions/sub-warranty-1 \u001a 200 (1ms)&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/subscriptions/sub-warranty-1 - 200 - application/json;+charset=utf-8 1.0300ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/apis/warranty-api/try-config - - -&#xD;
+[xUnit.net 00:00:02.94]       System.Text.Json.JsonException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.&#xD;
+[xUnit.net 00:00:02.94]       ---- System.Text.Json.JsonReaderException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. LineNumber: 0 | BytePositionInLine: 0.&#xD;
+[xUnit.net 00:00:02.94]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.94]            at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, JsonReaderException ex)&#xD;
+[xUnit.net 00:00:02.94]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:02.94]            at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Deserialize(Utf8JsonReader&amp; reader, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:02.94]            at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 utf8Json, JsonTypeInfo`1 jsonTypeInfo, Nullable`1 actualByteCount)&#xD;
+[xUnit.net 00:00:02.94]            at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 json, JsonTypeInfo`1 jsonTypeInfo)&#xD;
+[xUnit.net 00:00:02.94]            at System.Text.Json.JsonSerializer.Deserialize[TValue](String json, JsonSerializerOptions options)&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'PagedResult`1' as Json.&#xD;
+[xUnit.net 00:00:02.94]         C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\BffWebApplicationFactory.cs(106,0): at BffApi.Tests.TestHelpers.ReadJsonAsync[T](HttpResponseMessage response)&#xD;
+[xUnit.net 00:00:02.94]         C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\Endpoints\ApisEndpointsTests.cs(23,0): at BffApi.Tests.Endpoints.ApisEndpointsTests.ListApis_ReturnsOk_WithPagedResult()&#xD;
+[xUnit.net 00:00:02.94]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:02.94]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:02.94]            at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader&amp; json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)&#xD;
+[xUnit.net 00:00:02.94]            at System.Text.Json.Utf8JsonReader.Read()&#xD;
+[xUnit.net 00:00:02.94]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 POST http://localhost/api/subscriptions/sub-warranty-1/regeneratePrimaryKey - - -&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Subscribe&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: POST /api/subscriptions/{subId}/regeneratePrimaryKey'&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=TryIt&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/apis/{apiId}/try-config'&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+dbug: BffApi.Services.MockApiService[0]&#xD;
+      Mock: Regenerated primary key for sub-warranty-1&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'SubscriptionContract' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/tags/'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/tags \u001a 200 (7ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/tags - 200 - application/json;+charset=utf-8 7.3145ms&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'TryItConfig' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: POST /api/subscriptions/{subId}/regeneratePrimaryKey'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      POST /api/subscriptions/sub-warranty-1/regeneratePrimaryKey \u001a 200 (3ms)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 POST http://localhost/api/subscriptions/sub-warranty-1/regeneratePrimaryKey - 200 - application/json;+charset=utf-8 2.7773ms&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/apis/{apiId}/try-config'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/apis/warranty-api/try-config \u001a 200 (3ms)&#xD;
+info: BffApi.Middleware.LegacyApiMonitoringMiddleware[0]&#xD;
+      Legacy API call: Path=/api/apis/warranty-api/try-config | User=anonymous | Status=200 | Duration=3ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/apis/warranty-api/try-config - 200 - application/json;+charset=utf-8 5.4339ms&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[3]&#xD;
+      Hosting stopping&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Application is shutting down...&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[3]&#xD;
+      Hosting stopping&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[4]&#xD;
+      Hosting stopped&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[4]&#xD;
+      Hosting stopped&#xD;
+[xUnit.net 00:00:02.95]       System.Text.Json.JsonException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[3]&#xD;
+      Hosting stopping&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Application is shutting down...&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[3]&#xD;
+      Hosting stopping&#xD;
+[xUnit.net 00:00:02.95]       ---- System.Text.Json.JsonReaderException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. LineNumber: 0 | BytePositionInLine: 0.&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[4]&#xD;
+      Hosting stopped&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[4]&#xD;
+      Hosting stopped&#xD;
+[xUnit.net 00:00:02.95]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.95]            at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, JsonReaderException ex)&#xD;
+[xUnit.net 00:00:02.95]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:02.95]            at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Deserialize(Utf8JsonReader&amp; reader, ReadStack&amp; state)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/apis/warranty-api/products - - -&#xD;
+[xUnit.net 00:00:02.95]            at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 utf8Json, JsonTypeInfo`1 jsonTypeInfo, Nullable`1 actualByteCount)&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+[xUnit.net 00:00:02.95]            at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 json, JsonTypeInfo`1 jsonTypeInfo)&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+[xUnit.net 00:00:02.95]            at System.Text.Json.JsonSerializer.Deserialize[TValue](String json, JsonSerializerOptions options)&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/apis/{apiId}/products'&#xD;
+[xUnit.net 00:00:02.95]         C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\BffWebApplicationFactory.cs(106,0): at BffApi.Tests.TestHelpers.ReadJsonAsync[T](HttpResponseMessage response)&#xD;
+[xUnit.net 00:00:02.95]         C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\Endpoints\ApisEndpointsTests.cs(119,0): at BffApi.Tests.Endpoints.ApisEndpointsTests.GetTryItConfig_ReturnsOperationLabels()&#xD;
+[xUnit.net 00:00:02.95]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:02.95]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:02.95]            at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader&amp; json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)&#xD;
+[xUnit.net 00:00:02.95]            at System.Text.Json.Utf8JsonReader.Read()&#xD;
+[xUnit.net 00:00:02.95]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'PagedResult`1' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/apis/{apiId}/products'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/apis/warranty-api/products \u001a 200 (3ms)&#xD;
+info: BffApi.Middleware.LegacyApiMonitoringMiddleware[0]&#xD;
+      Legacy API call: Path=/api/apis/warranty-api/products | User=anonymous | Status=200 | Duration=3ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/apis/warranty-api/products - 200 - application/json;+charset=utf-8 3.7057ms&#xD;
+[xUnit.net 00:00:02.95]       System.Text.Json.JsonException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.&#xD;
+[xUnit.net 00:00:02.95]       ---- System.Text.Json.JsonReaderException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. LineNumber: 0 | BytePositionInLine: 0.&#xD;
+[xUnit.net 00:00:02.95]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.95]            at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, JsonReaderException ex)&#xD;
+[xUnit.net 00:00:02.95]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:02.96]            at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Deserialize(Utf8JsonReader&amp; reader, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:02.96]            at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 utf8Json, JsonTypeInfo`1 jsonTypeInfo, Nullable`1 actualByteCount)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/apis/warranty-api/hostnames - - -&#xD;
+[xUnit.net 00:00:02.96]            at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 json, JsonTypeInfo`1 jsonTypeInfo)&#xD;
+[xUnit.net 00:00:02.96]            at System.Text.Json.JsonSerializer.Deserialize[TValue](String json, JsonSerializerOptions options)&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+[xUnit.net 00:00:02.96]         C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\BffWebApplicationFactory.cs(106,0): at BffApi.Tests.TestHelpers.ReadJsonAsync[T](HttpResponseMessage response)&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+[xUnit.net 00:00:02.96]         C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\Endpoints\ApisEndpointsTests.cs(95,0): at BffApi.Tests.Endpoints.ApisEndpointsTests.ListApiProducts_ReturnsOk()&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/apis/{apiId}/hostnames'&#xD;
+[xUnit.net 00:00:02.96]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:02.96]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:02.96]            at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader&amp; json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)&#xD;
+[xUnit.net 00:00:02.96]            at System.Text.Json.Utf8JsonReader.Read()&#xD;
+[xUnit.net 00:00:02.96]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type '&lt;&gt;z__ReadOnlySingleElementList`1' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/apis/{apiId}/hostnames'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/apis/warranty-api/hostnames \u001a 200 (5ms)&#xD;
+info: BffApi.Middleware.LegacyApiMonitoringMiddleware[0]&#xD;
+      Legacy API call: Path=/api/apis/warranty-api/hostnames | User=anonymous | Status=200 | Duration=4ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/apis/warranty-api/hostnames - 200 - application/json;+charset=utf-8 5.3324ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/apis/warranty-api/subscription - - -&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/apis/{apiId}/subscription'&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type '&lt;&gt;f__AnonymousType0`2' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/apis/{apiId}/subscription'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/apis/warranty-api/subscription \u001a 200 (4ms)&#xD;
+info: BffApi.Middleware.LegacyApiMonitoringMiddleware[0]&#xD;
+      Legacy API call: Path=/api/apis/warranty-api/subscription | User=anonymous | Status=200 | Duration=3ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/apis/warranty-api/subscription - 200 - application/json;+charset=utf-8 4.0494ms&#xD;
+[xUnit.net 00:00:02.97]       Assert.Contains() Failure: Sub-string not found&#xD;
+[xUnit.net 00:00:02.97]       String:    ""&#xD;
+[xUnit.net 00:00:02.97]       Not found: "status"&#xD;
+[xUnit.net 00:00:02.97]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.97]         C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\Endpoints\ApisEndpointsTests.cs(108,0): at BffApi.Tests.Endpoints.ApisEndpointsTests.GetApiSubscriptionStatus_ReturnsOk()&#xD;
+[xUnit.net 00:00:02.97]         --- End of stack trace from previous location ---&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/apis/warranty-api/releases - - -&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/apis/{apiId}/releases'&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'PagedResult`1' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/apis/{apiId}/releases'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/apis/warranty-api/releases \u001a 200 (4ms)&#xD;
+info: BffApi.Middleware.LegacyApiMonitoringMiddleware[0]&#xD;
+      Legacy API call: Path=/api/apis/warranty-api/releases | User=anonymous | Status=200 | Duration=4ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/apis/warranty-api/releases - 200 - application/json;+charset=utf-8 4.8715ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/apis?top=1&amp;skip=0 - - -&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/apis/'&#xD;
+dbug: BffApi.Services.MockApiService[0]&#xD;
+      Mock: returning 1 APIs (top=1, skip=0)&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'PagedResult`1' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/apis/'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/apis \u001a 200 (1ms)&#xD;
+info: BffApi.Middleware.LegacyApiMonitoringMiddleware[0]&#xD;
+      Legacy API call: Path=/api/apis | User=anonymous | Status=200 | Duration=1ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/apis?top=1&amp;skip=0 - 200 - application/json;+charset=utf-8 1.7030ms&#xD;
+[xUnit.net 00:00:02.99]       System.Text.Json.JsonException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.&#xD;
+[xUnit.net 00:00:02.99]       ---- System.Text.Json.JsonReaderException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. LineNumber: 0 | BytePositionInLine: 0.&#xD;
+[xUnit.net 00:00:02.99]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.99]            at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, JsonReaderException ex)&#xD;
+[xUnit.net 00:00:02.99]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:02.99]            at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Deserialize(Utf8JsonReader&amp; reader, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:02.99]            at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 utf8Json, JsonTypeInfo`1 jsonTypeInfo, Nullable`1 actualByteCount)&#xD;
+[xUnit.net 00:00:02.99]            at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 json, JsonTypeInfo`1 jsonTypeInfo)&#xD;
+[xUnit.net 00:00:02.99]            at System.Text.Json.JsonSerializer.Deserialize[TValue](String json, JsonSerializerOptions options)&#xD;
+[xUnit.net 00:00:02.99]         C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\BffWebApplicationFactory.cs(106,0): at BffApi.Tests.TestHelpers.ReadJsonAsync[T](HttpResponseMessage response)&#xD;
+[xUnit.net 00:00:02.99]         C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\Endpoints\ApisEndpointsTests.cs(35,0): at BffApi.Tests.Endpoints.ApisEndpointsTests.ListApis_SupportsPagination()&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/apis/highlights - - -&#xD;
+[xUnit.net 00:00:02.99]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:02.99]         ----- Inner Stack Trace -----&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+[xUnit.net 00:00:02.99]            at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader&amp; json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+[xUnit.net 00:00:02.99]            at System.Text.Json.Utf8JsonReader.Read()&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/apis/highlights'&#xD;
+[xUnit.net 00:00:02.99]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+dbug: BffApi.Services.MockApiService[0]&#xD;
+      Mock: returning 3 APIs (top=3, skip=(null))&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]&#xD;
+      Setting HTTP status code 200.&#xD;
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]&#xD;
+      Writing value of type 'List`1' as Json.&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/apis/highlights'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/apis/highlights \u001a 200 (3ms)&#xD;
+info: BffApi.Middleware.LegacyApiMonitoringMiddleware[0]&#xD;
+      Legacy API call: Path=/api/apis/highlights | User=anonymous | Status=200 | Duration=3ms&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/apis/highlights - 200 - application/json;+charset=utf-8 3.7282ms&#xD;
+[xUnit.net 00:00:03.00]       System.Text.Json.JsonException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. Path: $ | LineNumber: 0 | BytePositionInLine: 0.&#xD;
+[xUnit.net 00:00:03.00]       ---- System.Text.Json.JsonReaderException : The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true. LineNumber: 0 | BytePositionInLine: 0.&#xD;
+[xUnit.net 00:00:03.00]       Stack Trace:&#xD;
+[xUnit.net 00:00:03.00]            at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack&amp; state, JsonReaderException ex)&#xD;
+[xUnit.net 00:00:03.00]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:03.00]            at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Deserialize(Utf8JsonReader&amp; reader, ReadStack&amp; state)&#xD;
+[xUnit.net 00:00:03.00]            at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 utf8Json, JsonTypeInfo`1 jsonTypeInfo, Nullable`1 actualByteCount)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]&#xD;
+      Request starting HTTP/1.1 GET http://localhost/api/apis/nonexistent-api - - -&#xD;
+[xUnit.net 00:00:03.00]            at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 json, JsonTypeInfo`1 jsonTypeInfo)&#xD;
+dbug: BffApi.Tests.TestAuthHandler[8]&#xD;
+      AuthenticationScheme: Test was successfully authenticated.&#xD;
+[xUnit.net 00:00:03.00]            at System.Text.Json.JsonSerializer.Deserialize[TValue](String json, JsonSerializerOptions options)&#xD;
+dbug: BffApi.Services.MockRoleProvider[0]&#xD;
+      MockRoleProvider: returning [Distributor] for user test-user&#xD;
+dbug: BffApi.Authorization.ApiAccessHandler[0]&#xD;
+      RBAC check: IsAuthenticated=True, UserId=test-user, Roles=[Distributor], Permission=Read&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]&#xD;
+      Executing endpoint 'HTTP: GET /api/apis/{apiId}'&#xD;
+[xUnit.net 00:00:03.00]         C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\BffWebApplicationFactory.cs(106,0): at BffApi.Tests.TestHelpers.ReadJsonAsync[T](HttpResponseMessage response)&#xD;
+dbug: BffApi.Services.MockApiService[0]&#xD;
+      Mock: GetApi(nonexistent-api) \u001a False&#xD;
+[xUnit.net 00:00:03.00]         C:\Users\hvu\source\repos\kx-apim-dev-custom\bff-dotnet\BffApi.Tests\Endpoints\ApisEndpointsTests.cs(48,0): at BffApi.Tests.Endpoints.ApisEndpointsTests.ListHighlights_ReturnsOk_WithArray()&#xD;
+[xUnit.net 00:00:03.00]         --- End of stack trace from previous location ---&#xD;
+info: Microsoft.AspNetCore.Http.Result.NotFoundObjectResult[1]&#xD;
+      Setting HTTP status code 404.&#xD;
+[xUnit.net 00:00:03.00]         ----- Inner Stack Trace -----&#xD;
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]&#xD;
+      Executed endpoint 'HTTP: GET /api/apis/{apiId}'&#xD;
+info: BffApi.Middleware.RequestLoggingMiddleware[0]&#xD;
+      GET /api/apis/nonexistent-api \u001a 404 (1ms)&#xD;
+info: BffApi.Middleware.LegacyApiMonitoringMiddleware[0]&#xD;
+      Legacy API call: Path=/api/apis/nonexistent-api | User=anonymous | Status=404 | Duration=0ms&#xD;
+[xUnit.net 00:00:03.00]            at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader&amp; json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)&#xD;
+[xUnit.net 00:00:03.00]            at System.Text.Json.Utf8JsonReader.Read()&#xD;
+[xUnit.net 00:00:03.00]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader&amp; reader, T&amp; value, JsonSerializerOptions options, ReadStack&amp; state)&#xD;
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]&#xD;
+      Request finished HTTP/1.1 GET http://localhost/api/apis/nonexistent-api - 404 - - 1.1628ms&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[3]&#xD;
+      Hosting stopping&#xD;
+info: Microsoft.Hosting.Lifetime[0]&#xD;
+      Application is shutting down...&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[4]&#xD;
+      Hosting stopped&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[3]&#xD;
+      Hosting stopping&#xD;
+dbug: Microsoft.Extensions.Hosting.Internal.Host[4]&#xD;
+      Hosting stopped&#xD;
+[xUnit.net 00:00:03.01]   Finished:    BffApi.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="CHQ-HVU-LT" outcome="Error" timestamp="2026-03-11T11:27:19.2041951-05:00">
+        <Text>[xUnit.net 00:00:02.85]     BffApi.Tests.Endpoints.ApisEndpointsTests.GetApi_ReturnsOk_ForExistingApi [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CHQ-HVU-LT" outcome="Error" timestamp="2026-03-11T11:27:19.2704133-05:00">
+        <Text>[xUnit.net 00:00:02.92]     BffApi.Tests.Endpoints.ApisEndpointsTests.ListOperations_ReturnsOk_WithOperations [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CHQ-HVU-LT" outcome="Error" timestamp="2026-03-11T11:27:19.2875556-05:00">
+        <Text>[xUnit.net 00:00:02.94]     BffApi.Tests.Endpoints.ApisEndpointsTests.ListApis_ReturnsOk_WithPagedResult [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CHQ-HVU-LT" outcome="Error" timestamp="2026-03-11T11:27:19.2963878-05:00">
+        <Text>[xUnit.net 00:00:02.95]     BffApi.Tests.Endpoints.ApisEndpointsTests.GetTryItConfig_ReturnsOperationLabels [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CHQ-HVU-LT" outcome="Error" timestamp="2026-03-11T11:27:19.3041277-05:00">
+        <Text>[xUnit.net 00:00:02.95]     BffApi.Tests.Endpoints.ApisEndpointsTests.ListApiProducts_ReturnsOk [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CHQ-HVU-LT" outcome="Error" timestamp="2026-03-11T11:27:19.3233965-05:00">
+        <Text>[xUnit.net 00:00:02.97]     BffApi.Tests.Endpoints.ApisEndpointsTests.GetApiSubscriptionStatus_ReturnsOk [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CHQ-HVU-LT" outcome="Error" timestamp="2026-03-11T11:27:19.3372369-05:00">
+        <Text>[xUnit.net 00:00:02.99]     BffApi.Tests.Endpoints.ApisEndpointsTests.ListApis_SupportsPagination [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="CHQ-HVU-LT" outcome="Error" timestamp="2026-03-11T11:27:19.3453393-05:00">
+        <Text>[xUnit.net 00:00:03.00]     BffApi.Tests.Endpoints.ApisEndpointsTests.ListHighlights_ReturnsOk_WithArray [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

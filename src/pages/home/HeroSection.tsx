@@ -6,6 +6,7 @@
 import { memo } from "react";
 import { Box, Button, Container, Grid, Stack, Typography, alpha, useTheme } from "@mui/material";
 import { ApiOutlined, ArrowForward } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 interface HeroSectionProps {
   onExploreClick: () => void;
@@ -14,6 +15,7 @@ interface HeroSectionProps {
 
 const HeroSection = memo(({ onExploreClick, onGetStartedClick }: HeroSectionProps) => {
   const theme = useTheme();
+  const { t } = useTranslation();
 
   return (
     <Box
@@ -54,7 +56,7 @@ const HeroSection = memo(({ onExploreClick, onGetStartedClick }: HeroSectionProp
                 display: "block"
               }}
             >
-              KOMATSU API PORTAL
+              {t("home.hero.overline")}
             </Typography>
             <Typography
               variant="h2"
@@ -65,7 +67,7 @@ const HeroSection = memo(({ onExploreClick, onGetStartedClick }: HeroSectionProp
                 fontSize: { xs: "2rem", md: "3rem" }
               }}
             >
-              Build the Future with Komatsu APIs
+              {t("home.hero.title")}
             </Typography>
             <Typography
               variant="h6"
@@ -77,8 +79,7 @@ const HeroSection = memo(({ onExploreClick, onGetStartedClick }: HeroSectionProp
                 lineHeight: 1.6
               }}
             >
-              Access secure, enterprise-grade APIs to power your digital transformation.
-              Streamline integrations, enhance productivity, and unlock new possibilities.
+              {t("home.hero.subtitle")}
             </Typography>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
               <Button
@@ -97,7 +98,7 @@ const HeroSection = memo(({ onExploreClick, onGetStartedClick }: HeroSectionProp
                   py: 1.5
                 }}
               >
-                Explore APIs
+                {t("home.hero.exploreButton")}
               </Button>
               <Button
                 variant="outlined"
@@ -115,7 +116,7 @@ const HeroSection = memo(({ onExploreClick, onGetStartedClick }: HeroSectionProp
                   py: 1.5
                 }}
               >
-                Get Started
+                {t("home.hero.getStartedButton")}
               </Button>
             </Stack>
           </Grid>

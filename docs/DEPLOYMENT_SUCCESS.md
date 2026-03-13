@@ -42,7 +42,8 @@ kapimdevacr.azurecr.io/komatsu-apim-portal:dev
 ```
 
 **Build Configuration:**
-- Base Image: Node 20 Alpine (builder) + Nginx Alpine (runtime)
+- Build Stages: Node 20 Alpine (frontend), .NET SDK 10.0-preview (BFF), Nginx Alpine (runtime)
+- BFF Runtime: ASP.NET Core 10 (`dotnet /app/bff/BffApi.dll`)
 - Build Tool: Vite 5.4.2
 - Framework: React 18.3.1 + TypeScript 5.5.4
 - Multi-stage build with optimized production assets
@@ -52,11 +53,11 @@ kapimdevacr.azurecr.io/komatsu-apim-portal:dev
 ## ⚙️ Environment Configuration
 
 ### Authentication:
-- **Entra ID Client ID:** 2ba49c18-f3b7-41e8-b1a8-15b95f3e662a
+- **Entra ID Client ID:** bd400d26-7db1-44fd-82b7-8c7af757e249
 - **External Tenant (CIAM):** 511e2453-090d-480c-abeb-d2d95388a675
 - **Workforce Tenant:** 58be8688-6625-4e52-80d8-c17f3a9ae08a
 - **Mock Auth:** Disabled (production mode)
-- **Multi-tenant:** Enabled
+- **Multi-tenant:** Enabled (workforce + CIAM via dual OIDC key resolution)
 
 ### Features:
 - **Public Home Page:** ✅ Enabled (`VITE_PUBLIC_HOME_PAGE=true`)
@@ -66,20 +67,32 @@ kapimdevacr.azurecr.io/komatsu-apim-portal:dev
 - **Default Locale:** English (en)
 
 ### Container Runtime Variables:
-- `PORTAL_API_BACKEND_URL=https://d-apim.developer.azure-api.net`
-  - Used by Nginx reverse proxy for `/api/*` requests
+- `ASPNETCORE_ENVIRONMENT=Production` — ASP.NET Core mode
+- `ASPNETCORE_URLS=http://+:3001` — BFF listen URL
+- `Apim__SubscriptionId`, `Apim__ResourceGroup`, `Apim__ServiceName` — ARM API targeting
+- `EntraId__TenantId`, `EntraId__ClientId`, `EntraId__ExternalTenantId` — JWT validation
+- `Features__UseMockMode=false` — Real authentication enabled
+- `AZURE_CLIENT_ID` — Managed Identity for DefaultAzureCredential
 
 ---
 
 ## 🔧 Technical Details
+
+### BFF (Backend-for-Frontend):
+- **Runtime:** ASP.NET Core 10 Minimal API (`bff-dotnet/BffApi.csproj`)
+- **Port:** 3001 (internal, proxied via Nginx)
+- **Auth:** JWT Bearer (Entra ID, dual-tenant) + RBAC policies
+- **Service Modes:** ARM (production), Data API (runtime), Mock (development)
+- **Resilience:** `Microsoft.Extensions.Http.Resilience` (retry 3x, circuit breaker, timeout)
+- **API Docs:** Scalar at `/scalar/v1` (development only)
 
 ### Container App Configuration:
 - **Port:** 8080 (Nginx)
 - **Ingress:** External (public internet access)
 - **Min Replicas:** 1
 - **Max Replicas:** 3
-- **CPU:** 0.5 cores
-- **Memory:** 1.0 GiB
+- **CPU:** 1.0 cores
+- **Memory:** 2.0 GiB
 - **Health Status:** Healthy ✅
 
 ### Nginx Configuration:

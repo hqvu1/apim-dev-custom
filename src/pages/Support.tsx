@@ -9,8 +9,9 @@ import {
   Typography
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { usePortalApi } from "../api/client";
+import { usePortalApi, unwrapArray } from "../api/client";
 import PageHeader from "../components/PageHeader";
+import { useTranslation } from "react-i18next";
 
 type Ticket = {
   id: string;
@@ -20,6 +21,7 @@ type Ticket = {
 
 const Support = () => {
   const { get, post } = usePortalApi();
+  const { t } = useTranslation();
   const [tab, setTab] = useState(0);
   const [faqs, setFaqs] = useState<string[]>([]);
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -30,13 +32,14 @@ const Support = () => {
         get<string[]>("/support/faqs"),
         get<Ticket[]>("/support/my-tickets")
       ]);
-
-      if (faqResult.data) {
-        setFaqs(faqResult.data);
+      
+      const faqItems = unwrapArray<string>(faqResult.data);
+      if (faqItems) {
+        setFaqs(faqItems);
       }
-
-      if (ticketResult.data) {
-        setTickets(ticketResult.data);
+      const ticketItems = unwrapArray<Ticket>(ticketResult.data);
+      if (ticketItems) {
+        setTickets(ticketItems);
       }
     };
 
@@ -45,17 +48,17 @@ const Support = () => {
 
   return (
     <Box>
-      <PageHeader title="Support" subtitle="FAQs, ticket creation, and service history." />
+      <PageHeader title={t("support.title")} subtitle={t("support.subtitle")} />
       <Tabs value={tab} onChange={(_, next) => setTab(next)} sx={{ mb: 3 }}>
-        <Tab label="FAQs" />
-        <Tab label="Create Ticket" />
-        <Tab label="My Tickets" />
+        <Tab label={t("support.tabFaqs")} />
+        <Tab label={t("support.tabCreateTicket")} />
+        <Tab label={t("support.tabMyTickets")} />
       </Tabs>
       {tab === 0 && (
         <Card>
           <CardContent>
             {faqs.length === 0 ? (
-              <Typography color="text.secondary">No FAQs loaded.</Typography>
+              <Typography color="text.secondary">{t("support.faqsEmpty")}</Typography>
             ) : (
               faqs.map((faq) => <Typography key={faq}>{faq}</Typography>)
             )}
@@ -65,12 +68,12 @@ const Support = () => {
       {tab === 1 && (
         <Card>
           <CardContent>
-            <TextField label="Category" fullWidth sx={{ mb: 2 }} />
-            <TextField label="API" fullWidth sx={{ mb: 2 }} />
-            <TextField label="Impact" fullWidth sx={{ mb: 2 }} />
-            <TextField label="Description" fullWidth multiline minRows={4} sx={{ mb: 2 }} />
+            <TextField label={t("support.categoryLabel")} fullWidth sx={{ mb: 2 }} />
+            <TextField label={t("support.apiLabel")} fullWidth sx={{ mb: 2 }} />
+            <TextField label={t("support.impactLabel")} fullWidth sx={{ mb: 2 }} />
+            <TextField label={t("support.descriptionLabel")} fullWidth multiline minRows={4} sx={{ mb: 2 }} />
             <Button variant="contained" onClick={() => post("/support/tickets", {})}>
-              Submit ticket
+              {t("support.submitTicket")}
             </Button>
           </CardContent>
         </Card>
@@ -79,7 +82,7 @@ const Support = () => {
         <Card>
           <CardContent>
             {tickets.length === 0 ? (
-              <Typography color="text.secondary">No tickets yet.</Typography>
+              <Typography color="text.secondary">{t("support.ticketsEmpty")}</Typography>
             ) : (
               tickets.map((ticket) => (
                 <Box key={ticket.id} mb={2}>

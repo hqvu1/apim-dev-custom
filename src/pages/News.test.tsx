@@ -7,7 +7,12 @@ import News from "./News";
 import * as apiClient from "../api/client";
 
 vi.mock("../api/client", () => ({
-  usePortalApi: vi.fn()
+  usePortalApi: vi.fn(),
+  unwrapArray: vi.fn((data: unknown) => {
+    if (Array.isArray(data)) return data;
+    if (data && typeof data === "object" && "value" in (data as any)) return (data as any).value;
+    return null;
+  })
 }));
 
 vi.mock("../components/PageHeader", () => ({

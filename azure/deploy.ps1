@@ -107,7 +107,6 @@ $buildArgs = @(
     "--build-arg", "VITE_LOGIN_SCOPES=$env:VITE_LOGIN_SCOPES",
     "--build-arg", "VITE_LOGOUT_MODE=$env:VITE_LOGOUT_MODE",
     "--build-arg", "VITE_USE_MOCK_AUTH=$env:VITE_USE_MOCK_AUTH",
-    "--build-arg", "VITE_PUBLIC_HOME_PAGE=$env:VITE_PUBLIC_HOME_PAGE",
     "--build-arg", "VITE_PORTAL_API_BASE=$env:VITE_PORTAL_API_BASE",
     "--build-arg", "VITE_PORTAL_API_SCOPE=$env:VITE_PORTAL_API_SCOPE",
     "--build-arg", "VITE_DEFAULT_LOCALE=$env:VITE_DEFAULT_LOCALE",

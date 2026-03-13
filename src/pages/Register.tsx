@@ -2,9 +2,11 @@ import { Box, Button, Grid, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { usePortalApi } from "../api/client";
 import PageHeader from "../components/PageHeader";
+import { useTranslation } from "react-i18next";
 
 const Register = () => {
   const { get, post } = usePortalApi();
+  const { t } = useTranslation();
   const [fields, setFields] = useState<string[]>(["Company", "Contact", "Role"]);
 
   useEffect(() => {
@@ -21,8 +23,8 @@ const Register = () => {
   return (
     <Box>
       <PageHeader
-        title="Registration"
-        subtitle="Submit a dealer or vendor registration request for Komatsu APIs."
+        title={t("register.title")}
+        subtitle={t("register.subtitle")}
       />
       <Stack spacing={3}>
         <Grid container spacing={2}>
@@ -32,20 +34,20 @@ const Register = () => {
             </Grid>
           ))}
           <Grid item xs={12}>
-            <TextField label="Intended APIs" fullWidth />
+            <TextField label={t("register.intendedApis")} fullWidth />
           </Grid>
           <Grid item xs={12}>
-            <TextField label="Data usage details" fullWidth multiline minRows={4} />
+            <TextField label={t("register.dataUsage")} fullWidth multiline minRows={4} />
           </Grid>
         </Grid>
         <Button
           variant="contained"
           onClick={() => post("/registration", { status: "submitted" })}
         >
-          Submit registration
+          {t("register.submit")}
         </Button>
         <Typography color="text.secondary">
-          Submissions trigger the Logic Apps workflow for approval.
+          {t("register.approvalNote")}
         </Typography>
       </Stack>
     </Box>

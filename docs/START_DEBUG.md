@@ -2,25 +2,29 @@
 
 ## ✅ Step-by-Step Process (Recommended)
 
-### Option 1: Manual Start (Most Reliable)
+### Option 1: .NET BFF + Frontend (Recommended)
 
-This is the **most reliable** approach for debugging:
+This is the **recommended** approach using the ASP.NET Core 10 BFF:
 
-#### Step 1: Start the BFF Server
+#### Step 1: Start the .NET BFF
 ```powershell
-cd bff
-npm install  # Only needed first time
-npm run dev
+cd bff-dotnet
+dotnet restore --source https://api.nuget.org/v3/index.json  # Only needed first time
+dotnet run
 ```
 
 Wait for this message:
 ```
-🚀 APIM Portal BFF Server Started
-🔐 Auth: 🧪 Mock Mode (Development)
-⚠️  WARNING: Running in MOCK MODE
+APIM Portal BFF (.NET 10) Started
+Port:          http://localhost:3001
+API Mode:      Mock
+Auth:          Mock Mode (Development)
+⚠ Running in MOCK MODE — all API calls return static data
 ```
 
-> **Note:** Mock mode is enabled by default (`USE_MOCK_MODE=true` in `bff/.env`). This allows local development without Azure credentials. The BFF will return mock data instead of calling the real APIM API.
+> **Note:** Mock mode is enabled by default in the Development environment (`Features:UseMockMode=true` in `appsettings.Development.json`). This allows local development without Azure credentials.
+
+Access the **Scalar API explorer** at http://localhost:3001/scalar/v1 to test endpoints interactively.
 
 #### Step 2: Start the Frontend
 Open a **new terminal** (keep the BFF running):
@@ -39,20 +43,31 @@ Wait for: `Local: http://localhost:5173/`
 
 #### Step 4: Set Breakpoints
 - **Frontend**: Open any `.tsx` or `.ts` file, click in the gutter to set breakpoints
-- **Backend**: Open `bff/server.js`, set breakpoints
+- **.NET BFF**: Open any `.cs` file in `bff-dotnet/` (e.g., `Endpoints/ApisEndpoints.cs`, `Services/ArmApiService.cs`)
 
 You're now debugging! 🎉
 
 ---
 
-### Option 2: Use VS Code Debug Configuration
+### Option 2: Node.js BFF + Frontend (Legacy — reference only)
 
-1. Press `F5` or go to **Run and Debug** (`Ctrl+Shift+D`)
-2. Select **"🚀 Full Stack (Frontend + BFF)"**
-3. Wait for both servers to start (may take 10-30 seconds)
-4. Chrome should open automatically
+> **⚠️ Deprecated:** The Node.js BFF is no longer used in Docker or ACA deployments.
+> It is retained for local reference/testing only. Use the .NET BFF (Option 1) for all active development.
 
-If you get errors, use **Option 1** instead.
+Uses the original Express.js BFF (retained for reference):
+
+#### Step 1: Start the BFF Server
+```powershell
+cd bff
+npm install  # Only needed first time
+npm run dev
+```
+
+Wait for:
+```
+🚀 APIM Portal BFF Server Started
+🔐 Auth: 🧪 Mock Mode (Development)
+```
 
 ---
 
@@ -135,12 +150,15 @@ Get-Process -Id (Get-NetTCPConnection -LocalPort 5173).OwningProcess | Stop-Proc
 ```powershell
 # Install all dependencies
 npm install
-cd bff && npm install && cd ..
+cd bff-dotnet && dotnet restore && cd ..
+
+# Start .NET BFF only (mock mode)
+cd bff-dotnet && dotnet run
 
 # Start frontend only
 npm run dev
 
-# Start BFF only
+# Start legacy Node.js BFF only
 cd bff && npm run dev
 
 # Run tests
@@ -181,14 +199,14 @@ npm run build
 Before debugging, make sure you have:
 
 - [ ] Node.js v20+ installed (`node --version`)
-- [ ] Dependencies installed:
-  - [ ] Root: `npm install`
-  - [ ] BFF: `cd bff && npm install`
+- [ ] .NET 10 SDK installed (`dotnet --version`)
+- [ ] Frontend dependencies installed: `npm install`
+- [ ] .NET BFF dependencies restored: `cd bff-dotnet && dotnet restore`
 - [ ] Environment files created:
   - [ ] Root: `.env` (copy from `.env.development`)
-  - [ ] BFF: `bff/.env` (already exists with `USE_MOCK_MODE=true`)
-- [ ] Mock mode enabled in `bff/.env` (recommended for local dev)
-- [ ] Azure CLI logged in (only if `USE_MOCK_MODE=false`): `az login`
+  - [ ] BFF: `bff-dotnet/appsettings.Development.json` (already exists with mock mode)
+- [ ] Mock mode enabled in `appsettings.Development.json` (recommended for local dev)
+- [ ] Azure CLI logged in (only if `UseMockMode=false`): `az login`
 
 ---
 

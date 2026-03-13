@@ -203,15 +203,17 @@ az containerapp revision list `
 
 ### Issue: Environment variables not set
 
+> **Note:** Environment variables are now managed by the Bicep template (`container-app.bicep`). The .NET BFF uses `__` separator convention for nested config (e.g., `Apim__SubscriptionId`, `EntraId__TenantId`). Only use `az containerapp update --set-env-vars` for quick overrides.
+
 **Solution:**
 ```powershell
-# Update environment variables
+# Update environment variables (example: override APIM settings)
 az containerapp update `
   --name komatsu-apim-portal-dev-ca `
   --resource-group kac_apimarketplace_eus_dev_rg `
   --set-env-vars `
-    "VITE_USE_MOCK_AUTH=false" `
-    "PORTAL_API_BACKEND_URL=https://d-apim.developer.azure-api.net"
+    "Apim__ServiceName=demo-apim-feb" `
+    "Features__UseMockMode=false"
 ```
 
 ---
@@ -269,11 +271,11 @@ az group delete `
 **Expected monthly costs (dev environment):**
 - Azure Container Registry (Basic): ~$5/month
 - Container Apps Environment: ~$0 (included)
-- Container App (1 instance, 0.5 CPU, 1GB RAM): ~$15-20/month
+- Container App (1 instance, 1.0 CPU, 2GB RAM): ~$30-40/month
 - Log Analytics (5GB ingestion): ~$10/month
 - Application Insights: ~$5/month
 
-**Total: ~$35-40/month**
+**Total: ~$50-60/month**
 
 ---
 

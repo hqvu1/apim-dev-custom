@@ -4,11 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import AppShell from "./AppShell";
 
 vi.mock("./Header", () => ({
-  default: (props: any) => <div data-testid="header">{props.showMenuButton ? "menu" : "no-menu"}</div>
-}));
-
-vi.mock("./SideNav", () => ({
-  default: () => <div data-testid="sidenav">SideNav</div>
+  default: () => <div data-testid="header">Header</div>
 }));
 
 vi.mock("./Footer", () => ({
@@ -16,7 +12,7 @@ vi.mock("./Footer", () => ({
 }));
 
 describe("AppShell", () => {
-  it("renders header, sidenav, and footer", () => {
+  it("renders header and footer", () => {
     render(
       <MemoryRouter>
         <AppShell />
@@ -24,8 +20,6 @@ describe("AppShell", () => {
     );
     expect(screen.getByTestId("header")).toBeInTheDocument();
     expect(screen.getByTestId("footer")).toBeInTheDocument();
-    // SideNav appears in the drawer
-    expect(screen.getByTestId("sidenav")).toBeInTheDocument();
   });
 
   it("renders the main content area", () => {

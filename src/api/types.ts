@@ -35,6 +35,8 @@ export type ApimPageContract<T> = {
   count?: number;
 };
 
+export type ApimPageResult<T> = ApimPageContract<T>;
+
 export type ApimOperationContract = {
   id: string;
   name: string;
@@ -78,17 +80,19 @@ export type ApiSource = "apim" | "external";
 export type ApiSummary = {
   id: string;
   name: string;
-  description: string;
+  displayName: string;
+  description?: string;
+  apiVersion?: string;
+  apiRevision?: string;
+  path?: string;
+  protocols?: string[];
+  type?: "http" | "soap" | "websocket" | "graphql";
+  subscriptionRequired?: boolean;
   status: "Sandbox" | "Production" | "Deprecated";
   owner: string;
   tags: string[];
   category: string;
   plan: "Free" | "Paid" | "Internal";
-  path?: string;
-  protocols?: string[];
-  apiVersion?: string;
-  type?: string;
-  subscriptionRequired?: boolean;
   /** Backend source — APIM Data API or external adapter. Defaults to "apim". */
   source?: ApiSource;
 };
@@ -157,6 +161,7 @@ export function mapApimApiToSummary(contract: ApimApiContract): ApiSummary {
   return {
     id: contract.id,
     name: contract.name,
+    displayName: contract.name,
     description: contract.description ?? "",
     status,
     owner: contract.contact?.name ?? "Komatsu",

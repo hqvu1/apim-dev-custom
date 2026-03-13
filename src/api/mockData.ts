@@ -13,6 +13,7 @@ export const apiHighlights: ApiSummary[] = [
   {
     id: "warranty-api",
     name: "Warranty API",
+    displayName: "Warranty API",
     description: "Warranty claims and coverage validation.",
     status: "Production",
     owner: "Komatsu Warranty",
@@ -26,6 +27,7 @@ export const apiHighlights: ApiSummary[] = [
   {
     id: "punchout-api",
     name: "Punchout API",
+    displayName: "Punchout API",
     description: "Dealer commerce and parts ordering.",
     status: "Sandbox",
     owner: "Commerce Platform",
@@ -39,6 +41,7 @@ export const apiHighlights: ApiSummary[] = [
   {
     id: "equipment-api",
     name: "Equipment API",
+    displayName: "Equipment API",
     description: "Fleet data, telemetry, and lifecycle info.",
     status: "Production",
     owner: "Equipment Insights",
@@ -56,6 +59,7 @@ export const apiCatalog: ApiSummary[] = [
   {
     id: "parts-api",
     name: "Parts API",
+    displayName: "Parts API",
     description: "Inventory, pricing, and dealer parts fulfillment.",
     status: "Sandbox",
     owner: "Parts Operations",

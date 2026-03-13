@@ -14,7 +14,15 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@komatsu-nagm/component-library": ["../react-template/src/index.ts"],
+      "react": ["./node_modules/@types/react"],
+      "react/jsx-runtime": ["./node_modules/@types/react/jsx-runtime"]
+    },
+    "preserveSymlinks": true
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

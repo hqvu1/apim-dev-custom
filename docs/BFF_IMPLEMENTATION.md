@@ -1,68 +1,97 @@
-# Managed Identity Implementation Summary
+# BFF Implementation Summary
+
+> **Status:** ✅ Migrated to ASP.NET Core 10 (`bff-dotnet/`). The original Node.js BFF (`bff/`) is retained for reference but the .NET BFF is the active implementation.
 
 ## What We Built
 
-We've implemented a **Backend-for-Frontend (BFF)** architecture with Azure Managed Identity authentication to solve the authorization issue with APIM Management API.
+We've implemented a **Backend-for-Frontend (BFF)** architecture with Azure Managed Identity authentication to solve the authorization issue with APIM Management API. The BFF has been migrated from Node.js Express to **ASP.NET Core 10 Minimal API** for better RBAC, type safety, and resilience.
 
-## Architecture Changes
+## Architecture
 
-### Before (Direct APIM Access - ❌ Unauthorized)
 ```
-Browser → Nginx → APIM Management API ❌
-                  (no authentication)
+┌────────────┐      ┌───────────┐      ┌────────────────────────────┐
+│  React SPA │ ───► │ Nginx     │ ───► │ BFF (.NET 10)              │
+│  :5173     │      │ :8080     │      │ :3001                      │
+│ /api/*     │      │ proxy_pass│      │ ├─ JWT Auth (Entra ID)      │
+└────────────┘      └───────────┘      │ ├─ RBAC Policies            │
+                                       │ ├─ ARM/Data API/Mock Proxy  │
+                                       │ ├─ IMemoryCache (1-min TTL) │
+                                       │ └─ Resilience Pipeline      │
+                                       └────────┬───────────────────┘
+                                                 │ DefaultAzureCredential
+                                       ┌────────▼───────────────────┐
+                                       │ ARM Management API         │
+                                       │ management.azure.com       │
+                                       └────────────────────────────┘
 ```
 
-### After (BFF with Managed Identity - ✅ Authenticated)
-```
-Browser → Nginx → Node.js BFF → APIM Management API ✅
-          (8080)   (3001)        (Managed Identity auth)
-```
+## BFF Components
 
-## New Components
-
-### 1. Node.js BFF Service (`bff/`)
-- **Location**: `/app/bff/` in container
+### Current: ASP.NET Core 10 BFF (`bff-dotnet/`)
+- **Runtime**: .NET 10 Minimal API (`BffApi.csproj`)
 - **Port**: 3001 (internal only)
-- **Purpose**: Authenticate to APIM using Managed Identity
-- **Dependencies**:
-  - `@azure/identity` - Managed Identity SDK
-  - `express` - Web server
-  - `helmet` - Security headers
-  - `cors` - CORS support
-  - `node-fetch` - HTTP client
+- **Authentication**: JWT Bearer validation (Entra ID, dual-tenant: workforce + CIAM)
+- **Authorization**: RBAC policies via `rbac-policies.json` (hot-reloadable)
+- **Service Modes**: ARM (production), Data API (runtime), Mock (development)
+- **Resilience**: `Microsoft.Extensions.Http.Resilience` — retry 3x, circuit breaker, timeout
+- **Caching**: `IMemoryCache` with 1-min TTL for GET responses
+- **OpenAPI**: Scalar API reference at `/scalar/v1` (development only)
 
-### 2. Process Management
-- **Supervisor** manages both nginx and BFF
-- Both services run as `nginx` user (non-root)
+### Legacy: Node.js BFF (`bff/`)
+- **Runtime**: Node.js Express
+- **Port**: 3001
+- **Purpose**: Original APIM proxy with Managed Identity (no RBAC)
+- **Status**: Retained for reference; `.NET BFF` is the active backend
+
+### Process Management
+- **Supervisor** manages both Nginx and BFF
 - Health checks on port 8080
 - Graceful shutdown handling
 
-### 3. Updated Files
+### Key Files
 
-| File | Changes |
-|------|---------|
-| `Dockerfile` | Added Node.js, BFF build, supervisor setup |
-| `nginx.conf` | Proxy `/api/*` to `localhost:3001` instead of external APIM |
-| `docker-entrypoint.sh` | Set `APIM_MANAGEMENT_URL` env var for BFF |
-| `supervisord.conf` | NEW - Manages nginx + BFF processes |
-| `bff/package.json` | NEW - BFF dependencies |
-| `bff/server.js` | NEW - Express server with Managed Identity |
-| `bff/README.md` | NEW - BFF documentation |
+| File | Description |
+|------|-------------|
+| `bff-dotnet/Program.cs` | Composition root — DI, middleware, endpoint mapping |
+| `bff-dotnet/BffApi.csproj` | .NET 10 project with `Azure.Identity`, `Microsoft.Identity.Web`, resilience packages |
+| `bff-dotnet/appsettings.json` | APIM configuration, Entra ID, feature flags |
+| `bff-dotnet/appsettings.Development.json` | Mock mode enabled, debug logging, CORS origins |
+| `bff-dotnet/rbac-policies.json` | RBAC role → API → permission mapping |
+| `bff-dotnet/api-registry.json` | API source registry (APIM vs external) |
+| `bff-dotnet/Services/ArmApiService.cs` | ARM Management API client (production) |
+| `bff-dotnet/Services/DataApiService.cs` | APIM Data API client (runtime mode) |
+| `bff-dotnet/Services/MockApiService.cs` | Static mock data (development) |
+| `Dockerfile` | Multi-stage build: SPA + BFF |
+| `nginx.conf` | Proxy `/api/*` → `localhost:3001` |
+| `supervisord.conf` | Manages Nginx + BFF processes |
 
 ## Environment Variables
 
 ### Container App Environment Variables
 ```bash
-PUBLIC_HOME_PAGE=true              # Enable/disable public home page
-PORTAL_API_BACKEND_URL=https://demo-apim-feb.management.azure-api.net  # APIM URL for BFF
+AZURE_SUBSCRIPTION_ID=121789fa-2321-4e44-8aee-c6f1cd5d7045
+AZURE_RESOURCE_GROUP=kac_apimarketplace_eus_dev_rg
+APIM_SERVICE_NAME=demo-apim-feb
+APIM_API_VERSION=2022-08-01
+MANAGED_IDENTITY_CLIENT_ID=2c46c615-a962-4ce7-a2f9-cc0610ff2043
+USE_MOCK_MODE=false
 ```
 
-### Internal BFF Variables
-```bash
-BFF_PORT=3001                      # BFF listens on this port
-APIM_MANAGEMENT_URL=${PORTAL_API_BACKEND_URL}  # Set by entrypoint
-APIM_API_VERSION=2021-08-01        # APIM API version
-NODE_ENV=production                # Node environment
+### BFF Configuration (`appsettings.json`)
+```json
+{
+  "Apim": {
+    "SubscriptionId": "121789fa-2321-4e44-8aee-c6f1cd5d7045",
+    "ResourceGroup": "kac_apimarketplace_eus_dev_rg",
+    "ServiceName": "demo-apim-feb",
+    "ApiVersion": "2022-08-01"
+  },
+  "EntraId": {
+    "TenantId": "58be8688-6625-4e52-80d8-c17f3a9ae08a",
+    "ClientId": "bd400d26-7db1-44fd-82b7-8c7af757e249"
+  },
+  "Features": { "UseMockMode": false }
+}
 ```
 
 ## Required Azure Configuration
@@ -89,136 +118,158 @@ az role assignment create \
   --scope "/subscriptions/121789fa-2321-4e44-8aee-c6f1cd5d7045/resourceGroups/kac_apimarketplace_eus_dev_rg/providers/Microsoft.ApiManagement/service/demo-apim-feb"
 ```
 
-**Or via Azure Portal**:
-1. Go to APIM instance: `demo-apim-feb`
-2. Click "Access control (IAM)"
-3. Add role assignment: "API Management Service Reader Role"
-4. Assign to: `komatsu-apim-portal-dev-ca` (Managed Identity)
+## API Endpoints
 
-## Deployment Steps
+### APIs (`/api/apis`)
+| Method | Path | Auth Policy | Description |
+|--------|------|-------------|-------------|
+| GET | `/api/apis` | ApiRead | List APIs with pagination & RBAC filtering |
+| GET | `/api/apis/highlights` | ApiRead | Top 3 featured APIs |
+| GET | `/api/apis/{apiId}` | ApiRead | API detail |
+| GET | `/api/apis/{apiId}/operations` | ApiRead | Operations for an API |
+| GET | `/api/apis/{apiId}/products` | ApiRead | Products associated with an API |
+| GET | `/api/apis/{apiId}/openapi` | ApiTryIt | OpenAPI spec (YAML) |
+| GET | `/api/apis/{apiId}/operations/{operationId}` | ApiRead | Operation detail |
+| GET | `/api/apis/{apiId}/operations/{operationId}/tags` | ApiRead | Tags for an operation |
+| GET | `/api/apis/{apiId}/operationsByTags` | ApiRead | Operations grouped by tag |
+| GET | `/api/apis/{apiId}/schemas` | ApiRead | API schemas |
+| GET | `/api/apis/{apiId}/releases` | ApiRead | API releases |
+| GET | `/api/apis/{apiId}/hostnames` | ApiRead | API hostnames |
 
-### 1. Build Image
-```bash
-docker build -t kapimdevacr.azurecr.io/komatsu-apim-portal:bff .
+### Other Endpoints
+| Method | Path | Auth Policy | Description |
+|--------|------|-------------|-------------|
+| GET | `/api/apisByTags` | ApiRead | APIs grouped by tag |
+| GET | `/api/apiVersionSets/{id}` | ApiRead | Version set detail |
+| GET | `/api/tags` | ApiRead | List tags |
+| GET | `/api/products` | ApiRead | List products |
+| GET | `/api/subscriptions` | ApiRead | List subscriptions |
+| POST | `/api/subscriptions` | ApiSubscribe | Create subscription |
+| PATCH | `/api/subscriptions/{id}` | ApiSubscribe | Update subscription |
+| DELETE | `/api/subscriptions/{id}` | ApiSubscribe | Delete subscription |
+| GET | `/api/stats` | ApiRead | Platform statistics |
+| GET | `/api/news` | ApiRead | News items |
+| GET | `/api/users/me` | Authenticated | Current user profile |
+| GET | `/api/health` | Anonymous | Health check |
+
+## Service Modes
+
+The BFF supports 3 backend modes, selectable via configuration:
+
+| Mode | Config | Service Class | Description |
+|------|--------|---------------|-------------|
+| **Mock** | `UseMockMode=true` + Development | `MockApiService` | Static data, no Azure required |
+| **Data API** | `UseDataApi=true` | `DataApiService` | APIM runtime endpoint, user bearer token |
+| **ARM** | Default | `ArmApiService` | ARM Management API, `DefaultAzureCredential` |
+
+### Data Flow
+```
+Mock:     MockApiService → static in-memory data
+Data API: DataApiService → https://{apim}.azure-api.net/developer → flat JSON
+ARM:      ArmApiService  → https://management.azure.com/subscriptions/... → unwrap {properties} envelope
 ```
 
-### 2. Push to ACR
-```bash
-docker push kapimdevacr.azurecr.io/komatsu-apim-portal:bff
-```
-
-### 3. Update Container App
-```bash
-# Update image
-az containerapp update \
-  --name komatsu-apim-portal-dev-ca \
-  --resource-group kac_apimarketplace_eus_dev_rg \
-  --image kapimdevacr.azurecr.io/komatsu-apim-portal:bff
-
-# Set environment variables
-az containerapp update \
-  --name komatsu-apim-portal-dev-ca \
-  --resource-group kac_apimarketplace_eus_dev_rg \
-  --set-env-vars \
-    "PUBLIC_HOME_PAGE=true" \
-    "PORTAL_API_BACKEND_URL=https://demo-apim-feb.management.azure-api.net"
-```
+All three return the same `PagedResult<T>` shape (`{ value: [...], count: N }`) to the SPA.
 
 ## How It Works
 
 1. **Container starts**:
-   - `docker-entrypoint.sh` exports `APIM_MANAGEMENT_URL`
-   - Supervisor starts nginx (port 8080) and BFF (port 3001)
+   - `docker-entrypoint.sh` exports environment variables
+   - Supervisor starts Nginx (port 8080) and BFF (port 3001)
 
 2. **User visits site**:
    - Nginx serves React static files
-   - React app loads in browser
+   - React app loads in browser, MSAL authenticates the user
 
 3. **React calls API**:
-   - `fetch('/api/apis')` 
-   - Nginx proxies to BFF: `http://localhost:3001/apis`
+   - `fetch('/api/apis')` with Bearer token
+   - Nginx proxies to BFF: `http://localhost:3001/api/apis`
 
-4. **BFF authenticates**:
+4. **BFF authenticates & authorizes**:
+   - Validates JWT against Entra ID JWKS (workforce or CIAM tenant)
+   - Checks RBAC policies (role → API → permission mapping)
+   - Routes to appropriate service (ARM, Data API, or Mock)
+
+5. **ARM mode (production)**:
    - Uses `DefaultAzureCredential` to get Managed Identity token
-   - Adds `Authorization: Bearer <token>` header
-   - Calls `https://demo-apim-feb.management.azure-api.net/apis?api-version=2021-08-01`
-
-5. **Response flows back**:
-   - APIM → BFF → Nginx → Browser → React app
+   - Calls `https://management.azure.com/subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.ApiManagement/service/{name}/apis?api-version=2022-08-01`
+   - Unwraps ARM `{ id, name, properties: {...} }` envelope → flat contracts
+   - Returns `PagedResult<T>` to the SPA
 
 ## Security Benefits
 
 ✅ No APIM credentials in frontend code  
-✅ No user authentication required for catalog browsing  
+✅ JWT Bearer validation on every request  
+✅ RBAC policies enforce per-API, per-role access  
 ✅ Managed Identity tokens auto-rotate  
 ✅ Least-privilege access (read-only APIM role)  
-✅ Services run as non-root user  
-✅ Token caching reduces authentication calls  
+✅ Security headers (X-Content-Type-Options, X-Frame-Options, Referrer-Policy)  
+✅ Resilience pipeline (retry, circuit breaker, timeout)  
+✅ IMemoryCache prevents thundering herd  
 
 ## Testing
 
-### Local Testing (with Azure CLI auth)
+### Local Testing (Mock Mode — no Azure required)
 ```bash
-# Login to Azure CLI
+cd bff-dotnet
+dotnet restore --source https://api.nuget.org/v3/index.json
+dotnet run  # Mock mode enabled in Development environment
+```
+
+Access Scalar API docs at http://localhost:3001/scalar/v1
+
+### Local Testing (ARM Mode — requires Azure CLI)
+```bash
 az login
-
-# Run BFF locally
-cd bff
-npm start
-
-# In another terminal, test BFF
-curl http://localhost:3001/apis?api-version=2021-08-01
+cd bff-dotnet
+ASPNETCORE_ENVIRONMENT=Production dotnet run
 ```
 
 ### Container Testing
 ```bash
-# Run container locally
+docker build -t komatsu-apim-portal:dev .
 docker run -p 8080:8080 \
-  -e PORTAL_API_BACKEND_URL=https://demo-apim-feb.management.azure-api.net \
-  -e PUBLIC_HOME_PAGE=true \
-  komatsu-apim-portal:bff
-
-# Visit http://localhost:8080
+  -e AZURE_SUBSCRIPTION_ID=121789fa-2321-4e44-8aee-c6f1cd5d7045 \
+  -e AZURE_RESOURCE_GROUP=kac_apimarketplace_eus_dev_rg \
+  -e APIM_SERVICE_NAME=demo-apim-feb \
+  -e APIM_API_VERSION=2022-08-01 \
+  -e ENTRA_TENANT_ID=58be8688-6625-4e52-80d8-c17f3a9ae08a \
+  -e ENTRA_CLIENT_ID=bd400d26-7db1-44fd-82b7-8c7af757e249 \
+  -e ENTRA_EXTERNAL_TENANT_ID=511e2453-090d-480c-abeb-d2d95388a675 \
+  -e ENTRA_CIAM_HOST=kltdexternaliddev.ciamlogin.com \
+  komatsu-apim-portal:dev
 ```
+
+> **Note:** The Dockerfile now uses a multi-stage build: frontend (node:20-alpine), .NET BFF (dotnet/sdk:10.0-preview), and runtime (nginx:alpine + ASP.NET Core runtime). Supervisor manages nginx + `dotnet /app/bff/BffApi.dll` on port 3001.
 
 ## Troubleshooting
 
 ### BFF won't start
 - Check supervisor logs: `docker exec <container> cat /var/log/supervisor/bff-stderr*.log`
-- Verify Node.js installed: `docker exec <container> node --version`
+- Verify .NET 10 runtime installed: `docker exec <container> dotnet --version`
 
 ### 401/403 errors
-- Ensure Managed Identity is enabled
+- Ensure Managed Identity is enabled on the Container App
 - Verify APIM role assignment (admin must grant this)
-- Check APIM URL is correct
+- Check JWT token: valid issuer, audience, and signing key
+- Review RBAC policies in `rbac-policies.json`
 
-### Can't reach BFF from nginx
+### Can't reach BFF from Nginx
 - Verify BFF is listening on port 3001
 - Check supervisor status
-- Ensure nginx.conf proxies to localhost:3001
+- Ensure `nginx.conf` proxies to `localhost:3001`
+
+### SPA shows no data (BFF returns `{ value: [...] }`)
+- The SPA uses `unwrapArray<T>()` in `src/api/client.ts` to handle both flat arrays and `PagedResult<T>` envelopes
+- Ensure the SPA's API hooks call `unwrapArray` on `result.data`
 
 ## Next Steps
 
-1. **Get admin to grant APIM permissions** (see Step 2 above)
-2. **Build and push image** with BFF
-3. **Deploy to Container App**
-4. **Test** that API catalog loads without authentication errors
-5. **Monitor** BFF logs for Managed Identity token acquisition
-
-## Files to Commit
-
-```bash
-git add bff/
-git add Dockerfile
-git add nginx.conf
-git add docker-entrypoint.sh
-git add supervisord.conf
-git add .env
-git add BFF_IMPLEMENTATION.md
-git commit -m "feat: Add BFF with Managed Identity for APIM authentication"
-git push
-```
+1. ~~**Complete BFF migration**: Update Dockerfile to build and run .NET BFF instead of Node.js~~ ✅ **Done** (March 2026)
+2. **Add integration tests**: xUnit + `WebApplicationFactory`
+3. **Monitor** BFF logs via Application Insights
+4. **Remove legacy `bff/`** — the Node.js BFF is no longer used in Docker/ACA deployments
 
 ---
 
-**🎉 Benefits**: No more authorization errors! The Container App authenticates to APIM using its own identity, not user credentials.
+*See also: [bff-dotnet/README.md](../bff-dotnet/README.md), [ARCHITECTURE_DESIGN.md](ARCHITECTURE_DESIGN.md), [BFF_MIGRATION_DECISION.md](BFF_MIGRATION_DECISION.md)*

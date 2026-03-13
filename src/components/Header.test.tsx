@@ -6,6 +6,48 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from '../theme';
 import Header from '../components/Header';
 
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => {
+      const translations: Record<string, string> = {
+        'nav.home': 'Home',
+        'nav.apis': 'API Catalog',
+        'nav.integrations': 'My Integrations',
+        'nav.support': 'Support',
+        'nav.news': 'News',
+        'nav.admin': 'Admin',
+      };
+      return translations[key] ?? key;
+    },
+    i18n: { language: 'en', changeLanguage: vi.fn() },
+  }),
+}));
+
+// Mock the component library Header & UserProfile
+vi.mock('@komatsu-nagm/component-library', async () => {
+  const actual = await vi.importActual<Record<string, unknown>>('@komatsu-nagm/component-library');
+  return {
+    ...actual,
+    Header: (props: any) => (
+      <header data-testid="komatsu-header">
+        <span data-testid="app-title">{props.appTitle}</span>
+        {props.actions}
+        {props.navigation?.map((nav: any, i: number) => (
+          <button key={i} onClick={nav.onClick}>{nav.label}</button>
+        ))}
+        {props.userProfile && (
+          <div data-testid="user-profile">
+            <span data-testid="user-email">{props.userProfile.userEmail}</span>
+            <span data-testid="user-initials">{props.userProfile.userInitials}</span>
+            <button onClick={props.userProfile.onSignOut}>Sign Out</button>
+          </div>
+        )}
+      </header>
+    ),
+  };
+});
+
 // Mock the auth hooks
 vi.mock('../auth/useAuth', () => ({
   useAuth: vi.fn()
@@ -39,11 +81,11 @@ describe('Header Component', () => {
     });
   });
 
-  const renderHeader = (props = {}) => {
+  const renderHeader = (props: { isPublic?: boolean } = {}) => {
     return render(
       <BrowserRouter>
         <ThemeProvider theme={theme}>
-          <Header drawerWidth={260} onMenuClick={vi.fn()} showMenuButton={false} {...props} />
+          <Header {...props} />
         </ThemeProvider>
       </BrowserRouter>
     );
@@ -51,73 +93,70 @@ describe('Header Component', () => {
 
   it('renders without crashing', () => {
     renderHeader();
-    expect(screen.getByRole('banner')).toBeInTheDocument();
+    expect(screen.getByTestId('komatsu-header')).toBeInTheDocument();
   });
 
-  it('displays app name/branding', () => {
+  it('displays app title', () => {
     renderHeader();
-    const branding = screen.getByText(/Portal/i);
-    expect(branding).toBeInTheDocument();
+    expect(screen.getByTestId('app-title')).toHaveTextContent('Komatsu API Marketplace');
   });
 
-  it('displays user name when authenticated', () => {
+  it('displays user email when authenticated', () => {
     renderHeader();
-    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    expect(screen.getByTestId('user-email')).toHaveTextContent('john.doe@komatsu.com');
   });
 
-  it('displays user avatar when authenticated', () => {
+  it('displays user initials', () => {
     renderHeader();
-    const avatar = screen.getByRole('button', { name: /open user menu/i });
-    expect(avatar).toBeInTheDocument();
+    expect(screen.getByTestId('user-initials')).toHaveTextContent('JD');
   });
 
-  it('opens user menu when avatar is clicked', async () => {
+  it('calls logout when Sign Out is clicked', async () => {
     const user = userEvent.setup();
     renderHeader();
-    
-    const avatarButton = screen.getByRole('button', { name: /open user menu/i });
-    await user.click(avatarButton);
-    
-    const signOutMenuItem = await screen.findByRole('menuitem', { name: /sign out/i });
-    expect(signOutMenuItem).toBeInTheDocument();
-  });
 
-  it('calls logout when Sign out is clicked', async () => {
-    const user = userEvent.setup();
-    renderHeader();
-    
-    const avatarButton = screen.getByRole('button', { name: /open user menu/i });
-    await user.click(avatarButton);
-    
-    const signOutMenuItem = await screen.findByRole('menuitem', { name: /sign out/i });
-    await user.click(signOutMenuItem);
-    
+    const signOutButton = screen.getByRole('button', { name: /sign out/i });
+    await user.click(signOutButton);
+
     expect(mockLogout).toHaveBeenCalledOnce();
   });
 
-  it('displays menu button when showMenuButton is true', () => {
-    const mockMenuClick = vi.fn();
-    renderHeader({ showMenuButton: true, onMenuClick: mockMenuClick });
-    
-    const menuButton = screen.getByRole('button', { name: /open navigation/i });
-    expect(menuButton).toBeInTheDocument();
+  it('renders navigation items when not public', () => {
+    renderHeader();
+    expect(screen.getByRole('button', { name: /home/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /api catalog/i })).toBeInTheDocument();
   });
 
-  it('calls onMenuClick when menu button is clicked', async () => {
-    const user = userEvent.setup();
-    const mockMenuClick = vi.fn();
-    renderHeader({ showMenuButton: true, onMenuClick: mockMenuClick });
-    
-    const menuButton = screen.getByRole('button', { name: /open navigation/i });
-    await user.click(menuButton);
-    
-    expect(mockMenuClick).toHaveBeenCalledOnce();
+  it('renders no navigation items when public', () => {
+    renderHeader({ isPublic: true });
+    expect(screen.queryByRole('button', { name: /home/i })).not.toBeInTheDocument();
   });
 
-  it('does not display menu button when showMenuButton is false', () => {
-    renderHeader({ showMenuButton: false });
-    
-    const menuButton = screen.queryByRole('button', { name: /open navigation/i });
-    expect(menuButton).not.toBeInTheDocument();
+  it('shows Admin nav item for Admin role', () => {
+    vi.mocked(useAuth).mockReturnValue({
+      account: {
+        name: 'Admin User',
+        username: 'admin@komatsu.com',
+        homeAccountId: '123',
+        environment: 'test',
+        tenantId: '456',
+        localAccountId: '789'
+      },
+      roles: ['Admin'],
+      isAuthenticated: true,
+      getAccessToken: vi.fn()
+    });
+    renderHeader();
+    expect(screen.getByRole('button', { name: /admin/i })).toBeInTheDocument();
+  });
+
+  it('does not show Admin nav item for non-admin users', () => {
+    renderHeader();
+    expect(screen.queryByRole('button', { name: /^admin$/i })).not.toBeInTheDocument();
+  });
+
+  it('renders language switcher button in header', () => {
+    renderHeader();
+    expect(screen.getByLabelText('Change language')).toBeInTheDocument();
   });
 });

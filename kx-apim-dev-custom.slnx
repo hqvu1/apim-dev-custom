@@ -1,5 +1,0 @@
-<Solution>
-  <Folder Name="/bff-dotnet/">
-    <Project Path="bff-dotnet/BffApi.csproj" />
-  </Folder>
-</Solution>

@@ -9,7 +9,12 @@ import * as apiClient from "../api/client";
 import { ApiSummary } from "../api/types";
 
 vi.mock("../api/client", () => ({
-  usePortalApi: vi.fn()
+  usePortalApi: vi.fn(),
+  unwrapArray: vi.fn((data: unknown) => {
+    if (Array.isArray(data)) return data;
+    if (data && typeof data === "object" && "value" in (data as any)) return (data as any).value;
+    return null;
+  })
 }));
 
 const stableToast = { notify: vi.fn() };
@@ -35,9 +40,9 @@ describe("ApiCatalog", () => {
   const mockGet = vi.fn();
 
   const mockApis: ApiSummary[] = [
-    { id: "1", name: "Fleet API", description: "Fleet management", status: "Production", owner: "Team A", tags: ["fleet"], category: "Integration", plan: "Paid" },
-    { id: "2", name: "Parts API", description: "Parts catalog service", status: "Sandbox", owner: "Team B", tags: ["parts"], category: "Public", plan: "Free" },
-    { id: "3", name: "Claims API", description: "Warranty claims", status: "Production", owner: "Team C", tags: ["claims"], category: "Integration", plan: "Internal" }
+    { id: "1", name: "Fleet API", displayName: "Fleet API", description: "Fleet management", status: "Production", owner: "Team A", tags: ["fleet"], category: "Integration", plan: "Paid" },
+    { id: "2", name: "Parts API", displayName: "Parts API", description: "Parts catalog service", status: "Sandbox", owner: "Team B", tags: ["parts"], category: "Public", plan: "Free" },
+    { id: "3", name: "Claims API", displayName: "Claims API", description: "Warranty claims", status: "Production", owner: "Team C", tags: ["claims"], category: "Integration", plan: "Internal" }
   ];
 
   beforeEach(() => {

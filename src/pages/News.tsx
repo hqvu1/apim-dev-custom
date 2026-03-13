@@ -2,6 +2,7 @@ import { Box, Card, CardContent, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { usePortalApi } from "../api/client";
 import PageHeader from "../components/PageHeader";
+import { useTranslation } from "react-i18next";
 
 type NewsItem = {
   id: string;
@@ -12,12 +13,13 @@ type NewsItem = {
 
 const News = () => {
   const { get } = usePortalApi();
+  const { t } = useTranslation();
   const [items, setItems] = useState<NewsItem[]>([]);
 
   useEffect(() => {
     const load = async () => {
       const result = await get<NewsItem[]>("/news");
-      if (result.data) {
+      if (Array.isArray(result.data)) {
         setItems(result.data);
       }
     };
@@ -27,10 +29,10 @@ const News = () => {
 
   return (
     <Box>
-      <PageHeader title="News and Announcements" subtitle="Latest updates from AEM." />
+      <PageHeader title={t("news.title")} subtitle={t("news.subtitle")} />
       <Stack spacing={2}>
         {items.length === 0 && (
-          <Typography color="text.secondary">No news articles yet.</Typography>
+          <Typography color="text.secondary">{t("news.empty")}</Typography>
         )}
         {items.map((item) => (
           <Card key={item.id}>
@@ -40,7 +42,7 @@ const News = () => {
               </Typography>
               <Typography color="text.secondary">{item.date}</Typography>
               {item.tags && (
-                <Typography color="text.secondary">Tags: {item.tags.join(", ")}</Typography>
+                <Typography color="text.secondary">{t("news.tagsLabel")} {item.tags.join(", ")}</Typography>
               )}
             </CardContent>
           </Card>

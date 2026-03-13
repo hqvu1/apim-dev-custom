@@ -19,12 +19,15 @@ vi.mock("./pages/Register", () => ({ default: () => <div>Register</div> }));
 vi.mock("./pages/Support", () => ({ default: () => <div>Support</div> }));
 
 // Mock PrivateRoute to pass through children
-vi.mock("./components/PrivateRoute", () => ({
-  default: () => {
-    const { Outlet } = require("react-router-dom");
-    return <Outlet />;
-  }
-}));
+vi.mock("./components/PrivateRoute", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    default: () => {
+      const { Outlet } = actual as any;
+      return <Outlet />;
+    }
+  };
+});
 
 // Mock RoleGate to pass through children
 vi.mock("./components/RoleGate", () => ({

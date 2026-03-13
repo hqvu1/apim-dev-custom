@@ -38,9 +38,6 @@
     "useMockAuth": {
       "value": "false"
     },
-    "publicHomePage": {
-      "value": "false"
-    },
     "portalApiBase": {
       "value": "https://demo-apim-feb.azure-api.net"
     },
@@ -79,6 +76,21 @@
     },
     "existingManagedIdentityClientId": {
       "value": "2c46c615-a962-4ce7-a2f9-cc0610ff2043"
+    },
+    "apimSpTenantId": {
+      "value": "58be8688-6625-4e52-80d8-c17f3a9ae08a"
+    },
+    "apimSpClientId": {
+      "value": "YOUR_SP_CLIENT_ID"
+    },
+    "apimSpClientSecret": {
+      "value": "YOUR_SP_CLIENT_SECRET"
+    },
+    "apimArmScope": {
+      "value": "https://management.azure.com/.default"
+    },
+    "apimDataApiScope": {
+      "value": "https://management.azure.com/.default"
     }
   }
 }

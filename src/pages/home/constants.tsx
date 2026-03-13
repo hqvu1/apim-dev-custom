@@ -10,41 +10,46 @@ import {
   CodeOutlined,
   SupportAgentOutlined
 } from "@mui/icons-material";
-import { Feature } from "./types";
+
+export interface FeatureKey {
+  icon: React.ReactNode;
+  titleKey: string;
+  descriptionKey: string;
+}
 
 /**
- * Feature highlights showcasing platform capabilities
+ * Feature highlights showcasing platform capabilities (i18n keys)
  */
-export const PLATFORM_FEATURES: Feature[] = [
+export const PLATFORM_FEATURES: FeatureKey[] = [
   {
     icon: <ApiOutlined sx={{ fontSize: 40 }} />,
-    title: "Comprehensive API Catalog",
-    description: "Access a wide range of enterprise APIs with detailed documentation and interactive testing capabilities."
+    titleKey: "home.features.apiCatalog.title",
+    descriptionKey: "home.features.apiCatalog.description"
   },
   {
     icon: <SecurityOutlined sx={{ fontSize: 40 }} />,
-    title: "Enterprise-Grade Security",
-    description: "Role-based access control, OAuth 2.0 authentication, and secure API key management."
+    titleKey: "home.features.security.title",
+    descriptionKey: "home.features.security.description"
   },
   {
     icon: <SpeedOutlined sx={{ fontSize: 40 }} />,
-    title: "High Performance",
-    description: "Low-latency APIs with Azure infrastructure, SLA guarantees, and real-time monitoring."
+    titleKey: "home.features.performance.title",
+    descriptionKey: "home.features.performance.description"
   },
   {
     icon: <IntegrationInstructionsOutlined sx={{ fontSize: 40 }} />,
-    title: "Easy Integration",
-    description: "SDKs, code samples, and step-by-step guides to accelerate your integration journey."
+    titleKey: "home.features.integration.title",
+    descriptionKey: "home.features.integration.description"
   },
   {
     icon: <CodeOutlined sx={{ fontSize: 40 }} />,
-    title: "Developer Tools",
-    description: "Interactive API explorer, sandbox environments, and comprehensive testing utilities."
+    titleKey: "home.features.devTools.title",
+    descriptionKey: "home.features.devTools.description"
   },
   {
     icon: <SupportAgentOutlined sx={{ fontSize: 40 }} />,
-    title: "24/7 Support",
-    description: "Expert technical support team ready to assist with integration challenges and questions."
+    titleKey: "home.features.support.title",
+    descriptionKey: "home.features.support.description"
   }
 ];
 

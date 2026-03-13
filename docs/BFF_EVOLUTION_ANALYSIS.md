@@ -1,6 +1,8 @@
 # BFF Evolution Analysis: Non-APIM API Support & Platform Options
 
 > **Context:** One of the three Phase 1 APIs (Warranty, Parts Punchout, or Equipment Management) may not be hosted in Azure APIM. The BFF must proxy to heterogeneous backends — some via the APIM Data API, some via direct REST endpoints.
+>
+> **⚠️ Historical Note (March 2026):** This analysis was written when the Express BFF (`bff/server.js`) was the active runtime. The deployment has since been migrated to the **ASP.NET Core 10 BFF** (`bff-dotnet/`), which already implements the backend router pattern via `IApiCatalogService` + `api-registry.json`. The architectural concepts below remain valid; the "Express vs. migrate" decision is now resolved — see `BFF_MIGRATION_DECISION.md`.
 
 ---
 

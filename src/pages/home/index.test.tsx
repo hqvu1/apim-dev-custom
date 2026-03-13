@@ -4,7 +4,6 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from '../../theme';
@@ -14,7 +13,12 @@ import { ApiSummary } from '../../api/types';
 
 // Mock the API client
 vi.mock('../../api/client', () => ({
-  usePortalApi: vi.fn()
+  usePortalApi: vi.fn(),
+  unwrapArray: vi.fn((data: unknown) => {
+    if (Array.isArray(data)) return data;
+    if (data && typeof data === 'object' && 'value' in (data as any)) return (data as any).value;
+    return null;
+  })
 }));
 
 // Mock the toast provider
@@ -39,9 +43,10 @@ describe('Home Page', () => {
     {
       id: '1',
       name: 'Test API 1',
+      displayName: 'Test API 1',
       description: 'First test API',
       status: 'Production' as const,
-      plan: 'Premium',
+      plan: 'Paid',
       owner: 'Test Team',
       tags: ['test', 'api'],
       category: 'Integration'
@@ -49,6 +54,7 @@ describe('Home Page', () => {
     {
       id: '2',
       name: 'Test API 2',
+      displayName: 'Test API 2',
       description: 'Second test API',
       status: 'Sandbox' as const,
       plan: 'Free',

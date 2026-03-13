@@ -102,7 +102,6 @@ docker build -t "$CONTAINER_IMAGE" \
     --build-arg "VITE_LOGIN_SCOPES=${VITE_LOGIN_SCOPES}" \
     --build-arg "VITE_LOGOUT_MODE=${VITE_LOGOUT_MODE}" \
     --build-arg "VITE_USE_MOCK_AUTH=${VITE_USE_MOCK_AUTH}" \
-    --build-arg "VITE_PUBLIC_HOME_PAGE=${VITE_PUBLIC_HOME_PAGE}" \
     --build-arg "VITE_PORTAL_API_BASE=${VITE_PORTAL_API_BASE}" \
     --build-arg "VITE_PORTAL_API_SCOPE=${VITE_PORTAL_API_SCOPE}" \
     --build-arg "VITE_DEFAULT_LOCALE=${VITE_DEFAULT_LOCALE}" \

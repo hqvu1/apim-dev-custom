@@ -2,18 +2,21 @@ import { Box, Card, CardContent, Step, StepLabel, Stepper, Typography } from "@m
 import { useEffect, useState } from "react";
 import { usePortalApi } from "../api/client";
 import PageHeader from "../components/PageHeader";
+import { useTranslation } from "react-i18next";
 
-const steps = ["Submitted", "Under Review", "Approved", "Access Enabled"];
+const stepKeys = ["onboarding.steps.submitted", "onboarding.steps.underReview", "onboarding.steps.approved", "onboarding.steps.accessEnabled"] as const;
+const stepStatuses = ["Submitted", "Under Review", "Approved", "Access Enabled"];
 
 const Onboarding = () => {
   const { get } = usePortalApi();
+  const { t } = useTranslation();
   const [activeStep, setActiveStep] = useState(1);
 
   useEffect(() => {
     const load = async () => {
       const result = await get<{ status: string }>("/registration/status");
       if (result.data?.status) {
-        const index = steps.findIndex((step) => step === result.data?.status);
+        const index = stepStatuses.findIndex((step) => step === result.data?.status);
         setActiveStep(index >= 0 ? index : 1);
       }
     };
@@ -24,20 +27,20 @@ const Onboarding = () => {
   return (
     <Box>
       <PageHeader
-        title="Onboarding Status"
-        subtitle="Track your dealer or vendor onboarding request." 
+        title={t("onboarding.title")}
+        subtitle={t("onboarding.subtitle")}
       />
       <Card>
         <CardContent>
           <Stepper activeStep={activeStep} alternativeLabel>
-            {steps.map((label) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
+            {stepKeys.map((key) => (
+              <Step key={key}>
+                <StepLabel>{t(key)}</StepLabel>
               </Step>
             ))}
           </Stepper>
           <Typography color="text.secondary" sx={{ mt: 3 }}>
-            Current status: {steps[activeStep]}
+            {t("onboarding.currentStatus")} {t(stepKeys[activeStep])}
           </Typography>
         </CardContent>
       </Card>

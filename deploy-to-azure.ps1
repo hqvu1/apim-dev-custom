@@ -146,6 +146,18 @@ if (-not $SkipBuild) {
         }
     }
     
+    # Copy component library source for Docker build context
+    $componentLibSource = "..\react-template"
+    $componentLibDest = ".\component-library"
+    if (Test-Path $componentLibSource) {
+        Write-Host "Copying component library from $componentLibSource..." -ForegroundColor Yellow
+        if (Test-Path $componentLibDest) { Remove-Item $componentLibDest -Recurse -Force }
+        Copy-Item $componentLibSource $componentLibDest -Recurse -Exclude @("node_modules", ".git", "dist")
+    } else {
+        Write-Host "⚠️ Component library not found at $componentLibSource" -ForegroundColor Yellow
+        Write-Host "   Docker build may fail. Clone react-template repo next to this repo." -ForegroundColor Yellow
+    }
+
     # Build with all environment variables
     docker build `
         --build-arg "VITE_ENTRA_CLIENT_ID=$env:VITE_ENTRA_CLIENT_ID" `
@@ -156,7 +168,6 @@ if (-not $SkipBuild) {
         --build-arg "VITE_LOGIN_SCOPES=$env:VITE_LOGIN_SCOPES" `
         --build-arg "VITE_LOGOUT_MODE=$env:VITE_LOGOUT_MODE" `
         --build-arg "VITE_USE_MOCK_AUTH=false" `
-        --build-arg "VITE_PUBLIC_HOME_PAGE=$env:VITE_PUBLIC_HOME_PAGE" `
         --build-arg "VITE_PORTAL_API_BASE=$env:VITE_PORTAL_API_BASE" `
         --build-arg "VITE_PORTAL_API_SCOPE=$env:VITE_PORTAL_API_SCOPE" `
         --build-arg "VITE_DEFAULT_LOCALE=$env:VITE_DEFAULT_LOCALE" `
@@ -168,8 +179,12 @@ if (-not $SkipBuild) {
     
     if ($LASTEXITCODE -ne 0) {
         Write-Host "❌ Docker build failed!" -ForegroundColor Red
+        if (Test-Path ".\component-library") { Remove-Item ".\component-library" -Recurse -Force }
         exit 1
     }
+    
+    # Clean up copied component library
+    if (Test-Path ".\component-library") { Remove-Item ".\component-library" -Recurse -Force }
     
     Write-Host "✅ Docker image built successfully" -ForegroundColor Green
 } else {

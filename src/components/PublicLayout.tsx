@@ -5,9 +5,9 @@ import Footer from "./Footer";
 
 /**
  * PublicLayout component
- * 
- * Provides a layout for public pages (without authentication)
- * Includes Header and Footer but no side navigation
+ *
+ * Provides a layout for public pages (without authentication).
+ * Uses the library Header in "public" mode (no navigation or user menu).
  */
 const PublicLayout = () => {
   return (
@@ -18,7 +18,7 @@ const PublicLayout = () => {
         minHeight: "100vh",
       }}
     >
-      <Header isPublic />
+      <Header />
       <Box
         component="main"
         sx={{

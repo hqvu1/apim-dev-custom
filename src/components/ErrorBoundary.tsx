@@ -1,28 +1,10 @@
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
+import i18n from "../i18n";
 
-type ErrorBoundaryProps = {
-  children: React.ReactNode;
-  /** Optional fallback UI. When omitted the default "Something went wrong" screen is shown. */
-  fallback?: React.ReactNode;
-};
+type ErrorBoundaryState = { hasError: boolean; error?: Error };
 
-type ErrorBoundaryState = {
-  hasError: boolean;
-  error?: Error;
-};
-
-/**
- * Global error boundary with structured logging.
- *
- * Catches uncaught rendering errors anywhere in the component tree and:
- *  1. Renders a user-friendly fallback UI.
- *  2. Logs the error + component stack to the console in a structured format
- *     that Application Insights can ingest.
- *
- * @see docs/ARCHITECTURE_DESIGN.md §8 — Security Architecture (structured logging)
- */
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+class ErrorBoundary extends React.Component<{ children: React.ReactNode; fallback?: React.ReactNode }, ErrorBoundaryState> {
   state: ErrorBoundaryState = { hasError: false };
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
@@ -40,11 +22,6 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     });
   }
 
-  private readonly handleRefresh = () => {
-    this.setState({ hasError: false, error: undefined });
-    globalThis.location.reload();
-  };
-
   render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
@@ -53,22 +30,12 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 
       return (
         <Box display="flex" flexDirection="column" alignItems="center" gap={2} py={6}>
-          <Typography variant="h5">Something went wrong.</Typography>
+          <Typography variant="h5">{i18n.t("error.title")}</Typography>
           <Typography color="text.secondary">
-            Please refresh the page or contact support if the issue persists.
+            {i18n.t("error.description")}
           </Typography>
-          {/* Show error name in non-production environments for debugging */}
-          {import.meta.env.DEV && this.state.error && (
-            <Typography
-              variant="caption"
-              color="error"
-              sx={{ fontFamily: "monospace", maxWidth: 600, wordBreak: "break-word" }}
-            >
-              {this.state.error.message}
-            </Typography>
-          )}
-          <Button variant="contained" onClick={this.handleRefresh}>
-            Refresh
+          <Button variant="contained" onClick={() => window.location.reload()}>
+            {i18n.t("error.refresh")}
           </Button>
         </Box>
       );

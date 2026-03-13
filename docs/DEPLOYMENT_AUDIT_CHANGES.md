@@ -1,5 +1,7 @@
 # Deployment Audit & Changes — February 25, 2026
 
+> **Update (March 2026):** The BFF has been migrated from Node.js (`bff/server.js`) to ASP.NET Core 10 (`bff-dotnet/BffApi.csproj`). The Dockerfile, supervisord.conf, docker-compose.yml, and container-app.bicep have all been updated to run the .NET BFF exclusively. The Node.js BFF references in the audit items below describe the original issues found. See [BFF_IMPLEMENTATION.md](BFF_IMPLEMENTATION.md) for current architecture.
+
 ## Summary
 
 After migrating the BFF from direct APIM management URLs to **Azure ARM endpoints**, several deployment configuration files were out of sync. This audit verifies the full pipeline: `server.js` → `supervisord.conf` → `docker-entrypoint.sh` → `Dockerfile` → `container-app.bicep`.
@@ -149,32 +151,44 @@ The BuildKit secret mount was optional and unused — `.env.production` already 
 
 ---
 
-## Environment Variable Flow (Production)
+## Environment Variable Flow (Production — .NET BFF)
 
 ```
 Bicep template (container-app.bicep)
-  ↓ sets container env vars
+  ↓ sets container env vars (ASPNETCORE_*, Apim__*, EntraId__*, Features__*, AZURE_CLIENT_ID)
 Container App runtime
   ↓ passes to
 docker-entrypoint.sh
-  ↓ exports for supervisord
+  ↓ exports shell-level vars for supervisord
 supervisord.conf → %(ENV_...)s
   ↓ passes to BFF process
-bff/server.js → process.env.*
+bff-dotnet/BffApi.dll → appsettings.json + environment variable overrides (__ separator)
   ↓ constructs
 ARM URL: https://management.azure.com/subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.ApiManagement/service/{name}
 ```
 
-| Variable | Source (Bicep) | Default in server.js | Used For |
-|----------|---------------|---------------------|----------|
-| `AZURE_SUBSCRIPTION_ID` | `121789fa-2321-4e44-8aee-c6f1cd5d7045` | same | ARM URL path |
-| `AZURE_RESOURCE_GROUP` | `kac_apimarketplace_eus_dev_rg` | same | ARM URL path |
-| `APIM_SERVICE_NAME` | `demo-apim-feb` | same | ARM URL path + docs link |
-| `APIM_API_VERSION` | `2022-08-01` | same | ARM query param |
-| `MANAGED_IDENTITY_CLIENT_ID` | `2c46c615-a962-4ce7-a2f9-cc0610ff2043` | — | `DefaultAzureCredential` opts |
-| `USE_MOCK_MODE` | `false` | `false` | Skip real auth in dev |
-| `BFF_PORT` | `3001` | `3001` | Express listen port |
-| `NODE_ENV` | `production` | `development` | Express mode |
+| Variable | Source (Bicep) | Config Section | Used For |
+|----------|---------------|---------------|----------|
+| `Apim__SubscriptionId` | `121789fa-2321-4e44-8aee-c6f1cd5d7045` | `Apim:SubscriptionId` | ARM URL path |
+| `Apim__ResourceGroup` | `kac_apimarketplace_eus_dev_rg` | `Apim:ResourceGroup` | ARM URL path |
+| `Apim__ServiceName` | `demo-apim-feb` | `Apim:ServiceName` | ARM URL path + docs link |
+| `Apim__ApiVersion` | `2022-08-01` | `Apim:ApiVersion` | ARM query param |
+| `Apim__ManagedIdentityClientId` | `2c46c615-a962-4ce7-a2f9-cc0610ff2043` | `Apim:ManagedIdentityClientId` | `DefaultAzureCredential` opts |
+| `AZURE_CLIENT_ID` | same | SDK auto-detection | Managed Identity client ID |
+| `EntraId__TenantId` | `58be8688-6625-4e52-80d8-c17f3a9ae08a` | `EntraId:TenantId` | JWT validation |
+| `EntraId__ClientId` | APIM Entra app | `EntraId:ClientId` | JWT audience |
+| `EntraId__ExternalTenantId` | `511e2453-090d-480c-abeb-d2d95388a675` | `EntraId:ExternalTenantId` | CIAM JWKS |
+| `EntraId__CiamHost` | `kltdexternaliddev.ciamlogin.com` | `EntraId:CiamHost` | CIAM authority |
+| `Features__UseMockMode` | `false` | `Features:UseMockMode` | Skip real auth in dev |
+| `ASPNETCORE_ENVIRONMENT` | `Production` | — | ASP.NET Core mode |
+| `ASPNETCORE_URLS` | `http://+:3001` | — | Listen URL |
+
+### .NET BFF Environment Variable Flow (Reference)
+
+The above flow is now the **primary** production flow. The .NET BFF reads configuration from `appsettings.json` / `appsettings.{Environment}.json` and environment variables via the standard ASP.NET Core configuration system. Key config sections:
+- `Apim:SubscriptionId`, `Apim:ResourceGroup`, `Apim:ServiceName`, `Apim:ApiVersion`
+- `EntraId:TenantId`, `EntraId:ClientId`, `EntraId:ValidIssuers`, `EntraId:ValidAudiences`
+- `Features:UseMockMode`
 
 ---
 
