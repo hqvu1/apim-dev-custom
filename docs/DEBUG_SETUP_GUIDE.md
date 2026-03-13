@@ -9,7 +9,7 @@
    - **JavaScript Debugger** (built-in)
    - **C# Dev Kit** (for .NET BFF debugging)
    - **Debugger for Chrome** or **Debugger for Edge** (for browser debugging)
-4. **Azure CLI** (if using Azure Managed Identity locally)
+4. **Azure App Registration** credentials (if connecting to real APIM — see `appsettings.Development.json`)
 
 ### Initial Setup
 
@@ -222,13 +222,14 @@ const { instance, accounts } = useMsal();
 debugger; // Check accounts array
 ```
 
-**BFF Managed Identity:**
-```javascript
-// bff/server.js - getAccessToken function
-async function getAccessToken() {
-  debugger; // Check token retrieval
-  const tokenResponse = await credential.getToken(AZURE_MANAGEMENT_SCOPE);
-  return tokenResponse.token;
+**BFF Service Principal Token:**
+```csharp
+// bff-dotnet/Services/AppRegistrationTokenProvider.cs
+public async Task<string> GetTokenAsync(string scope)
+{
+    // Check cached token or acquire new via ClientSecretCredential
+    var token = await _credential.GetTokenAsync(new TokenRequestContext(new[] { scope }), ct);
+    return token.Token;
 }
 ```
 
@@ -453,7 +454,7 @@ APIM Portal BFF (.NET 10) Started
 Port:          http://localhost:3001
 APIM:          demo-apim-feb (kac_apimarketplace_eus_dev_rg)
 API Mode:      ARM Management API
-Auth:          Azure Managed Identity + JWT Bearer
+Auth:          App Registration (Service Principal) + JWT Bearer
 ```
 
 Test endpoints:
@@ -556,7 +557,7 @@ npm start
 | **Frontend** (`.env.local`) | `VITE_USE_MOCK_AUTH=true`<br/>`VITE_USE_MOCK_DATA=true` | `VITE_USE_MOCK_AUTH=false`<br/>`VITE_USE_MOCK_DATA=false` |
 | **Azure CLI** | Not required | Required (`az login`) |
 | **RBAC Permissions** | None needed | Reader/Contributor role |
-| **Authentication** | Mock identity (Admin role) | Full MSAL + Managed Identity |
+| **Authentication** | Mock identity (Admin role) | Full MSAL + App Registration (Service Principal) |
 | **Data Source** | `MockApiService` (static data) | `ArmApiService` (ARM Management API) |
 | **API Explorer** | http://localhost:3001/scalar/v1 | http://localhost:3001/scalar/v1 |
 

@@ -3,7 +3,7 @@
 ## Overview
 The Dockerfile and deployment files were using **outdated environment variable names** from an old Azure AD configuration. They have been updated to match the current Entra ID multi-tenant authentication setup.
 
-> **Note (March 2026):** The BFF has been fully migrated from Node.js (`bff/server.js`) to ASP.NET Core 10 (`bff-dotnet/`). The Dockerfile now has a 3-stage build: frontend (node:20-alpine), BFF (`dotnet/sdk:10.0-preview`), and runtime (nginx:alpine + ASP.NET Core runtime). The .NET BFF uses `appsettings.json` with environment variable overrides (using `__` separator, e.g., `Apim__SubscriptionId`). The frontend `VITE_*` build args below still apply. See [BFF_IMPLEMENTATION.md](BFF_IMPLEMENTATION.md) for the current .NET BFF configuration.
+> **Note (March 2026):** The BFF has been fully migrated from Node.js (`bff/server.js`) to ASP.NET Core 10 (`bff-dotnet/`). The Dockerfile now has a 3-stage build: frontend (node:20-alpine), BFF (`dotnet/sdk:10.0-preview`), and runtime (nginx:alpine + ASP.NET Core runtime). The .NET BFF uses `appsettings.json` with environment variable overrides (using `__` separator, e.g., `Apim__SubscriptionId`). Authentication uses **App Registration (ClientSecretCredential)** via `ITokenProvider` — see `Services/AppRegistrationTokenProvider.cs`. The Docker build also requires the `@komatsu-nagm/component-library` source to be copied into `./component-library/` before building. The frontend `VITE_*` build args below still apply. See [BFF_IMPLEMENTATION.md](BFF_IMPLEMENTATION.md) for the current .NET BFF configuration.
 
 ## Changes Made
 
@@ -20,7 +20,6 @@ The Dockerfile and deployment files were using **outdated environment variable n
   - `VITE_LOGIN_SCOPES`
   - `VITE_LOGOUT_MODE`
   - `VITE_USE_MOCK_AUTH`
-  - `VITE_PUBLIC_HOME_PAGE` *(new)*
   - `VITE_PORTAL_API_BASE`
   - `VITE_PORTAL_API_SCOPE`
   - `VITE_DEFAULT_LOCALE`
@@ -84,7 +83,6 @@ The following workflow files still reference old environment variable names:
 | *(New)* | `VITE_LOGIN_SCOPES` | OAuth scopes configuration |
 | *(New)* | `VITE_LOGOUT_MODE` | Logout strategy selection |
 | *(New)* | `VITE_USE_MOCK_AUTH` | Development bypass |
-| *(New)* | `VITE_PUBLIC_HOME_PAGE` | Public demo mode |
 | *(New)* | `VITE_PORTAL_API_SCOPE` | Portal API OAuth scope |
 | *(New)* | `VITE_DEFAULT_LOCALE` | i18n configuration |
 
@@ -93,9 +91,12 @@ The following workflow files still reference old environment variable names:
 ### Before Deploying:
 
 - [x] Updated Dockerfile with new build args
+- [x] Updated Dockerfile to copy component library source (`./component-library/`)
 - [x] Updated Bicep template parameters
 - [x] Updated environment-specific parameter files
 - [x] Updated deployment scripts (deploy.sh, deploy.ps1)
+- [x] Added Service Principal env vars (`APIM_SP_*`) to docker-entrypoint.sh, supervisord.conf
+- [x] Added Service Principal params/secrets to container-app.bicep
 - [ ] Update GitHub Actions workflow files
 - [ ] Update GitHub repository variables/secrets
 - [ ] Test local Docker build with new variables
@@ -114,7 +115,6 @@ docker build \
   --build-arg VITE_LOGIN_SCOPES="User.Read" \
   --build-arg VITE_LOGOUT_MODE="msal-plus-bff" \
   --build-arg VITE_USE_MOCK_AUTH="false" \
-  --build-arg VITE_PUBLIC_HOME_PAGE="false" \
   --build-arg VITE_PORTAL_API_BASE="https://d-apim.developer.azure-api.net" \
   --build-arg VITE_PORTAL_API_SCOPE="api://komatsu-apim-portal/.default" \
   --build-arg VITE_DEFAULT_LOCALE="en" \
@@ -127,6 +127,11 @@ docker run -p 8080:8080 \
   -e Apim__SubscriptionId="121789fa-2321-4e44-8aee-c6f1cd5d7045" \
   -e Apim__ResourceGroup="kac_apimarketplace_eus_dev_rg" \
   -e Apim__ServiceName="demo-apim-feb" \
+  -e Apim__ServicePrincipal__TenantId="58be8688-6625-4e52-80d8-c17f3a9ae08a" \
+  -e Apim__ServicePrincipal__ClientId="<your-sp-client-id>" \
+  -e Apim__ServicePrincipal__ClientSecret="<your-sp-client-secret>" \
+  -e Apim__ArmScope="https://management.azure.com/.default" \
+  -e Apim__DataApiScope="https://management.azure.com/.default" \
   -e EntraId__TenantId="58be8688-6625-4e52-80d8-c17f3a9ae08a" \
   -e EntraId__ClientId="bd400d26-7db1-44fd-82b7-8c7af757e249" \
   -e Features__UseMockMode="false" \

@@ -104,7 +104,6 @@ x86/
 *.snupkg
 project.lock.json
 project.fragment.lock.json
-appsettings.*.json
 artifacts/
 
 # NuGet

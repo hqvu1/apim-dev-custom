@@ -48,11 +48,13 @@ Run the custom deployment script that does everything:
 This will:
 1. ✅ Check prerequisites
 2. ✅ Set correct Azure subscription
-3. ✅ Deploy infrastructure (ACR, CAE, ACA) using Bicep
-4. ✅ Build Docker image with your environment variables
-5. ✅ Push image to Azure Container Registry
-6. ✅ Update Container App with new image
-7. ✅ Give you the application URL
+3. ✅ Copy component library source (`../react-template` → `./component-library/`)
+4. ✅ Deploy infrastructure (ACR, CAE, ACA) using Bicep
+5. ✅ Build Docker image with your environment variables
+6. ✅ Push image to Azure Container Registry
+7. ✅ Update Container App with new image
+8. ✅ Give you the application URL
+9. ✅ Clean up temporary component library copy
 
 **Expected Duration:** 5-10 minutes
 
@@ -98,6 +100,9 @@ This creates:
 Or build manually:
 
 ```powershell
+# Copy component library source (required for Docker build)
+Copy-Item -Path "..\react-template" -Destination ".\component-library" -Recurse -Exclude @("node_modules", ".git", "dist")
+
 # Build the Docker image
 docker build -t komatsu-apim-portal:dev .
 
@@ -203,7 +208,7 @@ az containerapp revision list `
 
 ### Issue: Environment variables not set
 
-> **Note:** Environment variables are now managed by the Bicep template (`container-app.bicep`). The .NET BFF uses `__` separator convention for nested config (e.g., `Apim__SubscriptionId`, `EntraId__TenantId`). Only use `az containerapp update --set-env-vars` for quick overrides.
+> **Note:** Environment variables are now managed by the Bicep template (`container-app.bicep`). The .NET BFF uses `__` separator convention for nested config (e.g., `Apim__SubscriptionId`, `EntraId__TenantId`). Service principal credentials (`Apim__ServicePrincipal__ClientSecret`) are stored as Container App secrets. Only use `az containerapp update --set-env-vars` for quick overrides.
 
 **Solution:**
 ```powershell
@@ -213,6 +218,8 @@ az containerapp update `
   --resource-group kac_apimarketplace_eus_dev_rg `
   --set-env-vars `
     "Apim__ServiceName=demo-apim-feb" `
+    "Apim__ServicePrincipal__TenantId=<tenant-id>" `
+    "Apim__ServicePrincipal__ClientId=<client-id>" `
     "Features__UseMockMode=false"
 ```
 

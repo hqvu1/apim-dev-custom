@@ -4,7 +4,7 @@
 
 ## What We Built
 
-We've implemented a **Backend-for-Frontend (BFF)** architecture with Azure Managed Identity authentication to solve the authorization issue with APIM Management API. The BFF has been migrated from Node.js Express to **ASP.NET Core 10 Minimal API** for better RBAC, type safety, and resilience.
+We've implemented a **Backend-for-Frontend (BFF)** architecture with App Registration (service principal) authentication to solve the authorization issue with APIM Management API. The BFF has been migrated from Node.js Express to **ASP.NET Core 10 Minimal API** for better RBAC, type safety, and resilience.
 
 ## Architecture
 
@@ -18,7 +18,7 @@ We've implemented a **Backend-for-Frontend (BFF)** architecture with Azure Manag
                                        │ ├─ IMemoryCache (1-min TTL) │
                                        │ └─ Resilience Pipeline      │
                                        └────────┬───────────────────┘
-                                                 │ DefaultAzureCredential
+                                                 │ ITokenProvider (ClientSecretCredential)
                                        ┌────────▼───────────────────┐
                                        │ ARM Management API         │
                                        │ management.azure.com       │
@@ -40,7 +40,7 @@ We've implemented a **Backend-for-Frontend (BFF)** architecture with Azure Manag
 ### Legacy: Node.js BFF (`bff/`)
 - **Runtime**: Node.js Express
 - **Port**: 3001
-- **Purpose**: Original APIM proxy with Managed Identity (no RBAC)
+- **Purpose**: Original APIM proxy (no RBAC) — retained for reference
 - **Status**: Retained for reference; `.NET BFF` is the active backend
 
 ### Process Management
@@ -58,9 +58,10 @@ We've implemented a **Backend-for-Frontend (BFF)** architecture with Azure Manag
 | `bff-dotnet/appsettings.Development.json` | Mock mode enabled, debug logging, CORS origins |
 | `bff-dotnet/rbac-policies.json` | RBAC role → API → permission mapping |
 | `bff-dotnet/api-registry.json` | API source registry (APIM vs external) |
-| `bff-dotnet/Services/ArmApiService.cs` | ARM Management API client (production) |
-| `bff-dotnet/Services/DataApiService.cs` | APIM Data API client (runtime mode) |
+| `bff-dotnet/Services/ArmApiService.cs` | ARM Management API client (production, uses ITokenProvider) |
+| `bff-dotnet/Services/DataApiService.cs` | APIM Data API client (runtime mode, uses ITokenProvider) |
 | `bff-dotnet/Services/MockApiService.cs` | Static mock data (development) |
+| `bff-dotnet/Services/AppRegistrationTokenProvider.cs` | Shared ITokenProvider using ClientSecretCredential |
 | `Dockerfile` | Multi-stage build: SPA + BFF |
 | `nginx.conf` | Proxy `/api/*` → `localhost:3001` |
 | `supervisord.conf` | Manages Nginx + BFF processes |
@@ -73,8 +74,13 @@ AZURE_SUBSCRIPTION_ID=121789fa-2321-4e44-8aee-c6f1cd5d7045
 AZURE_RESOURCE_GROUP=kac_apimarketplace_eus_dev_rg
 APIM_SERVICE_NAME=demo-apim-feb
 APIM_API_VERSION=2022-08-01
-MANAGED_IDENTITY_CLIENT_ID=2c46c615-a962-4ce7-a2f9-cc0610ff2043
 USE_MOCK_MODE=false
+# Service Principal (App Registration)
+Apim__ServicePrincipal__TenantId=58be8688-6625-4e52-80d8-c17f3a9ae08a
+Apim__ServicePrincipal__ClientId=<your-sp-client-id>
+Apim__ServicePrincipal__ClientSecret=<your-sp-client-secret>
+Apim__ArmScope=https://management.azure.com/.default
+Apim__DataApiScope=https://management.azure.com/.default
 ```
 
 ### BFF Configuration (`appsettings.json`)
@@ -84,7 +90,14 @@ USE_MOCK_MODE=false
     "SubscriptionId": "121789fa-2321-4e44-8aee-c6f1cd5d7045",
     "ResourceGroup": "kac_apimarketplace_eus_dev_rg",
     "ServiceName": "demo-apim-feb",
-    "ApiVersion": "2022-08-01"
+    "ApiVersion": "2022-08-01",
+    "ArmScope": "https://management.azure.com/.default",
+    "DataApiScope": "https://management.azure.com/.default",
+    "ServicePrincipal": {
+      "TenantId": "58be8688-6625-4e52-80d8-c17f3a9ae08a",
+      "ClientId": "<your-sp-client-id>",
+      "ClientSecret": "<your-sp-client-secret>"
+    }
   },
   "EntraId": {
     "TenantId": "58be8688-6625-4e52-80d8-c17f3a9ae08a",
@@ -96,17 +109,13 @@ USE_MOCK_MODE=false
 
 ## Required Azure Configuration
 
-### Step 1: Managed Identity (✅ COMPLETED)
-```bash
-az containerapp identity assign \
-  --name komatsu-apim-portal-dev-ca \
-  --resource-group kac_apimarketplace_eus_dev_rg \
-  --system-assigned
-```
-
-**Result**: 
-- Principal ID: `01d35a0d-f8d2-4f6e-90b1-730c2235e2b8`
-- Tenant ID: `58be8688-6625-4e52-80d8-c17f3a9ae08a`
+### Step 1: App Registration (Service Principal)
+Register an application in Microsoft Entra ID for the BFF:
+1. Go to **Azure Portal** > **Microsoft Entra ID** > **App registrations** > **New registration**
+2. Name: `komatsu-apim-portal-bff`
+3. Create a **client secret** under **Certificates & secrets**
+4. Note the **Application (client) ID**, **Directory (tenant) ID**, and **Client secret value**
+5. Configure `appsettings.json` with these values under `Apim:ServicePrincipal`
 
 ### Step 2: Grant APIM Permissions (⏳ NEEDS ADMIN)
 
@@ -114,7 +123,7 @@ az containerapp identity assign \
 ```bash
 az role assignment create \
   --role "API Management Service Reader Role" \
-  --assignee "01d35a0d-f8d2-4f6e-90b1-730c2235e2b8" \
+  --assignee "<your-sp-client-id>" \
   --scope "/subscriptions/121789fa-2321-4e44-8aee-c6f1cd5d7045/resourceGroups/kac_apimarketplace_eus_dev_rg/providers/Microsoft.ApiManagement/service/demo-apim-feb"
 ```
 
@@ -159,8 +168,8 @@ The BFF supports 3 backend modes, selectable via configuration:
 | Mode | Config | Service Class | Description |
 |------|--------|---------------|-------------|
 | **Mock** | `UseMockMode=true` + Development | `MockApiService` | Static data, no Azure required |
-| **Data API** | `UseDataApi=true` | `DataApiService` | APIM runtime endpoint, user bearer token |
-| **ARM** | Default | `ArmApiService` | ARM Management API, `DefaultAzureCredential` |
+| **Data API** | `UseDataApi=true` | `DataApiService` | APIM runtime endpoint, service principal token |
+| **ARM** | Default | `ArmApiService` | ARM Management API, `ITokenProvider (ClientSecretCredential)` |
 
 ### Data Flow
 ```
@@ -191,7 +200,7 @@ All three return the same `PagedResult<T>` shape (`{ value: [...], count: N }`) 
    - Routes to appropriate service (ARM, Data API, or Mock)
 
 5. **ARM mode (production)**:
-   - Uses `DefaultAzureCredential` to get Managed Identity token
+   - Uses `ITokenProvider` (`AppRegistrationTokenProvider` with `ClientSecretCredential`) to get ARM bearer token
    - Calls `https://management.azure.com/subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.ApiManagement/service/{name}/apis?api-version=2022-08-01`
    - Unwraps ARM `{ id, name, properties: {...} }` envelope → flat contracts
    - Returns `PagedResult<T>` to the SPA
@@ -201,7 +210,7 @@ All three return the same `PagedResult<T>` shape (`{ value: [...], count: N }`) 
 ✅ No APIM credentials in frontend code  
 ✅ JWT Bearer validation on every request  
 ✅ RBAC policies enforce per-API, per-role access  
-✅ Managed Identity tokens auto-rotate  
+✅ Service principal tokens cached with 5-min expiry buffer (thread-safe via SemaphoreSlim)  
 ✅ Least-privilege access (read-only APIM role)  
 ✅ Security headers (X-Content-Type-Options, X-Frame-Options, Referrer-Policy)  
 ✅ Resilience pipeline (retry, circuit breaker, timeout)  
@@ -237,6 +246,11 @@ docker run -p 8080:8080 \
   -e ENTRA_CLIENT_ID=bd400d26-7db1-44fd-82b7-8c7af757e249 \
   -e ENTRA_EXTERNAL_TENANT_ID=511e2453-090d-480c-abeb-d2d95388a675 \
   -e ENTRA_CIAM_HOST=kltdexternaliddev.ciamlogin.com \
+  -e APIM_SP_TENANT_ID=58be8688-6625-4e52-80d8-c17f3a9ae08a \
+  -e APIM_SP_CLIENT_ID=<your-sp-client-id> \
+  -e APIM_SP_CLIENT_SECRET=<your-sp-client-secret> \
+  -e APIM_ARM_SCOPE=https://management.azure.com/.default \
+  -e APIM_DATA_API_SCOPE=https://management.azure.com/.default \
   komatsu-apim-portal:dev
 ```
 
@@ -249,8 +263,8 @@ docker run -p 8080:8080 \
 - Verify .NET 10 runtime installed: `docker exec <container> dotnet --version`
 
 ### 401/403 errors
-- Ensure Managed Identity is enabled on the Container App
-- Verify APIM role assignment (admin must grant this)
+- Ensure the Service Principal (App Registration) has the correct APIM RBAC role assigned
+- Verify `Apim:ServicePrincipal:ClientId` and `ClientSecret` are correct in appsettings or env vars
 - Check JWT token: valid issuer, audience, and signing key
 - Review RBAC policies in `rbac-policies.json`
 

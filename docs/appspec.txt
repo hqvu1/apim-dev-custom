@@ -1,0 +1,250 @@
+
+Project Objective
+This project covers Phase 1 of the Komatsu API Marketplace Portal (referenced as “portal” in this document). This is based on the KNA Project #802- Komatsu API Marketplace.
+Business Problem
+There is increasing demand by Komatsu partners such as dealers and vendors to integrate with Komatsu’s APIs to provide data and functionality across different business systems. Currently there are several challenges dealers encounter:
+•	Unaware of Komatsu’s API catalog
+•	Lack of documentation providing details concerning purpose of API and inability to test before integrating w/ the APIs
+•	A manually intensive process to request access to APIs and get onboarded with access
+Target Goals
+The portal is positioned as an online market place where stakeholders including internal development teams as well as external entities such as distributors and vendors will be able to register for an account, browse available APIs, and access documentation, use cases, and possible tests of the API. It should include Komatsu Design standard and security principles.
+The portal aims to
+•	Provide consolidated means to discover Komatsu provided API
+•	Drive integrations with Komatsu’s distributors and vendors
+•	Reduce effort to onboard end users to API
+•	Reduce support requests for API usage
+The Komatsu IT proposal is to provide a cloud based portal capable utilizing modern development methods, comply with Komatsu security standards, and integrates with API management system such as APIM.
+Success Metrics
+The KNA team recognizes the success of the portal is dependent on working with the KNA Business stakeholders to accomplish key objectives. The IT team aims to provide the following to ensure and measure the portal’s success.
+Measurable KPIs
+•	Reduction in manual entry to enter dealer data
+•	Increase in the number of successful integrations to APIs via third-parties
+•	Increase in user satisfaction targets by offering API instructions, documentation, sand box testing
+•	Increase in the number of 
+•	Achieve higher user satisfaction targets
+Adoption
+•	Track adoption of the portal by collecting user access metrics
+•	Include feedback from end users of the portal
+Go-To-Market
+•	Coordination with business and marketing teams for launch of the application.
+•	
+API Marketplace Portal Scope
+An API Marketplace online portal will be provided that will include the follow features:
+Accessibility, Design, and User Interface
+•	The landing page will feature a prominent, branded value proposition that clearly communicates the purpose of the Developer Portal.
+•	A page footer that includes links to support, developer license agreement, privacy policy, and terms of use.
+•	The landing page will be fully responsive, to ensure proper display and usability on desktop, tablet, and mobile devices.
+•	Marketplace Portal will be accessible via direct link or via KX Member Network
+•	The portal will offer multi-language support
+•	No anonymous access will be allowed
+Content and Categorization
+•	Each API page will include areas including
+o	Use Cases
+o	Cost Plan
+o	Sign-Up
+o	Developer Documentation
+•	APIs will be grouped according to categories and the APIs displayed under a category will include a brief description, graphic/icon, and a "Learn More" button linking into specific API details
+•	The portal will include a News & Announcements section featuring content including:
+o	API changes or deprecations
+o	New features or breaking changes
+o	Links to full changelogs or developer notices
+•	Dynamic content will be able to be updated dynamically and can be updated through a user interface (no hard coded changes).
+•	Integration with the AEM Content Authoring for dynamic content updates
+
+Authentication and Authorization
+•	The portal will support OAuth2.0 for authentication
+•	The portal will use the Global Admin framework for authentication (based on Entra ID) and authorizations
+•	Authorization to the portal will be role-based using RBAC. It will include roles for Admin, Developer, and Tester . 
+•	API credentials should be tied to specific applications or integrations, with permissions defined.
+•	Portal will follow KNA IT Security standards including
+o	Credentials to be encrypted at rest and in transit
+Registration
+•	Automated Welcome E-Mail with a quick-start guide.
+•	A feature to allow unregistered users the ability to enter user details to provide to an approval team to onboard into Global Admin. This will follow the same process for all KX applications.
+API Features
+•	An isolated sandbox area will be available for developers to de-risk integrations and validate workflows (See Assumptions)
+•	Swagger/Redoc "Try It" Consoles embedded for immediate API testing.
+•	API metadata attached to each API such as owner, version, contact
+•	3 existing APIS will be included as part of the marketplace
+a.	SAP Warranty API
+b.	Parts Punchout API
+c.	Equipment Management API
+Support
+•	Integration to a centralized Service Delivery system for defect tracking tied to the portal. For phase 1, this will be either the ASK or Service Now systems.
+•	Full system architecture diagrams and documentation needed for an Application Management Services (AMS) team to support
+Security and Compliance
+•	Soc 2 compliant
+•	Comply with GDPR standards
+•	On-Brand, WCAG-Compliant UI 
+•	PII data stored encrypted  
+
+Deliverables
+The following areas will be considered in scope for the MVP of the first phase of the project and will be delivered as part of phase 1.
+Technical Implementation
+•	The online API Marketplace portal hosted on Komatsu IT approved infrastructure
+o	The portal will include a development, quality, and production environment
+o	The portal will be hosted in a single region
+•	A custom DNS (ie “apimarketplace.komatsu.com”)
+•	3 existing APIS onboarded will be included 
+o	SAP Warranty API
+o	Parts Punchout API
+o	Equipment Management API
+•	Completed Threat Risk Assessment evaluation
+•	Provide Enterprise Architecture Review Board (EARB) required documents and conduct review with Komatsu EARB team
+•	Technical documents including
+o	Reference Architecture 
+o	Physical Architecture
+o	Integrations
+o	Runbook
+o	Any scripts used to build and deploy the application (IaC)
+Project Governance
+•	The KNA IT team will work to deliver a RACI model. The RACI model will cover Business, IT, Vendor, and API owners. 
+Portal Documentation
+•	How to guides for the portal targeted to Business Owner on 
+o	Manage content
+o	New API onboarding process
+o	Feature usage
+o	Registration and user onboarding process (as per Global Admin)
+•	API Onboarding guides for external partners intending to add APIs to the portal
+o	Workflow process for security, legal, and document review
+o	API sunset policy with notifications for depreciation
+o	Considerations for onboarding international partners
+Project and Release Activities
+•	Participation with Business and Marketing team to drive awareness of the portal both within Komatsu and at large.
+o	Inclusion of API Marketplace within Komatsu IT and Komatsu Experience new and marketing areas
+o	Participate in communications with partners including release announcement meetings, business presentations to partners, technical discussions with distributors and vendors.
+•	IT supported activities managed through Komatsu Project Workspace in Service Now
+o	Including weekly status report to key stakeholders
+•	Code to reside in Komatsu IT owned and manage repository
+•	Working sessions with API vendors (KLTD, Redfin and Softura) to outline the onboarding API process.
+•	A live demo before production turn over
+Launch and Support
+•	Coordination with all KNA teams including business, test, release teams in order to facilitate a success launch
+•	Post Go-Live support period of 2 weeks
+•	Knowledge transfer sessions to an AMS team
+
+Schedule
+Duration: 4.5 Months
+Timeline	Activities
+Month 1	Project Setup- DevOps, team definition, RACI model defined
+Requirements refining
+Functional design  
+Non-functional design
+API product definitions
+Discovery sessions with Warranty, Equipment and Parts API teams
+Discovery sessions with Global Admin team
+Month 1 Exit Criteria	•	RACI model provided
+•	Marketplace Portal platform decision
+•	Documents for 3 phase 1 APIs of how to onboard APIs to API Portal
+•	Document for integration of API Portal to Global Admin team
+•	Final sign off by KNA IT and business teams on all requirements
+Months 2 – 3	Build marketplace portal
+Initial EARB document prep and conduct review
+TRA Assessment (if necessary)
+
+Month 3 Exit Criteria	•	EARB required documentation
+•	TRA approval
+Month 4	Testing including SIT, performance, and UAT
+Address items from UAT
+Document preparation
+Content updates on portal
+EARB pre-production release review
+Production deployment release
+Month 4 Exit Criteria	•	Demo session of final version of portal
+•	UAT approval for portal
+•	Final review w/ EARB team
+•	Release of final product to production
+Month 4.5	2 week hypercare period
+Complete all documentation as per deliverables
+Knowledge transfer  session with AMS team
+End of Month 4.5 Exit Criteria	•	Turnover of all technical documentation defined in deliverables
+•	Successful turnover to AMS team
+
+Project Approach and Acceptance
+Approach
+•	This project will be run as an Agile delivery model.
+•	Sprints cadence is to be 3 weeks.
+•	Project management including features, user stories, tasks and bugs will be tracked in Komatsu Azure DevOps. This will be the primary method to track progress and measure completion.
+Technical Approach
+•	Any custom developed code done by KAC ICT must include a minimum of 70% Unit Test coverage
+•	Any resources needed to be created must be deployed via Infrastructure as Code such as Bicep (preferred) or Terraform.
+Acceptance
+•	KNA Digital Office will have ten (10) business days to review each deliverable and either provide acceptance or notify any deficiencies based on the agreed acceptance criteria.
+•	For any issues or bugs that are identified, the Contractor (ICT) will correct them at no additional cost and resubmit the deliverable following the same review process. This includes bugs found in standard development as well as during the hyper care period.
+•	The exit criteria for a sprint will include 
+o	All committed user stories meet their Definition of Done (DoD)
+o	Acceptance criteria are met and validated
+o	No open Critical or High defects
+o	Minor defects are documented and accepted by Product Owner
+o	No failing regression tests or issues
+o	All code must pass code scanning for secrets, vulnerabilities, and SAST scans as per Komatsu IT standards
+Change Control 
+•	Any changes to scope, cost, timeline, or deliverables must be documented through a Change Request (CR).
+•	All CRs must be approved in writing by Digital Office and KAC ICT before implementation and logged and tracked in ADO.
+•	Any Change Request will also require KNA DO approval through PMO/PPMO.
+
+Assumptions and Dependencies
+Design
+•	UI/UX design for the portal will be provided by Komatsu UI/UX
+Content
+•	Technical documentation of the APIs will be provided by API providers.
+•	Content for the News and Announcements section will be maintained as part of business owner activities
+•	Non-English translations will be provided externally from KNA IT team.
+
+Technical Dependecies
+•	Multi-region deployment for added site reliability can be added but will incur added development and deployment time.
+API Onboarding
+•	User access to specific APIs will reside with the owner of that API.
+•	An isolated sandbox for developers to de-risk integrations must be provided by the API providers.
+•	The API Approval Workflow process must be reviewed with Komatsu security and legal teams before new APIs can be added to the portal.
+External Providers
+•	Dedicated SME assistance with vendors of APIs in Phase 1 scope (Warranty, Parts Punchout, and Equipment Management) will be need in order to 
+o	obtain all integration documents
+o	metadata associated with API
+o	use cases 
+o	any sandbox instances
+o	authentication/authorization or registration process details 
+•	Dedicated SME assistance with the Global Admin team (KPS and Softura vendors) 
+o	To integrate this application to the Global Admin 
+o	API credential management within Global Admin 
+•	User registration to Global Admin will be external to the portal.
+Change Control and Project Management
+•	Final requirements for MVP should be signed off by end of month one. After that, changes to scope must be agreed upon by Business team, Digital Office, and KNA IT.
+•	Project management will need to be provided aside from the KNA IT team.
+Ownership
+•	Once delivered, all data for the application will be owned by the KNA Business team. This includes:
+o	All usage metrics gathered by the application including user access, API access, registration requests
+o	User feedback via channels provided in the application
+o	Any data needed by the application for standard runtime (configuration, tokens, etc)
+o	Content related data for Use Cases, API documents
+o	Code deployed as part of the portal
+•	Ownership and management of APIs developed outside of the portal will be retained by the party that provided the given API
+•	KNA IT will retain the option to make a copy of all source code, data schema, configuration, and application data upon delivery of the portal to KNA Business team.
+Support
+•	During the hypercare period, the KNA IT team will address any identified bugs of the portal.
+•	After hypercare, the API Marketplace portal will be transitioned to an AMS support team for long-term support. 
+o	The SLA and escalation model for support will need to be agreed upon by the Business and IT teams
+Future Phase Deliverables
+These features are out of scope for the MVP of phase 1. However, they will be used in evaluation and selection of the portal technical platform. 
+•	A Usage Analytics Dashboard (delivered via Power BI stack) provided to expose real-time consumption and spend without additional licensing overhead.
+•	Komatsu Internal Team should have ability to generate, view, update, and revoke API keys or tokens.
+•	Support for credential rotation, strong keys, and token-based authentication.
+o	This will integrate with Infrastructure team for app registration credential management.
+•	An SSO-protected Admin Console must be provided for full API lifecycle control, enabling Komatsu teams to iterate plans or retire endpoints without engineering bottlenecks.
+•	An Admin Console to support full API lifecycle control, enabling Komatsu teams to iterate plans or retire endpoints.
+•	Admin console to integrate with Azure DevOps Publishing Pipelines to automate mock server and documentation rollout. 
+o	Provided endpoints to the backend service are setup in APIM
+•	API credential analytics logging and a dashboard to include activity logs, source tracking, and failed access attempts.
+•	A notification system including
+o	Credential expiration
+o	API downtime
+•	Admin capability to disable credentials without full account revocation
+•	Executive BI Dashboards on KPIs (traffic, geo, registration rates, endpoint popularity) must inform strategic investment.
+•	Real-Time Alerting and Incident Management integrated to minimize MTTR.
+•	In-Portal Changelog and Release Notifications to reduce unexpected breakage.
+•	Update and incident tracking for SLA transparency (to be included as part of KX Status Page application)
+•	Global Search for ease of finding any instance of the word/search
+•	No monitization features incorporated into the portal
+
+
+

@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "../../kx-apim-marketplace-custom"
+		},
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../kx-membernetwork-backend"
+		},
+		{
+			"path": "../../kx-membernetwork-frontend"
+		},
+		{
+			"path": "../../api-management-developer-portal"
+		}
+	],
+	"settings": {}
+}

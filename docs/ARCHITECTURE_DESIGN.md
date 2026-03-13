@@ -4,7 +4,7 @@
 > **Repository:** `KNA-CustomApps-Org/kx-apim-dev-custom-frontend`
 > **Branch:** `UpdateWithNewClientApp`
 > **Stack:** React 18 · TypeScript · Vite 5 · MUI 5 · MSAL · ASP.NET Core 10 BFF · Nginx · Azure Container Apps · Bicep
-> **Last Updated:** 2026-03-06
+> **Last Updated:** 2026-03-07
 
 ---
 
@@ -32,14 +32,13 @@
 │  ┌──────────────────────────────────────────────────────┐            │
 │  │  BFF – ASP.NET Core 10 (port 3001)                   │            │
 │  │  ├─ dotnet /app/bff/BffApi.dll (supervisord-managed) │            │
-│  │  ├─ Azure Managed Identity → ARM token               │            │
+│  │  ├─ App Registration (ClientSecretCredential) → token│            │
 │  │  ├─ ARM token → SAS token (Data API auth)            │            │
 │  │  ├─ APIM Data API proxy (apis, products, operations) │            │
 │  │  ├─ JWT Bearer auth + RBAC policy enforcement        │            │
 │  │  └─ Mock mode for local dev                          │            │
 │  └──────────────────────────────────────────────────────┘            │
 │  supervisord orchestrates nginx + BFF                                │
-│  User-Assigned Managed Identity attached                             │
 └────────────────────────────┬──────────────────────────────────────────┘
                              │
          ┌───────────────────┼───────────────────┐
@@ -69,7 +68,8 @@
 | **Routing** | `react-router-dom` v6.26, nested layouts, lazy-loaded routes | SPA with shell ✅ |
 | **Auth** | `@azure/msal-react` 2.0 + `@azure/msal-browser` 3.20 | OAuth 2.0 / Entra ID ✅ |
 | **i18n** | `i18next` 23.12 + `react-i18next` 14.1 | Multi-language support ✅ |
-| **Theming** | Komatsu brand colors (`theme.ts`: Gloria Blue, Ice Blue, Cool Grey palette) | On-Brand UI ✅ |
+| **Component Library** | `@komatsu-nagm/component-library` — shared theme, Header, AppShell (compiled from source via Vite alias) | On-Brand UI ✅ |
+| **Theming** | Re-exported from component library (`theme.ts` re-exports `theme`, `colors`, `typography`) | Corporate consistency ✅ |
 | **Testing** | Vitest 1.6 + Testing Library (react + jest-dom + user-event) + jsdom 23 | 70% coverage target ✅ |
 | **State** | React Context (`AuthProvider`, `ToastProvider`) + local component state | Lightweight, no Redux overhead |
 | **Code-Splitting** | `React.lazy()` + `<Suspense>` on all route-level pages | Fast initial load ✅ |
@@ -134,7 +134,7 @@ Route                     Component           Lazy  Appspec Feature
                   ─ PublicLayout   (conditional: appConfig.publicHomePage)
                   │  └ Header (isPublic) + Home + Footer
                   ─ PrivateRoute   ← MSAL auth gate (useMsalLogin hook)
-                     └ AppShell    ← Header + responsive SideNav (260px) + Footer + Outlet
+                     └ AppShell    ← Header (from component library) + Footer + Outlet
                         ├ Home           → HeroSection, StatCard[], FeatureCard[], QuickActionCard[]
                         ├ ApiCatalog     → ApiCard[] with search/category/plan filters
                         ├ ApiDetails     → SectionCard, MethodBadge, operations table, plans
@@ -225,7 +225,7 @@ The `appConfig` singleton resolves values through a three-tier cascade:
 │  ┌─ Route Guards ──────────────────────────────────┐ │
 │  │  PrivateRoute → auth gate for all app routes    │ │
 │  │  RoleGate → role-based route guard (Admin, etc.)│ │
-│  │  SideNav → filters links by role visibility     │ │
+
 │  └─────────────────────────────────────────────────┘ │
 └──────────────────────────────────────────────────────┘
 ```
@@ -282,8 +282,8 @@ Express + helmet + cors + node-fetch + @azure/identity
 Configuration:
   Port 3001, ARM API via APIM_ARM_BASE_URL
   USE_MOCK_MODE toggle
-  Optional User-Assigned Managed Identity (AZURE_CLIENT_ID)
-  DefaultAzureCredential → ARM bearer → SAS token chain
+  Optional App Registration (Service Principal) credentials
+  ITokenProvider (ClientSecretCredential) → ARM bearer → SAS token chain
 
 Mock Mode Endpoints:
   /news, /stats, /apis, /apis/highlights, /apis/:apiId
@@ -325,18 +325,20 @@ ARM Transformers: transformArmApiToSummary(), transformArmApiToDetails()
 │  └─────────────────────────────────────────────────────┘     │
 │                                                              │
 │  ┌─ APIM Auth Chain ──────────────────────────────────┐      │
-│  │  DefaultAzureCredential (Managed Identity)          │     │
-│  │  ├ User-Assigned Managed Identity (prod)            │     │
-│  │  ├ System-Assigned Managed Identity (fallback)      │     │
-│  │  └ Azure CLI token (local dev: `az login`)          │     │
+│  │  App Registration (ClientSecretCredential)        │     │
+│  │  ├ ITokenProvider → AppRegistrationTokenProvider   │     │
+│  │  ├ Thread-safe token cache (SemaphoreSlim)         │     │
+│  │  └ Azure CLI token (local dev: `az login` fallback) │     │
 │  │  Token → ARM → Admin SAS Token → Data API calls     │     │
 │  │  (Cached with 5-min buffer before expiry)           │     │
 │  └─────────────────────────────────────────────────────┘     │
 │                                                              │
 │  ┌─ Service Layer ─────────────────────────────────────┐     │
+│  │  ITokenProvider → AppRegistrationTokenProvider   │     │
 │  │  IArmApiService interface                           │     │
 │  │  ├ MockApiService (IsDevelopment)                   │     │
-│  │  └ ArmApiService (production)                       │     │
+│  │  ├ ArmApiService (production ARM management API)    │     │
+│  │  └ DataApiService (APIM Data API runtime mode)      │     │
 │  │  api-registry.json defines source per API:          │     │
 │  │  ├ APIM APIs → Data API + SAS                       │     │
 │  │  └ External APIs → per-adapter routing              │     │
@@ -372,7 +374,7 @@ ARM Transformers: transformArmApiToSummary(), transformArmApiToDetails()
 ### 4.3 Why BFF, Not Direct SPA → APIM
 
 - SAS tokens and ARM tokens cannot be safely held in the browser
-- Managed Identity credentials stay server-side (SOC 2 / GDPR compliant)
+- Service principal credentials stay server-side (SOC 2 / GDPR compliant)
 - Single proxy point for APIM Data API, eliminating CORS issues
 - Allows server-side data transformation and caching
 - **RBAC enforcement** — the BFF is the security boundary that validates tokens and checks role-to-API permissions before proxying requests
@@ -435,7 +437,7 @@ User → /apis
   │  Nginx Prod: /api/* → proxy → localhost:3001 (strips /api prefix)
   │
   ├─ BFF: GET /apis
-  │   ├─ DefaultAzureCredential → ARM bearer token (cached)
+  │   ├─ ITokenProvider (ClientSecretCredential) → ARM bearer token (cached)
   │   ├─ ARM → SAS token (cached, 5-min buffer)
   │   ├─ APIM Data API "/apis" call
   │   ├─ Transform to ApiSummary[]
@@ -460,7 +462,8 @@ User → /apis
 │  │  ├ Runtime: nginx:alpine + ASP.NET Core 10    │            │
 │  │  ├ supervisord: nginx + dotnet BFF co-process │            │
 │  │  │  └ docker-entrypoint.sh: runtime config inject│            │
-│  │  ├ User-Assigned Managed Identity               │            │
+│  │  ├ App Registration (Service Principal)              │            │
+│  │  ├ Service Principal env vars (ARM/Data API auth)│            │
 │  │  ├ Env vars injected from Bicep parameters      │            │
 │  │  ├ Ingress: external, port 8080                 │            │
 │  │  └ Health check: /health → 200                  │            │
@@ -492,7 +495,7 @@ Deployment: azure/deploy.ps1 / deploy.sh
 - Log Analytics Workspace
 - Application Insights
 - Azure Container Registry
-- Managed Identity assignment
+- App Registration (Service Principal) RBAC assignment
 
 ### 6.2 Nginx Configuration
 
@@ -573,13 +576,14 @@ Browser CSP            nginx.conf Content-Security-Policy header
                        (self + login.microsoftonline.com + azure-api.net + fonts)
 Auth Tokens            MSAL tokens in localStorage; bearer-only on /api calls
                        Login dedup via sessionStorage("mn_login_attempted")
-Server Credentials     Managed Identity (no secrets in env vars or code)
+Server Credentials     App Registration (ClientSecretCredential via ITokenProvider)
+                       Client secret stored as Container App secret in Bicep
 SAS Tokens             Generated server-side (BFF); never exposed to browser
 Server Auth            JWT Bearer validation (ASP.NET Core BFF)
                        Multi-tenant JWKS aggregation
 RBAC (Server)          4 authorization policies: ApiRead, ApiTryIt, ApiSubscribe, ApiManage
                        Hot-reloadable rbac-policies.json
-RBAC (Client)          permissions.ts → usePermissions() → RoleGate + SideNav filtering
+RBAC (Client)          permissions.ts → usePermissions() → RoleGate filtering
 Nginx Headers          X-Frame-Options, X-Content-Type-Options, X-XSS-Protection,
                        Referrer-Policy (no-referrer-when-downgrade)
 Cross-tab Security     BroadcastChannel("mn-auth") logout propagation
@@ -602,7 +606,7 @@ SAST / Secret Scan     ADO pipeline required (per appspec exit criteria)
 | **Welcome Email** | Trigger from Global Admin onboarding workflow (external dependency); add a webhook endpoint in BFF if self-managed | Medium |
 | ~~**BFF Migration Completion**~~ | ✅ **Complete** (March 2026) — Dockerfile, supervisord, Bicep, and docker-compose updated to run .NET BFF exclusively | ~~High~~ |
 | **Sandbox isolation** | API providers must supply sandbox endpoints; `ApiTryIt.tsx` should target sandbox URLs from API metadata | Medium (dependency) |
-| **i18n translations** | `i18n.ts` has en/ja stubs; content strings need extraction and external translation files per locale | Medium |
+| **i18n translations** | `i18n.ts` has en/es locale files; content strings need extraction and external translation files per locale | Medium |
 | **Test coverage to 70%** | Test files exist alongside components; expand coverage for all pages and BFF routes | High |
 | **ADO CI/CD pipeline** | Create `.azure-pipelines/workflows/` with build → test → Docker → ACR → ACA deployment stages | High |
 | **Threat Risk Assessment** | Document CSP, CORS, Managed Identity, RBAC, token caching strategy for EARB review | High |
@@ -632,7 +636,7 @@ kx-apim-dev-custom/
 │   ├── Program.cs                  ← 379-line Minimal API host
 │   ├── BffApi.csproj
 │   ├── Endpoints/                  ← Route group handlers (4 files)
-│   ├── Services/                   ← ArmApiService + MockApiService
+│   ├── Services/                   ← ArmApiService + DataApiService + MockApiService + AppRegistrationTokenProvider
 │   ├── Authorization/              ← RBAC policies + handlers (4 files)
 │   ├── Middleware/                  ← Custom middleware (2 files)
 │   ├── Models/                     ← Shared DTOs
@@ -669,9 +673,8 @@ kx-apim-dev-custom/
 │   │   ├── useAuth.ts              ← useContext(AuthContext) wrapper ✅
 │   │   └── *.test.ts               ← Test files for all auth modules
 │   ├── components/
-│   │   ├── AppShell.tsx             ← Layout shell (responsive drawer, 260px) ✅
-│   │   ├── Header.tsx               ← App bar + lang switcher + user menu ✅
-│   │   ├── SideNav.tsx              ← Navigation with role-based filtering ✅
+│   │   ├── AppShell.tsx             ← Layout shell (Header from component library + Footer) ✅
+│   │   ├── Header.tsx               ← Wraps library Header + UserProfile ✅
 │   │   ├── Footer.tsx               ← Support/privacy/terms links ✅
 │   │   ├── PrivateRoute.tsx         ← MSAL auth gate ✅
 │   │   ├── RoleGate.tsx             ← Role-based route guard ✅
@@ -716,7 +719,7 @@ kx-apim-dev-custom/
 │   ├── config.ts                   ← Centralized config (runtime → build → fallback) ✅
 │   ├── App.tsx                     ← Route tree with lazy loading ✅
 │   ├── main.tsx                    ← MSAL bootstrap + provider stack ✅
-│   ├── theme.ts                    ← Komatsu brand MUI theme ✅
+│   ├─ theme.ts                    ← Re-exports theme/colors/typography from @komatsu-nagm/component-library ✅
 │   ├── i18n.ts                     ← i18next setup (en, ja) ✅
 │   └── styles.css                  ← Global styles
 ├── .env.development                ← Dev env vars (mock auth enabled)
@@ -746,7 +749,8 @@ kx-apim-dev-custom/
 | **MSAL React 2.0 over raw OAuth** | First-party Microsoft library for Entra ID; handles full token lifecycle |
 | **ASP.NET Core 10 BFF** | .NET BFF is the **active runtime** in Docker & ACA; provides RBAC, typed DI, resilience pipeline, JWT validation. The legacy Express BFF (`bff/`) is retained for reference only. See `docs/BFF_IMPLEMENTATION.md`. |
 | **Centralized config.ts** | Runtime → build-time → fallback cascade enables single Docker image across environments |
-| **Managed Identity over client secrets** | Zero-secret deployment; SOC 2 compliant; auto-rotated |
+| **App Registration (ClientSecretCredential) for BFF auth** | Consistent service principal identity for all ARM/Data API calls; `ITokenProvider` abstraction with thread-safe token cache; secrets managed via Container App secrets in Bicep |
+| **`@komatsu-nagm/component-library`** | Shared UI components (Header, AppShell, theme) compiled from source via Vite alias to resolve React 18/19 version mismatch |
 | **Bicep over Terraform** | Komatsu preferred IaC (per appspec); native Azure Resource Manager |
 | **Container Apps over App Service** | Built-in scaling, revision management, lower cost for containerized workloads |
 | **Vitest 1.6 over Jest** | Native Vite integration, faster execution, same config ecosystem |
@@ -790,7 +794,12 @@ npm run test:coverage       # Coverage report
 
 ### 12.3 Docker Build
 
+> **Note:** The Docker build requires the `@komatsu-nagm/component-library` source (`react-template` repo) to be available. The `deploy-to-azure.ps1` script automatically copies it into `./component-library/` before building.
+
 ```bash
+# Copy component library source (if not using deploy-to-azure.ps1)
+cp -r ../react-template ./component-library
+
 # Build
 docker build -t komatsu-apim-portal .
 
@@ -798,6 +807,9 @@ docker build -t komatsu-apim-portal .
 docker run -p 8080:8080 \
   -e VITE_ENTRA_CLIENT_ID=... \
   -e VITE_EXTERNAL_TENANT_ID=... \
+  -e Apim__ServicePrincipal__TenantId=... \
+  -e Apim__ServicePrincipal__ClientId=... \
+  -e Apim__ServicePrincipal__ClientSecret=... \
   komatsu-apim-portal
 ```
 

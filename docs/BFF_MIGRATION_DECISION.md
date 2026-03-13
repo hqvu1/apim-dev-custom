@@ -109,7 +109,7 @@ bff-dotnet/
 │   └── ApimContracts.cs                ← All DTOs (PagedResult<T>, ApiSummary, ApiDetails, etc.)
 │
 └── Services/
-    ├── ArmApiService.cs                ← ARM Management API client + DefaultAzureCredential
+    ├── ArmApiService.cs                ← ARM Management API client + ITokenProvider (ClientSecretCredential)
     │                                     (unwraps ARM {id,name,properties} envelope)
     ├── DataApiService.cs               ← APIM Data API client (flat responses, user-scoped prefixing)
     └── MockApiService.cs               ← Static mock data for offline development
@@ -369,7 +369,7 @@ For MVP, `rbac-policies.json` is loaded at startup and can be hot-reloaded via `
 | Frontend types (`ApiSummary`, `ApiDetails`) | Unchanged — BFF returns same shape |
 | Nginx config | Unchanged — still proxies `/api/` → `localhost:3001` |
 | Bicep IaC | Minor — add dotnet runtime to container, remove Node.js |
-| Container App Managed Identity | Unchanged — `DefaultAzureCredential` works in .NET SDK too |
+| Container App auth | Updated — now uses App Registration (`ClientSecretCredential`) instead of Managed Identity |
 | Mock mode | Port to ASP.NET Core `IsDevelopment()` check |
 
 ### Timeline Estimate
@@ -379,7 +379,7 @@ For MVP, `rbac-policies.json` is loaded at startup and can be hot-reloaded via `
 | Step | Effort | Status |
 |---|---|---|
 | Scaffold `bff-dotnet/` project, Program.cs, DI setup | 1 day | ✅ Complete |
-| Port APIM token service (Managed Identity → ARM) | 1 day | ✅ Complete |
+| Port APIM token service (App Registration → ARM) | 1 day | ✅ Complete |
 | Port API list/detail routes + transformers | 2 days | ✅ Complete |
 | Add JWT Bearer authentication middleware | 0.5 day | ✅ Complete |
 | Add RBAC authorization pipeline + policy provider | 2 days | ✅ Complete |
@@ -450,7 +450,7 @@ environment=ASPNETCORE_ENVIRONMENT="Production",ASPNETCORE_URLS="http://+:3001"
 | **Should you include RBAC in the BFF?** | **Yes.** The BFF is the enforcement point — it validates the MSAL token, checks role-to-API permissions, then proxies to the correct backend. The frontend `RoleGate` is for UX (hide/show), the BFF is for security (allow/deny). |
 | **Should you use Azure Functions instead?** | **No.** The RBAC middleware needs to run on every request with consistent low latency. Functions cold start + per-invocation pricing doesn't fit a request/response proxy. |
 | **When?** | **Now, during build phase (Months 2–3).** ~13 days across 2 sprints. The SPA doesn't change, so frontend work continues in parallel. |
-| **Risk?** | **Low.** The SPA calls `/api/...` through Nginx — it never knows the backend changed. Same container, same Managed Identity, same Bicep (minor update). |
+| **Risk?** | **Low.** The SPA calls `/api/...` through Nginx — it never knows the backend changed. Same container, same App Registration credentials, same Bicep (minor update). |
 
 ---
 

@@ -31,7 +31,7 @@ The browser talks **directly** to the APIM Data API. The SAS token is obtained v
 Browser (React SPA)
   └─ usePortalApi() → fetch("/api/...")
        └─ Nginx reverse proxy → BFF (Express, port 3001)
-            ├─ DefaultAzureCredential → ARM bearer token
+            ├─ ITokenProvider (ClientSecretCredential) → ARM bearer token
             ├─ ARM POST /users/1/token → SAS token
             ├─ SAS token → APIM Data API calls
             ├─ transformDataApiToSummary() / transformDataApiToDetails()

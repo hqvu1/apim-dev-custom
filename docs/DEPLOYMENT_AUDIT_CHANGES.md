@@ -173,8 +173,11 @@ ARM URL: https://management.azure.com/subscriptions/{sub}/resourceGroups/{rg}/pr
 | `Apim__ResourceGroup` | `kac_apimarketplace_eus_dev_rg` | `Apim:ResourceGroup` | ARM URL path |
 | `Apim__ServiceName` | `demo-apim-feb` | `Apim:ServiceName` | ARM URL path + docs link |
 | `Apim__ApiVersion` | `2022-08-01` | `Apim:ApiVersion` | ARM query param |
-| `Apim__ManagedIdentityClientId` | `2c46c615-a962-4ce7-a2f9-cc0610ff2043` | `Apim:ManagedIdentityClientId` | `DefaultAzureCredential` opts |
-| `AZURE_CLIENT_ID` | same | SDK auto-detection | Managed Identity client ID |
+| `Apim__ServicePrincipal__TenantId` | `{tenant-id}` | `Apim:ServicePrincipal:TenantId` | App Registration tenant |
+| `Apim__ServicePrincipal__ClientId` | `{client-id}` | `Apim:ServicePrincipal:ClientId` | App Registration client ID |
+| `Apim__ServicePrincipal__ClientSecret` | `{secret}` | `Apim:ServicePrincipal:ClientSecret` | `ClientSecretCredential` |
+| `Apim__ArmScope` | `https://management.azure.com/.default` | `Apim:ArmScope` | ARM API token scope |
+| `Apim__DataApiScope` | `https://{apim}.management.azure-api.net/.default` | `Apim:DataApiScope` | Data API token scope |
 | `EntraId__TenantId` | `58be8688-6625-4e52-80d8-c17f3a9ae08a` | `EntraId:TenantId` | JWT validation |
 | `EntraId__ClientId` | APIM Entra app | `EntraId:ClientId` | JWT audience |
 | `EntraId__ExternalTenantId` | `511e2453-090d-480c-abeb-d2d95388a675` | `EntraId:ExternalTenantId` | CIAM JWKS |
@@ -241,7 +244,7 @@ az containerapp logs show `
 ## Post-Deploy Verification Checklist
 
 - [ ] Container app revision is active and healthy
-- [ ] BFF logs show: `✅ Azure Managed Identity credential initialized (User-Assigned: 2c46c615-...)`
+- [ ] BFF logs show: `✅ App Registration credential initialized (ClientSecretCredential)`
 - [ ] BFF logs show: `✅ Transformed 3 APIs from ARM response`
 - [ ] Landing page shows real stats (3 APIs, 3 Products, 4 Subscriptions)
 - [ ] API Catalog loads 3 APIs (Echo API, Swagger Petstore, Swagger Petstore v1)

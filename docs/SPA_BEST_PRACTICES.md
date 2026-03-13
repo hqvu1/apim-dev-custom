@@ -24,7 +24,7 @@ export const appConfig = {
 ```
 
 ### Route Constants
-A `ROUTES` constant object eliminates hardcoded path strings across `App.tsx`, `SideNav.tsx`, `RoleGate.tsx`, and `navigate()` calls:
+A `ROUTES` constant object eliminates hardcoded path strings across `App.tsx`, `RoleGate.tsx`, and `navigate()` calls:
 
 ```typescript
 export const ROUTES = {
@@ -43,7 +43,9 @@ buildPath(ROUTES.API_DETAILS, { apiId: "warranty-api" }); // → "/apis/warranty
 
 ### Files Changed
 - **Created:** `src/config.ts`
-- **Updated:** `src/App.tsx`, `src/main.tsx`, `src/auth/msalConfig.ts`, `src/components/PrivateRoute.tsx`, `src/components/SideNav.tsx`, `src/components/RoleGate.tsx`
+- **Updated:** `src/App.tsx`, `src/main.tsx`, `src/auth/msalConfig.ts`, `src/components/PrivateRoute.tsx`, `src/components/RoleGate.tsx`
+
+> **Note:** `SideNav.tsx` has been removed. Navigation is now handled by the `@komatsu-nagm/component-library` Header component.
 
 ---
 
@@ -265,7 +267,7 @@ Move translations to dedicated JSON files per locale:
 ```
 src/i18n/
 ├── en.json    ← English (complete)
-└── ja.json    ← Japanese (complete)
+└── es.json    ← Spanish (complete)
 ```
 
 Each file contains namespaced translation keys for all pages:
@@ -284,17 +286,19 @@ Each file contains namespaced translation keys for all pages:
 Updated `src/i18n.ts` to import from JSON:
 ```typescript
 import en from "./i18n/en.json";
-import ja from "./i18n/ja.json";
+import es from "./i18n/es.json";
 
 i18n.use(initReactI18next).init({
   lng: appConfig.defaultLocale,
-  resources: { en: { translation: en }, ja: { translation: ja } },
+  resources: { en: { translation: en }, es: { translation: es } },
 });
 ```
 
 ### Files Changed
-- **Created:** `src/i18n/en.json`, `src/i18n/ja.json`
-- **Updated:** `src/i18n.ts`, `src/components/SideNav.tsx` (uses `t()` for nav labels)
+- **Created:** `src/i18n/en.json`, `src/i18n/es.json`
+- **Updated:** `src/i18n.ts`
+
+> **Note:** `SideNav.tsx` (which previously used `t()` for nav labels) has been removed. Navigation is now in the component library.
 
 ---
 
@@ -333,16 +337,18 @@ The `ApiCard` component now shows a source badge for external APIs:
 ## 9. Component Improvements
 
 ### Header (`src/components/Header.tsx`)
+- Now wraps the `Header` and `UserProfile` components from `@komatsu-nagm/component-library`
 - Accepts optional `isPublic` prop — hides user avatar and sign-out menu in public layout mode
-- All props now optional with sensible defaults
+- `companyName` and `appTitle` props are passed through to the library Header
 
 ### RoleGate (`src/components/RoleGate.tsx`)
 - Uses `ROUTES.ACCESS_DENIED` instead of hardcoded `"/access-denied"`
 - JSDoc linking to BFF_MIGRATION_DECISION.md for RBAC context
 
-### SideNav (`src/components/SideNav.tsx`)
-- Navigation labels use `t()` translation function instead of hardcoded English
-- Route paths reference `ROUTES` constants
+### SideNav — REMOVED
+- `SideNav.tsx` and `SideNav.test.tsx` have been deleted
+- Navigation is now provided by the `@komatsu-nagm/component-library` Header component
+- The `AppShell` component no longer includes a side drawer
 
 ### PrivateRoute (`src/components/PrivateRoute.tsx`)
 - Uses `appConfig.useMockAuth` instead of inline `import.meta.env` check
@@ -365,7 +371,7 @@ The `ApiCard` component now shows a source badge for external APIs:
 | `src/hooks/useBffHealth.ts` | BFF health check hook |
 | `src/hooks/index.ts` | Barrel export for hooks |
 | `src/i18n/en.json` | English translations (complete) |
-| `src/i18n/ja.json` | Japanese translations (complete) |
+| `src/i18n/es.json` | Spanish translations (complete) |
 
 ## Summary of Modified Files
 
@@ -377,12 +383,14 @@ The `ApiCard` component now shows a source badge for external APIs:
 | `src/auth/msalConfig.ts` | Uses centralized appConfig.entra |
 | `src/components/ApiCard.tsx` | External API source badge |
 | `src/components/ErrorBoundary.tsx` | Structured logging, fallback prop, dev-mode error display |
-| `src/components/Header.tsx` | Optional isPublic prop, conditional user menu |
+| `src/components/Header.tsx` | Wraps library Header + UserProfile components, optional isPublic prop |
 | `src/components/PrivateRoute.tsx` | Uses appConfig.useMockAuth |
 | `src/components/RoleGate.tsx` | Uses ROUTES constants, JSDoc |
-| `src/components/SideNav.tsx` | i18n translations, ROUTES constants |
 | `src/i18n.ts` | Imports from JSON files, uses appConfig.defaultLocale |
-| `src/main.tsx` | Uses centralized appConfig |
+| `src/main.tsx` | Uses centralized appConfig, ThemeProvider from component library |
+| `src/theme.ts` | Re-exports theme/colors/typography from @komatsu-nagm/component-library |
+
+> **Note:** `src/components/SideNav.tsx` has been removed. Navigation is handled by the shared component library.
 
 ---
 

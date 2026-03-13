@@ -60,9 +60,6 @@ kapimdevacr.azurecr.io/komatsu-apim-portal:dev
 - **Multi-tenant:** Enabled (workforce + CIAM via dual OIDC key resolution)
 
 ### Features:
-- **Public Home Page:** ✅ Enabled (`VITE_PUBLIC_HOME_PAGE=true`)
-  - Allows unauthenticated users to view landing page
-  - Demo mode for public access
 - **API Backend:** https://d-apim.developer.azure-api.net
 - **Default Locale:** English (en)
 
@@ -72,7 +69,11 @@ kapimdevacr.azurecr.io/komatsu-apim-portal:dev
 - `Apim__SubscriptionId`, `Apim__ResourceGroup`, `Apim__ServiceName` — ARM API targeting
 - `EntraId__TenantId`, `EntraId__ClientId`, `EntraId__ExternalTenantId` — JWT validation
 - `Features__UseMockMode=false` — Real authentication enabled
-- `AZURE_CLIENT_ID` — Managed Identity for DefaultAzureCredential
+- `Apim__ServicePrincipal__TenantId` — App Registration tenant
+- `Apim__ServicePrincipal__ClientId` — App Registration client ID
+- `Apim__ServicePrincipal__ClientSecret` — App Registration client secret
+- `Apim__ArmScope` — ARM API scope (e.g. `https://management.azure.com/.default`)
+- `Apim__DataApiScope` — Data API scope (if using Data API mode)
 
 ---
 

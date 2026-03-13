@@ -41,8 +41,8 @@ This directory contains all project documentation for the Komatsu API Marketplac
 
 ### Infrastructure
 - [Azure Deployment Guide](../azure/README.md) — Infrastructure and deployment (Bicep + parameters)
-- [Azure Managed Identity Setup](../azure/MANAGED_IDENTITY_SETUP.md) — Managed Identity configuration
-- [Azure Quick Setup](../azure/QUICK_SETUP.md) — Quick Azure setup guide
+- [Azure Managed Identity Setup](../azure/MANAGED_IDENTITY_SETUP.md) — (Legacy) Managed Identity docs
+- [Azure Quick Setup](../azure/QUICK_SETUP.md) — App Registration (Service Principal) setup guide
 
 ## 📖 Document Conventions
 
@@ -55,14 +55,16 @@ This directory contains all project documentation for the Komatsu API Marketplac
 
 | Document | Last Updated | Status |
 |----------|--------------|--------|
-| ARCHITECTURE_DESIGN.md | 2026-03-05 | ✅ Complete |
-| BFF_IMPLEMENTATION.md | 2026-03-05 | ✅ Updated for .NET BFF |
+| ARCHITECTURE_DESIGN.md | 2026-03-07 | ✅ Updated (component library, SP auth, deploy) |
+| BFF_IMPLEMENTATION.md | 2026-03-07 | ✅ Updated (SP auth via ITokenProvider) |
 | BFF_MIGRATION_DECISION.md | 2026-03-05 | ✅ Updated with actual implementation |
 | DEBUG_SETUP_GUIDE.md | 2026-03-05 | ✅ Updated for .NET BFF |
 | START_DEBUG.md | 2026-03-05 | ✅ Updated for .NET BFF |
 | DEPLOYMENT_AUDIT_CHANGES.md | 2026-03-05 | ✅ Updated with .NET BFF notes |
 | DEPLOYMENT_SUCCESS.md | 2026-03-05 | ✅ Updated Client ID |
-| DOCKER_ENV_MIGRATION.md | 2026-03-05 | ✅ Added .NET BFF config note |
+| DOCKER_ENV_MIGRATION.md | 2026-03-07 | ✅ Updated (SP env vars, component library build) |
+| SPA_BEST_PRACTICES.md | 2026-03-07 | ✅ Updated (SideNav removed, component library) |
+| AZURE_DEPLOYMENT_GUIDE.md | 2026-03-07 | ✅ Updated (component library, SP env vars) |
 | BFF_EVOLUTION_ANALYSIS.md | 2026-02-17 | ✅ Historical (pre-migration) |
 | PUBLIC_LANDING_PAGE_SETUP.md | 2026-02-17 | ✅ Complete |
 | APIM_INTEGRATION_CHECKLIST.md | 2026-02-17 | ⚠️ In Progress |
