@@ -23,6 +23,18 @@
 14. [Deployment Model](#14-deployment-model)
 15. [Testing Strategy](#15-testing-strategy)
 16. [Best Practices Checklist](#16-best-practices-checklist)
+17. [End-to-End Data Flow & Fetch Reference](#17-end-to-end-data-flow--fetch-reference)
+    - [17.1 Master Data Flow Diagram](#171-master-data-flow-diagram)
+    - [17.2 Inbound: SPA → BFF](#172-inbound-spa--bff)
+    - [17.3 BFF Middleware Pipeline](#173-bff-middleware-pipeline-per-request-processing)
+    - [17.4 Outbound: BFF → ARM Management API](#174-outbound-bff--arm-management-api)
+    - [17.5 Outbound: BFF → APIM Data API](#175-outbound-bff--apim-data-api)
+    - [17.6 Outbound: BFF → Global Admin API](#176-outbound-bff--global-admin-api-role-provider)
+    - [17.7 Outbound: BFF → Legacy SOAP APIs](#177-outbound-bff--legacy-soap-apis)
+    - [17.8 Complete Endpoint → Data Source Map](#178-complete-endpoint--data-source-map)
+    - [17.9 Page-Level Fetch Orchestration](#179-page-level-fetch-orchestration)
+    - [17.10 Resilience & Error Handling Matrix](#1710-resilience--error-handling-matrix)
+    - [17.11 Token Flow Diagram](#1711-token-flow-diagram)
 
 ---
 
@@ -1734,3 +1746,763 @@ public class ApisEndpointsTests(BffWebApplicationFactory factory)
 ---
 
 *Document generated from the production implementation in `bff-dotnet/`. For quick-start instructions see [`bff-dotnet/README.md`](../bff-dotnet/README.md). For architecture decision records see [`docs/BFF_MIGRATION_DECISION.md`](BFF_MIGRATION_DECISION.md) and [`docs/BFF_EVOLUTION_ANALYSIS.md`](BFF_EVOLUTION_ANALYSIS.md).*
+
+---
+
+## 17. End-to-End Data Flow & Fetch Reference
+
+This section documents **every** data flow in the system, from the React SPA through the BFF to each backend service. Use it to answer: *"What happens—step by step—when a page loads, a subscription is created, or an admin action is taken?"*
+
+---
+
+### 17.1 Master Data Flow Diagram
+
+The diagram below shows all data paths at once, including the four named HTTP clients and both token flows.
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  User Browser                                                               │
+│                                                                             │
+│  React SPA (Vite + TypeScript)                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  Pages: Home, ApiCatalog, ApiDetails, ApiTryIt, Admin, Support, …   │   │
+│  │    │                                                                 │   │
+│  │    ├─ usePortalApi() / useApimCatalog() / useApiData<T>()           │   │
+│  │    │     └─ request() in src/api/client.ts                          │   │
+│  │    │           └─ MSAL getAccessToken() → Bearer header             │   │
+│  │    │                                                                 │   │
+│  │    ├─ useApimClient()  (src/api/apimClient.ts)  — legacy alternate  │   │
+│  │    └─ useMapiClient()  (src/api/mapiClient.ts)  — direct ARM client │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                     │  HTTPS /api/*  (Authorization: Bearer <user-JWT>)     │
+└─────────────────────┼───────────────────────────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Container (port 8080)                                                      │
+│                                                                             │
+│  Nginx (reverse proxy)                                                      │
+│  ├─ /          →  React SPA static files                                   │
+│  └─ /api/*     →  BFF :3001                                                │
+│                         │                                                   │
+│                         ▼                                                   │
+│  .NET 10 Minimal API BFF (:3001)                                            │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  Middleware pipeline (in order):                                     │   │
+│  │    LegacyApiMonitoringMiddleware → RequestLoggingMiddleware          │   │
+│  │    → SecurityHeadersMiddleware → CORS → UseAuthentication()          │   │
+│  │    → ClaimsEnrichmentMiddleware → UseAuthorization()                 │   │
+│  │                                                                      │   │
+│  │  Endpoint groups:                                                    │   │
+│  │    ApisEndpoints / ProductsEndpoints / SubscriptionsEndpoints        │   │
+│  │    MiscEndpoints / AdminEndpoints / SupportEndpoints                 │   │
+│  │    RegistrationEndpoints                                             │   │
+│  │                                                                      │   │
+│  │  Service layer (strategy pattern):                                   │   │
+│  │    IArmApiService ──→ ArmApiService  (ARM named client)             │   │
+│  │                   └─→ DataApiService (DataApi named client)         │   │
+│  │                   └─→ MockApiService (dev only)                     │   │
+│  │    IRoleProvider  ──→ GlobalAdminRoleProvider (GlobalAdmin client)  │   │
+│  │    IUnifiedApiService → UnifiedApiService (cloud + legacy merge)    │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│           │               │              │               │                  │
+│           ▼               ▼              ▼               ▼                  │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────┐ ┌──────────────────┐      │
+│  │  ArmApi      │ │  DataApi     │ │GlobalAdmin│ │  LegacySoap      │      │
+│  │  HttpClient  │ │  HttpClient  │ │HttpClient │ │  HttpClient      │      │
+│  └──────┬───────┘ └──────┬───────┘ └────┬─────┘ └───────┬──────────┘      │
+└─────────┼────────────────┼──────────────┼───────────────┼──────────────────┘
+          │                │              │               │
+          ▼                ▼              ▼               ▼
+  ARM Management    APIM Data API   Global Admin    Legacy SOAP
+  API (APIM)        (runtime)       API (roles)     APIs (NTLM)
+  SP bearer token   SP bearer token  API key         legacy auth
+```
+
+**Token flows summary:**
+
+| Direction | Token type | Acquisition | Header |
+|-----------|-----------|-------------|--------|
+| Browser → BFF (inbound) | Entra ID JWT (user) | `MSAL.acquireTokenSilent()`, scope `api://<bff-client-id>/Portal.Access` (where `<bff-client-id>` is `EntraId:ClientId` from config / `VITE_AAD_CLIENT_ID` env var) | `Authorization: Bearer <user-JWT>` |
+| BFF → ARM / Data API (outbound) | Service-principal bearer token | `ITokenProvider.GetTokenAsync(scope)` → `ClientSecretCredential` → `DefaultAzureCredential` fallback | `Authorization: Bearer <sp-token>` |
+| BFF → Global Admin API (outbound) | API key | `GlobalAdminSettings.ApiKey` config value | `Ocp-Apim-Subscription-Key: <key>` |
+| BFF → Legacy SOAP (outbound) | NTLM / legacy auth | `LegacyAuthenticationBridge` | Varies per legacy system |
+
+---
+
+### 17.2 Inbound: SPA → BFF
+
+All four layers of the React fetch stack, from low-level to high-level.
+
+#### 17.2.1 `request()` — core authenticated fetch (`src/api/client.ts`)
+
+The single function all hooks ultimately delegate to.
+
+```
+caller
+  │
+  ├─ getAccessToken() via MSAL (useAuth hook)
+  │     → acquireTokenSilent() → Entra ID → JWT
+  │
+  ├─ fetch(`${API_BASE}${path}`, { Authorization: Bearer <token>, ...options })
+  │
+  ├─ Response handling:
+  │     401 → ApiError { code: "UNAUTHORIZED" }
+  │     403 → ApiError { code: "FORBIDDEN" }
+  │     404 → ApiError { code: "NOT_FOUND" }
+  │     429/500/502/503/504 → retry (up to MAX_RETRIES=2)
+  │     AbortError → ApiError { code: "ABORTED" }
+  │     network error → ApiError { code: "NETWORK" }
+  │
+  └─ Returns: ApiResult<T> = { data: T | null, error: ApiError | null }
+```
+
+**Retry configuration:**
+
+| Parameter | Value |
+|-----------|-------|
+| `MAX_RETRIES` | `2` |
+| `RETRY_BASE_DELAY_MS` | `500` ms |
+| Backoff formula | `500 * 2^attempt` ms (500 ms, 1000 ms) |
+| Retryable status codes | `429, 500, 502, 503, 504` |
+| AbortController | Passed via `options.signal`; aborted requests return `{ code: "ABORTED" }` |
+
+**`ApiResult<T>` / `ApiError` contract:**
+
+```typescript
+// src/api/client.ts
+type ApiError = {
+  message: string;
+  status?: number;
+  code?: "UNAUTHORIZED" | "FORBIDDEN" | "NOT_FOUND" | "NETWORK" | "ABORTED" | "SERVER";
+};
+
+type ApiResult<T> = { data: T | null; error: ApiError | null };
+```
+
+#### 17.2.2 `usePortalApi()` — low-level CRUD hook (`src/api/client.ts`)
+
+Wraps `request()` with `useCallback` for stable React references. Used directly by pages for one-off fetches.
+
+```typescript
+const { get, post, patch, delete: del } = usePortalApi();
+
+// Usage examples from pages:
+get<NewsItem[]>("/news")
+get<ApiSummary[]>("/apis/highlights")
+get<PlatformStats>("/stats")
+post<SupportTicket>("/support/tickets", body)
+get<SupportTicket[]>("/support/my-tickets")
+get<RegistrationRequest[]>("/admin/registrations?status=pending")
+get<AdminMetric[]>("/admin/metrics")
+```
+
+Each method signature:
+
+| Method | Signature | HTTP verb |
+|--------|-----------|-----------|
+| `get` | `<T>(path, signal?) → Promise<ApiResult<T>>` | GET |
+| `post` | `<T>(path, body, signal?) → Promise<ApiResult<T>>` | POST |
+| `patch` | `<T>(path, body, signal?) → Promise<ApiResult<T>>` | PATCH |
+| `delete` | `<T>(path, signal?) → Promise<ApiResult<T>>` | DELETE |
+
+#### 17.2.3 `useApimCatalog()` — typed catalog operations (`src/api/client.ts`)
+
+High-level hook for the APIM catalog. Mirrors the URL conventions of the official `api-management-developer-portal` `apiService.ts`.
+
+| Operation | HTTP call | Notes |
+|-----------|-----------|-------|
+| `listApis(opts?)` | `GET /apis?$top=N&$skip=N&skipWorkspaces=true[&tags[i]=…][&$filter=contains(name,'…')]` | Returns `ApiSummary[]` (mapped from `ApimApiContract`) |
+| `getApi(apiId)` | 3 sequential calls: `GET /apis/{id}?expandApiVersionSet=true` → `GET /apis/{id}/operations?$top=100` → `GET /apis/{id}/products?$top=50` | Returns `ApiDetails` with operations + products merged |
+| `listProducts(opts?)` | `GET /products?$top=N&$skip=N&$filter=state eq 'published'` | Returns `ApiProduct[]` |
+| `listSubscriptions()` | `GET /subscriptions?$top=100` | Returns `ApiSubscription[]` |
+| `createSubscription(productId, displayName)` | `POST /subscriptions` with `{ scope, displayName, state: "submitted" }` | Returns `ApiSubscription` |
+| `cancelSubscription(subscriptionId)` | `DELETE /subscriptions/{id}` | Returns `void` |
+
+**`getApi()` parallel fetch detail:**
+
+```
+useApimCatalog.getApi("petstore")
+  │
+  ├─ 1. GET /apis/petstore?expandApiVersionSet=true  → ApiContract
+  ├─ 2. GET /apis/petstore/operations?$top=100        → PagedResult<OperationContract>
+  └─ 3. GET /apis/petstore/products?$top=50           → PagedResult<ProductContract>
+        (Note: steps 2 and 3 are sequential after step 1 resolves)
+  │
+  └─ Maps into: ApiDetails { ...summary, operations[], plans[], overview, ... }
+```
+
+#### 17.2.4 `useApimClient()` — legacy/alternate client (`src/api/apimClient.ts`)
+
+Direct client used primarily by `ApiTryIt` and other pages that need the `api-version` query parameter style. Uses `VITE_APIM_GATEWAY_URL` or `VITE_PORTAL_API_BASE` as base.
+
+| Operation | HTTP call |
+|-----------|-----------|
+| `getApis()` | `GET /apis?api-version=2022-08-01` |
+| `getApiById(apiId)` | Parallel: `GET /apis/{id}?api-version=2022-08-01` + `GET /apis/{id}/operations?api-version=2022-08-01` |
+
+Returns `ApiSummary[]` / `ApiDetails | null` (no `ApiResult` wrapper — returns `null` on error).
+
+#### 17.2.5 `useApiData<T>(path)` — generic fetch-on-mount hook (`src/hooks/useApiData.ts`)
+
+Encapsulates the "fetch on mount, cancel on unmount" pattern. Used across `ApiCatalog`, `ApiDetails`, `News`, `MyIntegrations`, etc.
+
+```typescript
+const { data, loading, error, refetch } = useApiData<ApiSummary[]>("/apis");
+//      T | null  bool     ApiError | null  () => void
+```
+
+**Lifecycle:**
+
+```
+mount
+  │
+  ├─ AbortController created
+  ├─ setLoading(true)
+  ├─ usePortalApi().get<T>(path, signal)
+  │     └─ on success: setData(result.data), setLoading(false)
+  │     └─ on error:   setError(result.error), setLoading(false)
+  │
+unmount
+  └─ controller.abort()  → in-flight fetch receives AbortError → ignored
+```
+
+**Options:**
+
+| Option | Type | Effect |
+|--------|------|--------|
+| `skip` | `boolean` | Skip initial fetch (useful for conditional loading based on auth state) |
+
+#### 17.2.6 `useBffHealth()` — periodic health polling (`src/hooks/useBffHealth.ts`)
+
+Polls `GET /api/health` (anonymous BFF endpoint) on an interval.
+
+| Return value | Meaning |
+|-------------|---------|
+| `"checking"` | Initial state / request in-flight |
+| `"healthy"` | BFF returned HTTP 200 |
+| `"unhealthy"` | Non-200 or network error |
+
+Default polling interval: **60 seconds**. Components display a degraded-mode banner when `status === "unhealthy"`.
+
+#### 17.2.7 `useMapiClient()` — direct ARM Management API client (`src/api/mapiClient.ts`)
+
+Builds the ARM base URL from Vite env vars and calls Azure Resource Manager directly (bypassing the BFF). Used for low-level ARM operations in development/testing scenarios.
+
+**Base URL construction:**
+
+```
+https://management.azure.com/subscriptions/${VITE_AZURE_SUBSCRIPTION_ID}
+  /resourceGroups/${VITE_AZURE_RESOURCE_GROUP}
+  /providers/Microsoft.ApiManagement/service/${VITE_AZURE_APIM_SERVICE_NAME}
+```
+
+Methods: `get`, `post`, `put`, `patch`, `delete`, `getAll` (auto-follows `nextLink` pagination).
+
+---
+
+### 17.3 BFF Middleware Pipeline (per-request processing)
+
+Every request entering the BFF at `:3001` traverses this middleware stack in order (`bff-dotnet/BffApi/Program.cs`):
+
+```
+Incoming HTTP request (/api/...)
+  │
+  1. LegacyApiMonitoringMiddleware   — latency tracking, error counters for legacy API paths
+  │                                    (bff-dotnet/BffApi/Middleware/LegacyApiMonitoringMiddleware.cs)
+  │
+  2. RequestLoggingMiddleware        — structured logging: {Method} {Path} → {Status} ({Elapsed}ms)
+  │                                    (bff-dotnet/BffApi/Middleware/RequestLoggingMiddleware.cs)
+  │
+  3. SecurityHeadersMiddleware       — adds HSTS, X-Frame-Options, X-Content-Type-Options, etc.
+  │                                    (bff-dotnet/BffApi/Middleware/RequestLoggingMiddleware.cs — defined in same file)
+  │
+  4. CORS                            — allow-list for same-origin Nginx proxy and dev origins
+  │
+  5. UseAuthentication()             — validates JWT Bearer token (Entra ID multi-tenant)
+  │                                    — in mock mode: auto-succeeds with synthetic "dev-user" Admin
+  │
+  6. ClaimsEnrichmentMiddleware      — extracts OID from JWT, calls GlobalAdminRoleProvider,
+  │                                    merges returned business roles into ClaimsPrincipal
+  │                                    (bff-dotnet/BffApi/Middleware/ClaimsEnrichmentMiddleware.cs)
+  │
+  7. UseAuthorization()              — evaluates RBAC policies via ApiAccessHandler
+  │                                    policies: ApiRead / ApiTryIt / ApiSubscribe / ApiManage
+  │                                    (bff-dotnet/BffApi/Authorization/ApiAccessHandler.cs)
+  │
+  ▼
+  Endpoint handler (IArmApiService call → response)
+```
+
+**Sequence diagram for a typical authenticated request:**
+
+```
+SPA                  Nginx             BFF                Entra ID       Global Admin
+ │                    │                 │                     │               │
+ │─ GET /api/apis ──►│                 │                     │               │
+ │                    │─ proxy ───────►│                     │               │
+ │                    │                │─ validate JWT ─────►│               │
+ │                    │                │◄─ OK (claims) ──────│               │
+ │                    │                │─ GET /users/{oid}/roles ────────────►│
+ │                    │                │◄─ ["Distributor"] ──────────────────│
+ │                    │                │                     │               │
+ │                    │                │─ RBAC check → allow │               │
+ │                    │                │─ ArmApiService.ListApisAsync()      │
+ │                    │                │   (ARM call with SP token)          │
+ │                    │◄─ 200 JSON ────│                     │               │
+ │◄─ 200 JSON ────────│                │                     │               │
+```
+
+---
+
+### 17.4 Outbound: BFF → ARM Management API
+
+**Service:** `ArmApiService` (`bff-dotnet/BffApi/Services/ArmApiService.cs`)  
+**Named HTTP client:** `"ArmApi"`
+
+#### Token acquisition
+
+```
+ArmApiService.GetTokenAsync(scope)
+  │
+  └─ ITokenProvider.GetTokenAsync("https://management.azure.com/.default")
+        │
+        ├─ try: ClientSecretCredential (TenantId + ClientId + ClientSecret from KeyVault)
+        │         → POST https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token
+        │         → bearer token (SP identity)
+        │
+        └─ on 403 / failure: _tokenProvider.InvalidateCredential()
+                               → retry with DefaultAzureCredential
+                               → (ManagedIdentity → EnvVars → AzureCLI → VisualStudio)
+```
+
+#### Base URL construction
+
+```
+https://management.azure.com/subscriptions/{SubscriptionId}
+  /resourceGroups/{ResourceGroup}
+  /providers/Microsoft.ApiManagement/service/{ServiceName}
+```
+
+Configured via `appsettings.json` section `"Apim"`: `SubscriptionId`, `ResourceGroup`, `ServiceName`, `ApiVersion` (default `"2022-08-01"`).
+
+#### Generic fetch methods
+
+| Method | Signature | Notes |
+|--------|-----------|-------|
+| `FetchArmAsync(path, ct, method?, body?)` | → `JsonElement` | Attaches Bearer token, handles 403 by retrying with fallback credential |
+| `FetchArmCachedAsync(path, ct)` | → `JsonElement` | `IMemoryCache` dedup with **1-minute TTL**; cache key `"arm:{path}"` |
+
+#### ARM response envelope unwrapping
+
+ARM returns resources with a `properties` sub-object. The service strips this envelope to produce flat contracts:
+
+```json
+// ARM raw response (GET /apis/petstore)
+{
+  "id": "/subscriptions/.../apis/petstore",
+  "name": "petstore",
+  "properties": {
+    "displayName": "Petstore API",
+    "path": "/petstore",
+    "protocols": ["https"],
+    "subscriptionRequired": true
+  }
+}
+
+// After TransformApiContract() → ApiContract
+{
+  "id": "petstore",
+  "name": "Petstore API",
+  "path": "/petstore",
+  "protocols": ["https"],
+  "subscriptionRequired": true
+}
+```
+
+Transformer functions: `TransformApiContract`, `TransformOperationContract`, `TransformProductContract`, `TransformSubscriptionContract`, `TransformTagContract`.
+
+#### Resilience (via `Program.cs` `AddResilienceHandler`)
+
+| Policy | Configuration |
+|--------|---------------|
+| Retry | 3 attempts, exponential backoff |
+| Per-attempt timeout | 30 seconds |
+| Total request timeout | 90 seconds |
+| Telemetry header | `PortalTelemetryHandler` (a `DelegatingHandler` registered on the `ArmApi`/`DataApi` named clients, separate from Polly policies) adds `x-ms-apim-client: apim-dev-portal` on every outbound ARM/Data API request (`bff-dotnet/BffApi/Middleware/PortalTelemetryHandler.cs`) |
+
+---
+
+### 17.5 Outbound: BFF → APIM Data API
+
+**Service:** `DataApiService` (`bff-dotnet/BffApi/Services/DataApiService.cs`)  
+**Named HTTP client:** `"DataApi"`
+
+Registered when `Apim:UseDataApi = true`. Implements the same `IArmApiService` interface as `ArmApiService`, so endpoint handlers are unaware of which backend is active.
+
+#### Key differences from `ArmApiService`
+
+| Aspect | ArmApiService | DataApiService |
+|--------|---------------|----------------|
+| Base URL | `https://management.azure.com/subscriptions/…` | `Apim:DataApiUrl` (e.g. `https://<apim>.azure-api.net/developer`) |
+| Token scope | `Apim:ArmScope` | `Apim:DataApiScope` |
+| Response shape | ARM envelope `{ properties: { … } }` | Flat JSON — fields directly on object |
+| Subscription prefix | Not applicable | `/users/{userId}/subscriptions/…` (user-scoped) |
+| API version | `Apim:ApiVersion` (2022-08-01) | `Apim:DataApiVersion` (2022-04-01-preview) |
+
+#### User-scoped prefix
+
+The Data API requires subscription paths to be prefixed with the caller's identity:
+
+```csharp
+// DataApiService.UserPrefix()
+string UserPrefix(string path) {
+    var userId = GetCurrentUserId(); // oid or sub claim from JWT
+    return $"/users/{userId}/{path.TrimStart('/')}";
+}
+
+// e.g. GET /subscriptions → /users/abc-123/subscriptions
+```
+
+#### Caching
+
+Same pattern as `ArmApiService`: `IMemoryCache` with `"dataapi:{path}"` cache key and **1-minute TTL**.
+
+---
+
+### 17.6 Outbound: BFF → Global Admin API (Role Provider)
+
+**Service:** `GlobalAdminRoleProvider` (`bff-dotnet/BffApi/Services/GlobalAdminRoleProvider.cs`)  
+**Named HTTP client:** `"GlobalAdmin"`
+
+Called by `ClaimsEnrichmentMiddleware` on **every authenticated request** (before RBAC evaluation).
+
+#### Flow
+
+```
+ClaimsEnrichmentMiddleware
+  │
+  └─ IRoleProvider.GetUserRolesAsync(userId)
+        │
+        ├─ IMemoryCache check → key "ga-roles:{userId}"
+        │     HIT  → return cached roles (TTL: 30 min)
+        │
+        └─ MISS → GET {GlobalAdmin:BaseUrl}/users/{userId}/roles
+                    header: Ocp-Apim-Subscription-Key: {GlobalAdmin:ApiKey}
+                    │
+                    ├─ success → cache + return string[] (e.g. ["Distributor"])
+                    └─ error   → log + return []  (fail-closed → RBAC denies all)
+```
+
+#### Fail-closed behavior
+
+If the Global Admin API is unreachable or returns an error, `GetUserRolesAsync` returns an empty array `[]`. The RBAC pipeline then denies access to all protected endpoints. This prevents unauthorized access during Global Admin API outages.
+
+#### Resilience (named client `"GlobalAdmin"` in `Program.cs`)
+
+| Policy | Configuration |
+|--------|---------------|
+| Retry | 2 attempts |
+| Per-attempt timeout | 10 seconds |
+| Total request timeout | 30 seconds |
+| Cache TTL | **30 minutes** (configurable via `GlobalAdmin:RoleCacheMinutes`) |
+
+---
+
+### 17.7 Outbound: BFF → Legacy SOAP APIs
+
+**Services:** `SoapLegacyApiService`, `LegacySubscriptionService`, `LegacyAuthenticationBridge`, `UnifiedApiService`  
+(all in `bff-dotnet/BffApi/Services/Legacy/`)
+
+#### Component responsibilities
+
+| Component | File | Responsibility |
+|-----------|------|----------------|
+| `ILegacyApiService` / `SoapLegacyApiService` | `Legacy/SoapLegacyApiService.cs` | SOAP envelope construction, XML response parsing, maps to `ApiDetail[]` |
+| `LegacyAuthenticationBridge` | `Legacy/LegacyAuthenticationBridge.cs` | Acquires NTLM / legacy auth tokens for SOAP backends |
+| `LegacySubscriptionService` | `Legacy/LegacySubscriptionService.cs` | Subscription lifecycle for legacy systems (create/cancel) |
+| `UnifiedApiService` | `Services/UnifiedApiService.cs` | Merges cloud + legacy catalogs in a single `Task.WhenAll` parallel fetch |
+
+#### `UnifiedApiService` parallel fetch
+
+```csharp
+// UnifiedApiService.GetAllApisAsync()
+var cloudTask  = GetCloudApisAsync();   // IArmApiService.ListApisAsync()
+var legacyTask = GetLegacyApisAsync();  // ILegacyApiService.GetApisAsync()
+
+await Task.WhenAll(cloudTask, legacyTask);
+
+var all = cloudApis.Concat(legacyApis).OrderBy(a => a.Name).ToList();
+```
+
+**Cache keys and TTLs:**
+
+| Cache key | TTL |
+|-----------|-----|
+| `"unified:cloud-apis"` | **60 minutes** |
+| `"unified:legacy-apis"` | **60 minutes** |
+
+On error in either branch, the failing branch returns an empty list — the other branch's results are still returned (graceful degradation).
+
+---
+
+### 17.8 Complete Endpoint → Data Source Map
+
+All BFF endpoints, their auth requirements, the service method called, the upstream API hit, and caching behaviour.
+
+#### APIs (`/api/apis/*`) — `ApisEndpoints.cs`
+
+| Method | Path | Auth Policy | Service Method | Upstream | Response | Cached |
+|--------|------|-------------|----------------|----------|----------|--------|
+| GET | `/api/apis` | `ApiRead` | `IArmApiService.ListApisAsync(top, skip, filter)` | ARM / Data API | `PagedResult<ApiContract>` | ✅ 1 min |
+| GET | `/api/apis/highlights` | `ApiRead` | `IArmApiService.ListApisAsync(top: 3)` | ARM / Data API | `List<ApiContract>` | ✅ 1 min |
+| GET | `/api/apis/{apiId}` | `ApiRead` | `IArmApiService.GetApiAsync(apiId, revision?)` | ARM / Data API | `ApiContract` | ✅ 1 min |
+| GET | `/api/apis/{apiId}/operations` | `ApiRead` | `IArmApiService.ListOperationsAsync(apiId, top, skip)` | ARM / Data API | `PagedResult<OperationContract>` | ✅ 1 min |
+| GET | `/api/apis/{apiId}/products` | `ApiRead` | `IArmApiService.ListProductsForApiAsync(apiId)` | ARM / Data API | `PagedResult<ProductContract>` | ✅ 1 min |
+| GET | `/api/apis/{apiId}/openapi` | `ApiTryIt` | `IArmApiService.ExportOpenApiSpecAsync(apiId, format)` | ARM / Data API | `302 redirect` or inline JSON | ❌ |
+| GET | `/api/apis/{apiId}/operations/{opId}` | `ApiRead` | `IArmApiService.GetOperationAsync(apiId, opId)` | ARM / Data API | `OperationContract` | ✅ 1 min |
+| GET | `/api/apis/{apiId}/operations/{opId}/tags` | `ApiRead` | `IArmApiService.GetOperationTagsAsync(apiId, opId)` | ARM / Data API | `IReadOnlyList<TagContract>` | ✅ 1 min |
+| GET | `/api/apis/{apiId}/operationsByTags` | `ApiRead` | `IArmApiService.GetOperationsByTagsAsync(…)` | ARM / Data API | `PagedResult<TagGroup<OperationContract>>` | ✅ 1 min |
+| GET | `/api/apis/{apiId}/schemas` | `ApiRead` | `IArmApiService.GetApiSchemasAsync(apiId)` | ARM / Data API | `PagedResult<SchemaContract>` | ✅ 1 min |
+| GET | `/api/apis/{apiId}/releases` | `ApiRead` | `IArmApiService.GetApiChangeLogAsync(apiId, top, skip)` | ARM / Data API | `PagedResult<ChangeLogContract>` | ✅ 1 min |
+| GET | `/api/apis/byTags` | `ApiRead` | `IArmApiService.GetApisByTagsAsync(…)` | ARM / Data API | `PagedResult<TagGroup<ApiContract>>` | ✅ 1 min |
+
+#### Products (`/api/products/*`) — `ProductsEndpoints.cs`
+
+| Method | Path | Auth Policy | Service Method | Upstream | Response | Cached |
+|--------|------|-------------|----------------|----------|----------|--------|
+| GET | `/api/products` | `ApiRead` | `IArmApiService.ListProductsAsync(top, skip)` | ARM / Data API | `PagedResult<ProductContract>` | ✅ 1 min |
+| GET | `/api/products/{productId}` | `ApiRead` | `IArmApiService.GetProductAsync(productId)` | ARM / Data API | `ProductContract` | ✅ 1 min |
+| GET | `/api/products/{productId}/apis` | `ApiRead` | `IArmApiService.GetProductApisAsync(productId, top, skip, filter)` | ARM / Data API | `PagedResult<ApiContract>` | ✅ 1 min |
+
+#### Subscriptions (`/api/subscriptions/*`) — `SubscriptionsEndpoints.cs`
+
+| Method | Path | Auth Policy | Service Method | Upstream | Response | Cached |
+|--------|------|-------------|----------------|----------|----------|--------|
+| GET | `/api/subscriptions` | `ApiSubscribe` | `IArmApiService.ListSubscriptionsAsync(top, skip)` | ARM / Data API | `PagedResult<SubscriptionContract>` | ✅ 1 min |
+| GET | `/api/subscriptions/{subId}` | `ApiSubscribe` | `IArmApiService.GetSubscriptionAsync(subId)` | ARM / Data API | `SubscriptionContract` | ✅ 1 min |
+| POST | `/api/subscriptions` | `ApiSubscribe` | `IArmApiService.CreateSubscriptionAsync(request)` | ARM / Data API | `SubscriptionContract` 201 | ❌ |
+| PATCH | `/api/subscriptions/{subId}` | `ApiSubscribe` | `IArmApiService.UpdateSubscriptionAsync(subId, body)` | ARM / Data API | `SubscriptionContract` | ❌ |
+| DELETE | `/api/subscriptions/{subId}` | `ApiSubscribe` | `IArmApiService.DeleteSubscriptionAsync(subId)` | ARM / Data API | 204 No Content | ❌ |
+| POST | `/api/subscriptions/{subId}/secrets` | `ApiSubscribe` | `IArmApiService.ListSubscriptionSecretsAsync(subId)` | ARM / Data API | `SubscriptionContract` | ❌ |
+| POST | `/api/subscriptions/{subId}/regeneratePrimaryKey` | `ApiSubscribe` | `IArmApiService.RegeneratePrimaryKeyAsync(subId)` | ARM / Data API | `SubscriptionContract` | ❌ |
+| POST | `/api/subscriptions/{subId}/regenerateSecondaryKey` | `ApiSubscribe` | `IArmApiService.RegenerateSecondaryKeyAsync(subId)` | ARM / Data API | `SubscriptionContract` | ❌ |
+
+#### Misc (`/api/tags`, `/api/stats`, `/api/news`, `/api/users`, `/api/health`) — `MiscEndpoints.cs`
+
+| Method | Path | Auth Policy | Service Method | Upstream | Response | Cached |
+|--------|------|-------------|----------------|----------|----------|--------|
+| GET | `/api/tags` | `ApiRead` | `IArmApiService.ListTagsAsync(scope, filter)` | ARM / Data API | `PagedResult<TagContract>` | ✅ 1 min |
+| GET | `/api/stats` | `ApiRead` | `IArmApiService.GetStatsAsync()` | ARM / Data API (4× count queries) | `PlatformStats` | ✅ 1 min |
+| GET | `/api/news` | `ApiRead` | Static in-memory data | None (static) | `NewsItem[]` | ❌ |
+| GET | `/api/users/me` | Authenticated | JWT claims extraction | None (from token) | `UserProfile` | ❌ |
+| GET | `/api/users/me/subscriptions` | Authenticated | `IArmApiService.ListSubscriptionsAsync(top, skip)` | ARM / Data API | `PagedResult<SubscriptionContract>` | ✅ 1 min |
+| GET | `/api/health` | Anonymous | Inline static response | None | `{ status, service, timestamp, version }` | ❌ |
+
+#### Admin (`/api/admin/*`) — `AdminEndpoints.cs`
+
+| Method | Path | Auth Policy | Service Method | Upstream | Response | Cached |
+|--------|------|-------------|----------------|----------|----------|--------|
+| GET | `/api/admin/registrations` | `ApiManage` | In-memory mock list | None (mock) | `List<RegistrationRequest>` | ❌ |
+| POST | `/api/admin/registrations/{id}/approve` | `ApiManage` | In-memory mock mutation | None (mock) | `RegistrationRequest` | ❌ |
+| POST | `/api/admin/registrations/{id}/reject` | `ApiManage` | In-memory mock mutation | None (mock) | `RegistrationRequest` | ❌ |
+| GET | `/api/admin/metrics` | `ApiManage` | `IArmApiService.GetStatsAsync()` + mock counts | ARM / Data API | `AdminMetric[]` | ❌ |
+
+#### Support (`/api/support/*`) — `SupportEndpoints.cs`
+
+| Method | Path | Auth Policy | Service Method | Upstream | Response | Cached |
+|--------|------|-------------|----------------|----------|----------|--------|
+| GET | `/api/support/faqs` | Authenticated | In-memory static array | None (static) | `string[]` | ❌ |
+| POST | `/api/support/tickets` | Authenticated | In-memory ticket store | None (mock) | `SupportTicket` 201 | ❌ |
+| GET | `/api/support/my-tickets` | Authenticated | In-memory ticket store | None (mock) | `List<SupportTicket>` | ❌ |
+
+#### Registration (`/api/registration/*`) — `RegistrationEndpoints.cs`
+
+| Method | Path | Auth Policy | Service Method | Upstream | Response | Cached |
+|--------|------|-------------|----------------|----------|----------|--------|
+| GET | `/api/registration/config` | Authenticated | Static config | None | `RegistrationConfig` | ❌ |
+| POST | `/api/registration` | Authenticated | In-memory store | None (mock) | `RegistrationRequest` 201 | ❌ |
+| GET | `/api/registration/status` | Authenticated | In-memory store lookup | None (mock) | `RegistrationStatus` | ❌ |
+
+---
+
+### 17.9 Page-Level Fetch Orchestration
+
+How each React page initiates and coordinates its data fetches.
+
+#### Home (`src/pages/home/index.tsx`)
+
+```typescript
+// Three parallel fetches on mount via Promise.all
+const [newsResult, highlightsResult, statsResult] = await Promise.all([
+  get<NewsItem[]>("/news"),                   // GET /api/news
+  get<ApiSummary[]>("/apis/highlights"),       // GET /api/apis/highlights
+  get<PlatformStats>("/stats"),               // GET /api/stats
+]);
+```
+
+| Fetch | Endpoint | Hook | Auth |
+|-------|----------|------|------|
+| News items | `GET /api/news` | `usePortalApi().get` | `ApiRead` |
+| Highlighted APIs (top 3) | `GET /api/apis/highlights` | `usePortalApi().get` | `ApiRead` |
+| Platform statistics | `GET /api/stats` | `usePortalApi().get` | `ApiRead` |
+
+On partial failure (any single fetch errors), the page shows a toast and renders with available data. `cancelled` guard prevents state updates after unmount.
+
+#### ApiCatalog (`src/pages/ApiCatalog.tsx`)
+
+| Fetch | Endpoint | Hook | Auth |
+|-------|----------|------|------|
+| API list (paginated) | `GET /api/apis?$top=N&$skip=N[&$filter=…][&tags[i]=…]` | `usePortalApi` + `useApimCatalog` | `ApiRead` |
+
+Pagination triggers re-fetch with updated `$skip`. Tag filters are appended as `tags[0]=…&tags[1]=…`.
+
+#### ApiDetails (`src/pages/ApiDetails.tsx`)
+
+| Fetch | Endpoint | Hook | Notes |
+|-------|----------|------|-------|
+| API metadata | `GET /api/apis/{id}?expandApiVersionSet=true` | `useApimCatalog().getApi` | |
+| Operations list | `GET /api/apis/{id}/operations?$top=100` | `useApimCatalog().getApi` | Same call, parallel |
+| Linked products | `GET /api/apis/{id}/products?$top=50` | `useApimCatalog().getApi` | Same call, parallel |
+
+All three fetches are initiated inside `useApimCatalog().getApi(apiId)` which fans them out and merges the results into an `ApiDetails` object.
+
+#### ApiTryIt (`src/pages/ApiTryIt.tsx`)
+
+| Fetch | Endpoint | Hook | Notes |
+|-------|----------|------|-------|
+| API + operations | `GET /api/apis/{id}?api-version=2022-08-01` + `GET /api/apis/{id}/operations?api-version=2022-08-01` | `useApimClient().getApiById` | Parallel `Promise.all` inside `getApiById` |
+
+The resulting `ApiDetails.openApiUrl` is then used to fetch the OpenAPI spec inline or redirect via `GET /api/apis/{id}/openapi`.
+
+#### MyIntegrations (`src/pages/MyIntegrations.tsx`)
+
+| Fetch | Endpoint | Hook | Auth |
+|-------|----------|------|------|
+| User subscriptions | `GET /api/users/me/subscriptions` | `usePortalApi().get` or `useApiData` | Authenticated |
+
+Subscription actions trigger additional calls:
+- Regenerate key: `POST /api/subscriptions/{subId}/regeneratePrimaryKey`
+- Cancel: `DELETE /api/subscriptions/{subId}`
+
+#### Admin (`src/pages/Admin.tsx`)
+
+| Fetch | Endpoint | Hook | Auth |
+|-------|----------|------|------|
+| Pending registrations | `GET /api/admin/registrations?status=pending` | `usePortalApi().get` | `ApiManage` |
+| Portal metrics | `GET /api/admin/metrics` | `usePortalApi().get` | `ApiManage` |
+
+Both fetches run in parallel. Approve/reject actions trigger `POST /api/admin/registrations/{id}/approve` or `.../reject`.
+
+#### Support (`src/pages/Support.tsx`)
+
+| Fetch | Endpoint | Hook | Auth |
+|-------|----------|------|------|
+| FAQ list | `GET /api/support/faqs` | `usePortalApi().get` | Authenticated |
+| My tickets | `GET /api/support/my-tickets` | `usePortalApi().get` | Authenticated |
+
+Creating a ticket triggers `POST /api/support/tickets` with `{ category, api, impact, description }`.
+
+#### Register / Onboarding (`src/pages/Register.tsx`, `src/pages/Onboarding.tsx`)
+
+| Fetch | Endpoint | Hook | Auth |
+|-------|----------|------|------|
+| Form config | `GET /api/registration/config` | `usePortalApi().get` | Authenticated |
+| Submit registration | `POST /api/registration` | `usePortalApi().post` | Authenticated |
+| Registration status | `GET /api/registration/status` | `usePortalApi().get` | Authenticated |
+
+---
+
+### 17.10 Resilience & Error Handling Matrix
+
+Cross-cutting summary of retry, caching, and error handling at each layer.
+
+| Layer | Component | Retry Strategy | Cache | Timeout | Error Handling |
+|-------|-----------|---------------|-------|---------|----------------|
+| SPA | `request()` in `src/api/client.ts` | 2 retries, exp backoff (500 ms base), codes `[429, 500–504]` | None | Browser default | Returns `ApiResult` with typed `ApiError.code` |
+| SPA | `useApiData<T>` | Inherits from `request()` | None | Browser default | Sets `error` state; `refetch()` to retry manually |
+| SPA | `useBffHealth` | No retry (poll every 60 s) | None | Browser default | Sets status to `"unhealthy"` |
+| BFF | `ArmApiService` | Polly 3× retry, exponential | `IMemoryCache` 1 min | 30 s / 90 s total | Log + rethrow `HttpRequestException`; 403 → credential invalidation + one-time retry |
+| BFF | `DataApiService` | Polly 3× retry, exponential | `IMemoryCache` 1 min | 30 s / 90 s total | Log + rethrow `HttpRequestException` |
+| BFF | `GlobalAdminRoleProvider` | Polly 2× retry | `IMemoryCache` 30 min | 10 s / 30 s total | Catch-all → return `[]` (fail-closed) |
+| BFF | `SoapLegacyApiService` | Timeout only | `IMemoryCache` 60 min | Configurable | Return empty list on exception |
+| BFF | `UnifiedApiService` | Per-source (see above) | `IMemoryCache` 60 min | Per-source | Graceful degradation: bad source returns `[]`, other source still returned |
+
+**SPA error code → UI mapping:**
+
+| `ApiError.code` | Meaning | Typical UI action |
+|-----------------|---------|-------------------|
+| `UNAUTHORIZED` | JWT expired / missing | Redirect to MSAL login |
+| `FORBIDDEN` | Insufficient RBAC role | Show "Access Denied" page |
+| `NOT_FOUND` | Resource does not exist | Show 404 message inline |
+| `NETWORK` | Connection refused / DNS | Show "Service unavailable" banner |
+| `ABORTED` | React unmount cleanup | Silently ignored |
+| `SERVER` | 5xx after all retries | Show generic error toast |
+
+---
+
+### 17.11 Token Flow Diagram
+
+End-to-end view of both token paths (user-facing MSAL and service-to-service SP).
+
+```
+User Browser
+  │
+  ├─ MSAL acquireTokenSilent()
+  │    scope: api://<bff-client-id>/Portal.Access
+  │    cache hit → return cached JWT
+  │    cache miss → POST https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token
+  │                  (auth code / refresh token flow)
+  │                  ← access token (JWT, ~1 h expiry)
+  │
+  └─ Every API call: Authorization: Bearer <user-access-token>
+                     ─────────────────────────────────────────►
+                                                              BFF (.NET)
+                                                               │
+                                                               ├─ JWT validation
+                                                               │   Authority: https://login.microsoftonline.com/{tenant}/v2.0
+                                                               │   Audience:  api://<bff-client-id>
+                                                               │   Multi-tenant: ValidIssuers list
+                                                               │
+                                                               ├─ Extract OID claim → user identity
+                                                               │
+                                                               ├─ GlobalAdminRoleProvider.GetUserRolesAsync(oid)
+                                                               │   → GET {GlobalAdminBaseUrl}/users/{oid}/roles
+                                                               │       Ocp-Apim-Subscription-Key: <key>
+                                                               │   ← ["Distributor", "Admin"]  (cached 30 min)
+                                                               │
+                                                               ├─ ClaimsPrincipal enriched with business roles
+                                                               │
+                                                               ├─ RBAC policy evaluation (ApiAccessHandler)
+                                                               │   → allow / deny
+                                                               │
+                                                               │  For APIM calls (ARM Management API):
+                                                               ├─ ITokenProvider.GetTokenAsync("https://management.azure.com/.default")
+                                                               │   primary:  ClientSecretCredential
+                                                               │             TenantId + ClientId + ClientSecret
+                                                               │             → POST /oauth2/v2.0/token (client_credentials)
+                                                               │             ← SP access token (cached by Azure.Identity)
+                                                               │   fallback: DefaultAzureCredential
+                                                               │             → ManagedIdentity / EnvVars / AzureCLI
+                                                               │
+                                                               ├─ Outbound: Authorization: Bearer <sp-token>
+                                                               │           x-ms-apim-client: apim-dev-portal
+                                                               │           ─────────────────────────────►
+                                                               │                                        ARM / Data API
+                                                               │                                         (Azure APIM)
+                                                               │
+                                                               │  For Global Admin calls:
+                                                               └─ Ocp-Apim-Subscription-Key: <key>
+                                                                  ──────────────────────────────────►
+                                                                                                  Global Admin API
+```
+
+**Token cache behaviour:**
+
+| Token | Cached by | TTL |
+|-------|-----------|-----|
+| User JWT (inbound) | MSAL in browser (`localStorage` / `sessionStorage`) | ~1 hour (token expiry) |
+| SP bearer token (outbound ARM/Data API) | `Azure.Identity` SDK | ~1 hour (token expiry) |
+| Global Admin roles | `IMemoryCache` in BFF | 30 minutes (configurable) |
+| ARM/Data API responses | `IMemoryCache` in BFF | 1 minute per path |
+| Unified/Legacy catalog | `IMemoryCache` in BFF | 60 minutes |
