@@ -664,7 +664,7 @@ The `apis` field in each policy entry accepts a wildcard `"*"` (all APIs) or a l
 
 ### 6.1 `IArmApiService` Interface
 
-`bff-dotnet/BffApi/Services/IArmApiService.cs` (also inferred from implementations)
+`bff-dotnet/BffApi/Services/IArmApiService.cs`
 
 All three service implementations satisfy the same interface, making the strategy switch transparent to endpoint code:
 
@@ -672,51 +672,75 @@ All three service implementations satisfy the same interface, making the strateg
 public interface IArmApiService
 {
     // ── APIs ──────────────────────────────────────────────────────────────────
-    Task<PagedResult<ApiContract>> GetApisAsync(
-        int? top, int? skip, string? filter, CancellationToken ct = default);
-    Task<ApiContract?> GetApiAsync(string apiId, CancellationToken ct = default);
-    Task<PagedResult<OperationContract>> GetApiOperationsAsync(
-        string apiId, int? top, int? skip, CancellationToken ct = default);
-    Task<PagedResult<ProductContract>> GetApiProductsAsync(
+    Task<PagedResult<ApiContract>> ListApisAsync(
+        int? top = null, int? skip = null, string? filter = null, CancellationToken ct = default);
+    Task<ApiContract?> GetApiAsync(
+        string apiId, string? revision = null, CancellationToken ct = default);
+    Task<PagedResult<OperationContract>> ListOperationsAsync(
+        string apiId, int? top = null, int? skip = null, CancellationToken ct = default);
+    Task<OperationContract?> GetOperationAsync(
+        string apiId, string operationId, CancellationToken ct = default);
+    Task<PagedResult<ProductContract>> ListProductsForApiAsync(
         string apiId, CancellationToken ct = default);
-    Task<string> GetApiOpenApiAsync(string apiId, CancellationToken ct = default);
-    Task<IReadOnlyList<TagContract>> GetApiTagsAsync(string apiId, CancellationToken ct = default);
-    Task<IReadOnlyList<VersionSetContract>> GetApiVersionSetsAsync(CancellationToken ct = default);
-    Task<IReadOnlyList<SchemaContract>> GetApiSchemasAsync(
+    Task<PagedResult<ProductContract>> ListProductsForApiPageAsync(
+        string apiId, int? top = null, int? skip = null, string? filter = null, CancellationToken ct = default);
+    Task<JsonElement?> ExportOpenApiSpecAsync(
+        string apiId, string format = "swagger-link", CancellationToken ct = default);
+
+    // ── APIs — tag grouping ────────────────────────────────────────────────────
+    Task<PagedResult<TagGroup<ApiContract>>> GetApisByTagsAsync(
+        int? top = null, int? skip = null, string[]? tags = null, string? pattern = null, CancellationToken ct = default);
+    Task<PagedResult<TagGroup<OperationContract>>> GetOperationsByTagsAsync(
+        string apiId, int? top = null, int? skip = null, string[]? tags = null, string? pattern = null, CancellationToken ct = default);
+    Task<IReadOnlyList<TagContract>> GetOperationTagsAsync(
+        string apiId, string operationId, CancellationToken ct = default);
+
+    // ── APIs — version sets ────────────────────────────────────────────────────
+    Task<VersionSetContract?> GetApiVersionSetAsync(
+        string versionSetId, CancellationToken ct = default);
+    Task<IReadOnlyList<ApiContract>> GetApisInVersionSetAsync(
+        string versionSetId, CancellationToken ct = default);
+
+    // ── APIs — schema & changelog ──────────────────────────────────────────────
+    Task<PagedResult<SchemaContract>> GetApiSchemasAsync(
         string apiId, CancellationToken ct = default);
-    Task<IReadOnlyList<ApiContract>> GetApiChangelogAsync(
-        string apiId, CancellationToken ct = default);
+    Task<PagedResult<ChangeLogContract>> GetApiChangeLogAsync(
+        string apiId, int? top = null, int? skip = null, CancellationToken ct = default);
     Task<IReadOnlyList<string>> GetApiHostnamesAsync(
         string apiId, CancellationToken ct = default);
+    Task<PagedResult<ApiContract>> GetProductApisAsync(
+        string productId, int? top = null, int? skip = null, string? filter = null, CancellationToken ct = default);
+
+    // ── Tags ──────────────────────────────────────────────────────────────────
+    Task<PagedResult<TagContract>> ListTagsAsync(
+        string? scope = null, string? filter = null, CancellationToken ct = default);
 
     // ── Products ──────────────────────────────────────────────────────────────
-    Task<PagedResult<ProductContract>> GetProductsAsync(
-        int? top, int? skip, CancellationToken ct = default);
-    Task<ProductContract?> GetProductAsync(string productId, CancellationToken ct = default);
-    Task<PagedResult<ApiContract>> GetProductApisAsync(
+    Task<PagedResult<ProductContract>> ListProductsAsync(
+        int? top = null, int? skip = null, CancellationToken ct = default);
+    Task<ProductContract?> GetProductAsync(
         string productId, CancellationToken ct = default);
 
     // ── Subscriptions ─────────────────────────────────────────────────────────
-    Task<PagedResult<SubscriptionContract>> GetSubscriptionsAsync(
-        int? top, int? skip, CancellationToken ct = default);
+    Task<PagedResult<SubscriptionContract>> ListSubscriptionsAsync(
+        int? top = null, int? skip = null, CancellationToken ct = default);
     Task<SubscriptionContract?> GetSubscriptionAsync(
-        string subId, CancellationToken ct = default);
-    Task<SubscriptionContract> CreateSubscriptionAsync(
-        CreateSubscriptionRequest req, CancellationToken ct = default);
-    Task<SubscriptionContract> UpdateSubscriptionAsync(
-        string subId, UpdateSubscriptionRequest req, CancellationToken ct = default);
-    Task DeleteSubscriptionAsync(string subId, CancellationToken ct = default);
-    Task<SubscriptionSecretsContract> GetSubscriptionSecretsAsync(
-        string subId, CancellationToken ct = default);
-    Task RegenerateSubscriptionKeyAsync(
-        string subId, string keyType, CancellationToken ct = default);
-
-    // ── Tags ──────────────────────────────────────────────────────────────────
-    Task<PagedResult<TagContract>> GetTagsAsync(
-        string? scope, string? filter, CancellationToken ct = default);
+        string subscriptionId, CancellationToken ct = default);
+    Task<SubscriptionContract?> CreateSubscriptionAsync(
+        CreateSubscriptionRequest request, CancellationToken ct = default);
+    Task<SubscriptionContract?> UpdateSubscriptionAsync(
+        string subscriptionId, object patchBody, CancellationToken ct = default);
+    Task<bool> DeleteSubscriptionAsync(
+        string subscriptionId, CancellationToken ct = default);
+    Task<SubscriptionContract?> ListSubscriptionSecretsAsync(
+        string subscriptionId, CancellationToken ct = default);
+    Task<SubscriptionContract?> RegeneratePrimaryKeyAsync(
+        string subscriptionId, CancellationToken ct = default);
+    Task<SubscriptionContract?> RegenerateSecondaryKeyAsync(
+        string subscriptionId, CancellationToken ct = default);
 
     // ── Stats ─────────────────────────────────────────────────────────────────
-    Task<StatsContract> GetStatsAsync(CancellationToken ct = default);
+    Task<PlatformStats> GetStatsAsync(CancellationToken ct = default);
 }
 ```
 
