@@ -158,7 +158,7 @@ Roles and permissions are defined in `rbac-policies.json` (hot-reloaded):
 ```
 bff-dotnet/
 ├── Program.cs                      # Composition root — DI, middleware, endpoints
-├── BffApi.csproj                   # .NET 10, packages
+├── Komatsu.ApimMarketplace.Bff.csproj                   # .NET 10, packages
 ├── appsettings.json                # APIM, Entra ID, feature flags
 ├── appsettings.Development.json    # Mock mode enabled
 ├── rbac-policies.json              # RBAC role → permission mapping

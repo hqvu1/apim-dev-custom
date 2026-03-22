@@ -1,4 +1,0 @@
-<Solution>
-  <Project Path="BffApi/BffApi.csproj" />
-  <Project Path="BffApi.Tests/BffApi.Tests.csproj" />
-</Solution>

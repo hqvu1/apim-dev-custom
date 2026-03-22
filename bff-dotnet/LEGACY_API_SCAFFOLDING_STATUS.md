@@ -64,7 +64,7 @@
 ### 4. Configuration & Registration
 
 **`Program.cs`** (Updated)
-- Added using statement: `using BffApi.Services.Legacy;`
+- Added using statement: `using Komatsu.ApimMarketplace.Bff.Services.Legacy;`
 - Registered services:
   - `ILegacyApiService` → `SoapLegacyApiService`
   - `ILegacyAuthenticationBridge` → `LegacyAuthenticationBridge`
@@ -164,7 +164,7 @@ Update `appsettings.Development.json`:
 Before compiling, verify:
 
 - [ ] All 7 new files created in correct directories
-- [ ] Program.cs has `using BffApi.Services.Legacy;` added  
+- [ ] Program.cs has `using Komatsu.ApimMarketplace.Bff.Services.Legacy;` added  
 - [ ] Program.cs has service registrations in correct location
 - [ ] appsettings.json has `LegacyApis` section
 - [ ] All model files compile without errors

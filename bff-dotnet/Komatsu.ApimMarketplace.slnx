@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Komatsu.ApimMarketplace.Bff/Komatsu.ApimMarketplace.Bff.csproj" />
+  <Project Path="Komatsu.ApimMarketplace.Bff.Tests/Komatsu.ApimMarketplace.Bff.Tests.csproj" />
+</Solution>
